@@ -1,0 +1,30 @@
+# Shopify CLI — Alterpop OS 2.0 theme (Dawn-based)
+# Docs: https://shopify.dev/docs/storefronts/themes/tools/cli
+#
+# Uso:
+#   shopify theme dev      # sobe um development theme e faz hot-reload local
+#   shopify theme list     # ver themes da loja + IDs
+#   shopify theme push     # publicar para um theme existente (com --theme <id>)
+#
+# O primeiro `shopify theme dev` pede login no browser e cria o
+# development theme automaticamente. Preencher `theme` abaixo só depois
+# de escolher um theme fixo para push.
+
+[environments.development]
+store = "alterpop-store.myshopify.com"
+# theme = "123456789012"   # opcional: ID de um theme fixo para push
+
+ignore = [
+  "shopify.theme.toml",
+  "README.md",
+  "LICENSE.md",
+  "release-notes.md",
+  ".git/**",
+  ".github/**",
+  ".gitignore",
+  ".prettierrc.json",
+  ".theme-check.yml",
+  ".shopify/**",
+  ".DS_Store",
+  "**/.DS_Store",
+]

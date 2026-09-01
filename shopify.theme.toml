@@ -2,16 +2,14 @@
 # Docs: https://shopify.dev/docs/storefronts/themes/tools/cli
 #
 # Uso:
-#   shopify theme dev      # sobe um development theme e faz hot-reload local
+#   shopify theme dev      # sobe um development theme + hot-reload em 127.0.0.1:9292
 #   shopify theme list     # ver themes da loja + IDs
-#   shopify theme push     # publicar para um theme existente (com --theme <id>)
+#   shopify theme push --theme <id>   # publicar para um theme existente
 #
-# O primeiro `shopify theme dev` pede login no browser e cria o
-# development theme automaticamente. Preencher `theme` abaixo só depois
-# de escolher um theme fixo para push.
+# Nota: o handle real da loja Alterpop e' jyr17t-wr.myshopify.com
+# (dominio permanente .myshopify.com). "alterpop-store" nao resolve.
 
-[environments.development]
-store = "alterpop-store.myshopify.com"
+store = "jyr17t-wr.myshopify.com"
 # theme = "123456789012"   # opcional: ID de um theme fixo para push
 
 ignore = [

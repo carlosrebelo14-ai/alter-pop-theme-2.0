@@ -2,10 +2,6 @@
 {{ 'component-card.css' | asset_url | stylesheet_tag }}
 {{ 'component-price.css' | asset_url | stylesheet_tag }}
 
-{% if section.settings.image_shape == 'blob' %}
-  {{ 'mask-blobs.css' | asset_url | stylesheet_tag }}
-{%- endif -%}
-
 {%- unless section.settings.quick_add == 'none' -%}
   {{ 'quick-add.css' | asset_url | stylesheet_tag }}
 {%- endunless -%}
@@ -195,9 +191,6 @@
         </div>
       </div>
     {%- endpaginate -%}
-    {% if section.settings.image_shape == 'arch' %}
-      {{ 'mask-arch.svg' | inline_asset_content }}
-    {%- endif -%}
   </div>
 </collection-component>
 

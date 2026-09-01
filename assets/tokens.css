@@ -1,0 +1,154 @@
+/* ============================================================================
+   Alterpop — Design System tokens (Phase 0B)
+   Source of truth: handoff `alterpop-design-system-motion-rarity.css` +
+   PLANO_IMPLEMENTACAO.md Fase 0B.
+
+   Loaded in layout/theme.liquid immediately after Dawn's inline settings
+   `{% style %}` block and BEFORE base.css, so these values win.
+
+   NAME NOTE: Dawn already owns `--color-background` / `--color-foreground`
+   (RGB triplets consumed as `rgb(var(--…))`) and `--font-*-family`.
+   Those keep flowing from the color schemes in settings_data.json (now set
+   to the Alterpop neutral palette). Alterpop's own page background token is
+   `--color-canvas` to avoid clashing with Dawn's triplet.
+   Equivalence: --color-canvas (#F7F6F2) == Dawn scheme-1 background.
+   ============================================================================ */
+
+:root {
+  /* --- Colour ------------------------------------------------------------- */
+  --color-ink-900: #121014;          /* primary text / ink */
+  --color-canvas: #F7F6F2;           /* page background (= Dawn scheme-1 bg) */
+  --color-surface: #FBFAF7;          /* raised surface / card face */
+  --color-border: #D9D7D0;           /* hairline borders — read via border, not shadow */
+  --color-text-muted: #6E6A63;       /* secondary text — fixed token, AA on --color-canvas.
+                                        Never variable opacity for secondary text. */
+
+  /* Marigold — EXCLUSIVE to purchase CTAs (Add to Cart, Checkout, Shop the
+     Universe). NEVER navigation, NEVER the cookie banner, NEVER generic links. */
+  --color-marigold: #FFB800;
+
+  /* Emerald 600 — EXCLUSIVE to the authenticity seal ("100% Licensed").
+     Do not reuse for success states, links, or decoration. */
+  --color-emerald-600: #0E7C5A;
+  --color-emerald: var(--color-emerald-600);
+
+  /* DS gold scale — NOT the purchase accent (that is --color-marigold). */
+  --color-gold-500: #E09B24;
+  --color-gold-700: #8A5E0F;
+
+  /* Fragile / collector handling banner (deliberate exception, F4/F7). */
+  --color-fragile-bg: #F3E7D6;
+  --color-fragile-ink: #8A5410;
+
+  /* --- Typography ------------------------------------------------------------
+     Display: Hanken Grotesk 800/900.  Body/UI: Inter 400/500/600.
+     Weights outside those sets are not part of the system. */
+  --font-display: 'Hanken Grotesk', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --font-weight-body: 400;
+  --font-weight-body-medium: 500;
+  --font-weight-body-strong: 600;
+  --font-weight-display: 800;
+  --font-weight-display-max: 900;
+
+  /* --- Spacing --------------------------------------------------------------- */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+  --space-2xl: 32px;
+  --space-3xl: 48px;
+  --space-4xl: 64px;
+  --space-5xl: 96px;
+
+  /* --- Radius -------------------------------------------------------------
+     radius-none: product images/thumbnails (pure-square rule).
+     radius-xs:   inputs, quantity stepper, filter pills.
+     radius-sm:   status pills / badges, outline secondary buttons.
+     radius-md:   container cards, drawers, banners.
+     radius-full: only genuinely circular elements.
+     Primary CTAs keep the asymmetric brand corner — outside this scale. */
+  --radius-none: 0px;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-full: 9999px;
+
+  /* --- Shadow ------------------------------------------------------------
+     Default = none (static in-flow surfaces read via border).
+     sm: temporarily-floating (drawers, overlays, open selects).
+     md: fixed/sticky elements visible during scroll. */
+  --shadow-sm: 0 2px 8px rgba(17, 17, 17, 0.06);
+  --shadow-md: 0 4px 16px rgba(17, 17, 17, 0.08);
+
+  /* --- Motion — EXACTLY TWO pacings. Never introduce a third. -------------
+     transactional: add-to-cart, quantity stepper, card hover, cart drawer,
+                    checkout, filters.
+     editorial:     Universe Room entry, hero open, PDP-premium transitions,
+                    still-life image swap.  Enter = fade + scale 1.02 -> 1.00.
+     Never mix the two within a single interaction moment. */
+  --motion-transactional-duration: 120ms;
+  --motion-transactional-easing: cubic-bezier(0.4, 0, 0.2, 1);
+  --motion-transactional: var(--motion-transactional-duration) var(--motion-transactional-easing);
+
+  --motion-editorial-duration: 400ms;
+  --motion-editorial-easing: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-editorial: var(--motion-editorial-duration) var(--motion-editorial-easing);
+
+  /* --- Rarity presentation tokens (logic lives in the component, F1A) ------ */
+  --rarity-limited-label-weight: 600;
+  --rarity-limited-label-color: var(--color-ink-900);
+  --rarity-limited-image-area-boost: 8%;
+  --rarity-soldout-image-opacity: 0.7;
+  --rarity-soldout-label-weight: 500;
+  --rarity-soldout-label-color: var(--color-ink-900);
+}
+
+/* ============================================================================
+   Dawn bridge — remap Dawn's typography vars onto the Alterpop fonts so every
+   inherited Dawn component picks them up without editing Dawn's CSS.
+   Colour is NOT bridged here: it comes from the Alterpop palette written into
+   the color schemes (config/settings_data.json).
+   ============================================================================ */
+:root {
+  --font-body-family: var(--font-body);
+  --font-body-style: normal;
+  --font-body-weight: var(--font-weight-body);
+  --font-body-weight-bold: var(--font-weight-body-strong);
+
+  --font-heading-family: var(--font-display);
+  --font-heading-style: normal;
+  --font-heading-weight: var(--font-weight-display);
+}
+
+/* ============================================================================
+   Motion helper classes (from the handoff). The only two pacings.
+   ============================================================================ */
+.motion-editorial {
+  transition-duration: var(--motion-editorial-duration);
+  transition-timing-function: var(--motion-editorial-easing);
+}
+
+.motion-transactional {
+  transition-duration: var(--motion-transactional-duration);
+  transition-timing-function: var(--motion-transactional-easing);
+}
+
+/* Editorial enter: fade + scale 1.02 -> 1.00 (hero open, Universe Room entry). */
+@keyframes ap-editorial-in {
+  from { opacity: 0; transform: scale(1.02); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-editorial,
+  .motion-transactional {
+    transition-duration: 0.01ms;
+  }
+  @keyframes ap-editorial-in {
+    from { opacity: 1; transform: none; }
+    to   { opacity: 1; transform: none; }
+  }
+}

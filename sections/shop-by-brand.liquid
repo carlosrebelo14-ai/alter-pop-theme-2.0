@@ -58,7 +58,15 @@
       </ul>
       <p class="ap-shopby__empty-note type-caption">{{ 'sections.universe_room.shop_by_placeholder' | t }}</p>
     {%- else -%}
-      <p class="ap-shopby__empty-note type-caption">{{ 'sections.universe_room.shop_by_brand_empty' | t }}</p>
+      {%- comment -%} Explicit empty state — skeleton chips + a discreet note, no invented brands. {%- endcomment -%}
+      <div class="ap-shopby__empty" role="note">
+        <ul class="ap-shopby__row ap-shopby__row--chips ap-shopby__row--skeleton" role="list" aria-hidden="true">
+          {%- for i in (1..5) -%}
+            <li><span class="ap-shopby__chip-ph"></span></li>
+          {%- endfor -%}
+        </ul>
+        <p class="ap-shopby__empty-note type-caption">{{ 'sections.universe_room.shop_by_brand_empty' | t }}</p>
+      </div>
     {%- endif -%}
   </div>
 </section>

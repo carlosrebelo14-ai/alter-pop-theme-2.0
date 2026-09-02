@@ -94,6 +94,28 @@
   }
 }
 
+/* No image bound yet: a compact band, not a wall of black (same collapse as
+   the homepage hero). */
+.ap-uroom-header--no-image {
+  min-height: 0;
+  align-items: flex-start;
+}
+
+.ap-uroom-header--no-image .ap-uroom-header__inner {
+  padding-block: var(--space-3xl);
+}
+
+@media (min-width: 990px) {
+  .ap-uroom-header--no-image {
+    min-height: 0;
+    align-items: flex-start;
+  }
+
+  .ap-uroom-header--no-image .ap-uroom-header__body {
+    max-width: 540px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ap-uroom-header { animation-duration: 0.01ms; }
 }
@@ -209,6 +231,19 @@
   border-radius: var(--radius-xs);
   background: var(--color-border);
 }
+
+/* skeleton chip — same footprint as .ap-btn--chip, no label */
+[data-template-suffix="universe-room"] .ap-shopby__chip-ph {
+  display: block;
+  width: 76px;
+  height: 36px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+}
+
+[data-template-suffix="universe-room"] .ap-shopby__row--skeleton li:nth-child(3n) .ap-shopby__chip-ph { width: 96px; }
+[data-template-suffix="universe-room"] .ap-shopby__row--skeleton li:nth-child(4n) .ap-shopby__chip-ph { width: 60px; }
 
 [data-template-suffix="universe-room"] .ap-shopby__empty-note {
   margin: var(--space-md) 0 0;
@@ -737,8 +772,13 @@
   }
 }
 
+/* Dawn sizes .grid__item for a flex row: `width: calc(33.33% - …)`. In our
+   CSS-grid container that % resolves against the 1fr TRACK, collapsing each
+   card to ~1/3 of its cell. Reset it so the card fills the track. */
 [data-template-suffix="universe-room"] .product-grid .grid__item {
+  width: auto;
   max-width: none;
+  min-width: 0;
   margin: 0;
   padding: 0;
 }

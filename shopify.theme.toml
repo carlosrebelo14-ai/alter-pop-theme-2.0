@@ -18,6 +18,7 @@ ignore = [
   "LICENSE.md",
   "release-notes.md",
   "PLANO_IMPLEMENTACAO.md",
+  "CLAUDE.md",
   ".git/**",
   ".github/**",
   ".gitignore",

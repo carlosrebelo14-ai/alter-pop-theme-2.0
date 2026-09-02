@@ -1,0 +1,60 @@
+# CLAUDE.md — Alterpop OS 2.0 theme
+
+Working notes for Claude Code sessions on this repo. See `PLANO_IMPLEMENTACAO.md`
+for the phase plan and scope.
+
+## Dev server ↔ git (hard rule — learned the hard way)
+
+`shopify theme dev` runs a file watcher that pushes **incremental** uploads and
+deletes to the development theme as files change on disk. Git operations that
+churn the working tree — **`git checkout` (branch switch), `git merge`,
+`git branch -d`, `git push --delete`** — make the watcher emit spurious
+`delete` events for files that then never get re-uploaded (a fast-forward merge
+changes nothing on disk, so no `update` event fires to fix it). Symptom:
+`Liquid error: Could not find asset snippets/<x>.liquid` on every page, even
+though the file is present on disk and committed.
+
+Therefore:
+
+1. **Do git branch operations (checkout / merge / branch delete) with the dev
+   server stopped.** Stop it, do the git work, start it again.
+2. **If that is not possible**, after the git work: **restart `shopify theme dev`
+   and re-verify against the served HTML** before reporting anything as done.
+   A plain `git add` / `git commit` on the current branch is safe and does not
+   need this.
+
+## Verification (also a hard rule)
+
+**Render verification is always against the served HTML from the dev server,
+never `shopify theme check` alone.** `theme check` is a linter — it does not
+catch a broken upload, a missing synced asset, or a runtime Liquid error on a
+real page.
+
+Minimum check after any theme change, per affected page type
+(home `/`, collection `/collections/all`, product, search `/search?q=…`):
+
+```
+curl -s http://127.0.0.1:9292/<path> \
+  | grep -iE "Could not find asset|Liquid error|Liquid syntax|Translation missing"
+```
+
+Expect **no matches**. Then confirm the changed markup is actually present in
+the response (grep for the new class / snippet output), and take a screenshot
+for anything visual. Run `theme check --fail-level error` as well, but it is
+necessary, not sufficient.
+
+If the dev server has been through git branch churn this session, assume its
+uploaded copy is stale until a restart + re-verify says otherwise.
+
+## Store / CLI
+
+- Store handle: **`jyr17t-wr.myshopify.com`** (permanent domain). `alterpop-store`
+  does not resolve. Set in `shopify.theme.toml`.
+- Development theme id: `206791704906`. Dev server: `http://127.0.0.1:9292`.
+
+## Branch workflow
+
+- One branch per phase/component: `feat/phase-<n><x>-<slug>` or `chore/…`.
+- Fast-forward merge to `main`, push, delete the branch. No PRs.
+- `a717245` is the untouched Dawn 16.0.0 baseline — keep it as the reference
+  point for the cumulative diff.

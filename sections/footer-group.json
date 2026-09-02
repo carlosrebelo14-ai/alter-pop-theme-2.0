@@ -9,15 +9,10 @@
       "settings": {
         "newsletter_enable": true,
         "newsletter_heading": "Collectors Club",
-        "enable_country_selector": true,
-        "enable_language_selector": true,
-        "payment_enable": true,
-        "padding_top": 36,
-        "padding_bottom": 36
+        "footer_meta": "Visa · Mastercard · Apple Pay · Google Pay · 14-Day Returns",
+        "faq_url": "shopify://pages/faq"
       }
     }
   },
-  "order": [
-    "footer"
-  ]
+  "order": ["footer"]
 }

@@ -1,172 +1,117 @@
 {{ 'footer.css' | asset_url | stylesheet_tag }}
 
-{%- liquid
-  assign lockup = 'lockup-horizontal-ink.svg'
-  assign country_selector = false
-  if section.settings.enable_country_selector and localization.available_countries.size > 1
-    assign country_selector = true
-  endif
-  assign language_selector = false
-  if section.settings.enable_language_selector and localization.available_languages.size > 1
-    assign language_selector = true
-  endif
--%}
+{%- comment -%}
+  Alterpop — Footer. Source of truth: Wireframe_Alterpop_3_3.pdf 1a / 1b.
+
+  Structure:
+    1. Collectors Club band — heading + note (left) + email + Join (right).
+       Dawn {% form 'customer' %} logic kept (contact[tags]=newsletter,
+       form.errors / form.posted_successfully?).
+    2. Footer row —
+       symbol-ink logo · "Visa · Mastercard · Apple Pay · Google Pay ·
+       14-Day Returns" (plain text) · FAQ link
+       ─────
+       Legal   Terms & Conditions · Privacy Policy · Cookie Policy ·
+               Complaints Book · Contact
+       fine print (one line, dot-separated): legal name · NIF · address
+
+  Fine print: legal name, NIF and fiscal address were NOT provided —
+  clearly-marked placeholders. Full legal copy pending lawyer review.
+  Link colour is gold-700 (#8A5E0F) per the wireframe — NOT Marigold
+  (Marigold stays exclusive to purchase CTAs).
+{%- endcomment -%}
 
 <footer class="ap-footer">
-  <div class="ap-footer__inner page-width">
 
-    <div class="ap-footer__top">
-      <a href="{{ routes.root_url }}" class="ap-footer__logo" aria-label="{{ shop.name | escape }}">
-        {{- lockup | inline_asset_content -}}
-      </a>
-
-      {%- if section.settings.newsletter_enable -%}
-        <div class="ap-footer__club">
+  {%- if section.settings.newsletter_enable -%}
+    <div class="ap-footer__club">
+      <div class="ap-footer__club-inner page-width">
+        <div class="ap-footer__club-copy">
           {%- if section.settings.newsletter_heading != blank -%}
             <h2 class="ap-footer__club-heading inline-richtext">{{ section.settings.newsletter_heading }}</h2>
           {%- endif -%}
-          <p class="ap-footer__club-note">
-            {{- 'sections.footer.collectors_club_note' | t -}}
-          </p>
-
-          {%- comment -%} Dawn newsletter logic kept: {% form 'customer' %} + hidden newsletter tag. {%- endcomment -%}
-          {%- form 'customer', id: 'ContactFooter', class: 'ap-footer__newsletter newsletter-form' -%}
-            <input type="hidden" name="contact[tags]" value="newsletter">
-            <div class="newsletter-form__field-wrapper">
-              <div class="ap-footer__field">
-                <input
-                  id="NewsletterForm--{{ section.id }}"
-                  type="email"
-                  name="contact[email]"
-                  value="{{ form.email }}"
-                  aria-required="true"
-                  autocorrect="off"
-                  autocapitalize="off"
-                  autocomplete="email"
-                  {% if form.errors %}
-                    autofocus
-                    aria-invalid="true"
-                    aria-describedby="ContactFooter-error"
-                  {% elsif form.posted_successfully? %}
-                    aria-describedby="ContactFooter-success"
-                  {% endif %}
-                  placeholder="{{ 'newsletter.label' | t }}"
-                  required
-                >
-                <label class="field__label" for="NewsletterForm--{{ section.id }}">
-                  {{ 'newsletter.label' | t }}
-                </label>
-                <button
-                  type="submit"
-                  class="newsletter-form__button"
-                  name="commit"
-                  id="Subscribe"
-                  aria-label="{{ 'newsletter.button_label' | t }}"
-                >
-                  <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
-                    <path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </button>
-              </div>
-
-              {%- if form.errors -%}
-                <small class="newsletter-form__message" id="ContactFooter-error">
-                  {{ 'icon-error.svg' | inline_asset_content }}
-                  {{- form.errors.translated_fields.email | capitalize }}
-                  {{ form.errors.messages.email -}}
-                </small>
-              {%- endif -%}
-            </div>
-
-            {%- if form.posted_successfully? -%}
-              <h3
-                class="newsletter-form__message newsletter-form__message--success"
-                id="ContactFooter-success"
-                tabindex="-1"
-                autofocus
-              >
-                {{ 'icon-success.svg' | inline_asset_content }}
-                {{- 'newsletter.success' | t }}
-              </h3>
-            {%- endif -%}
-          {%- endform -%}
+          <p class="ap-footer__club-note">{{ 'sections.footer.collectors_club_note' | t }}</p>
         </div>
-      {%- endif -%}
-    </div>
 
-    <nav class="ap-footer__legal" aria-label="{{ 'sections.footer.legal_heading' | t }}">
-      <h2 class="ap-footer__nav-heading">{{ 'sections.footer.legal_heading' | t }}</h2>
+        {%- form 'customer', id: 'ContactFooter', class: 'ap-footer__club-form newsletter-form' -%}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <div class="ap-footer__field">
+            <input
+              id="NewsletterForm--{{ section.id }}"
+              type="email"
+              name="contact[email]"
+              value="{{ form.email }}"
+              aria-required="true"
+              autocorrect="off"
+              autocapitalize="off"
+              autocomplete="email"
+              {% if form.errors %}
+                autofocus aria-invalid="true" aria-describedby="ContactFooter-error"
+              {% elsif form.posted_successfully? %}
+                aria-describedby="ContactFooter-success"
+              {% endif %}
+              placeholder="{{ 'newsletter.label' | t }}"
+              required
+            >
+            <label class="ap-footer__label" for="NewsletterForm--{{ section.id }}">{{ 'newsletter.label' | t }}</label>
+            <button type="submit" class="ap-footer__join" name="commit">{{ 'newsletter.button_label' | t }}</button>
+          </div>
+          {%- if form.errors -%}
+            <small class="newsletter-form__message" id="ContactFooter-error">
+              {{ 'icon-error.svg' | inline_asset_content }}
+              {{- form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email -}}
+            </small>
+          {%- endif -%}
+          {%- if form.posted_successfully? -%}
+            <h3 class="newsletter-form__message newsletter-form__message--success" id="ContactFooter-success" tabindex="-1" autofocus>
+              {{ 'icon-success.svg' | inline_asset_content }} {{ 'newsletter.success' | t }}
+            </h3>
+          {%- endif -%}
+        {%- endform -%}
+      </div>
+    </div>
+  {%- endif -%}
+
+  <div class="ap-footer__main">
+    <div class="ap-footer__main-inner page-width">
+      <div class="ap-footer__row-top">
+        <a href="{{ routes.root_url }}" class="ap-footer__logo" aria-label="{{ shop.name | escape }}">
+          {{- 'symbol-ink.svg' | inline_asset_content -}}
+        </a>
+        {%- if section.settings.footer_meta != blank -%}
+          <p class="ap-footer__meta">{{ section.settings.footer_meta | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.faq_url != blank -%}
+          <a href="{{ section.settings.faq_url }}" class="ap-footer__link ap-footer__faq">{{ 'sections.footer.faq' | t }}</a>
+        {%- endif -%}
+      </div>
+
+      <hr class="ap-footer__rule">
+
       {%- comment -%}
-        TODO: confirmar handles — cookie-policy e contact não são políticas
-        nativas do Shopify. Terms/Privacy usam as URLs padrão /policies/*
-        (existem só se a política estiver preenchida no admin).
+        TODO: confirmar handles — /pages/cookie-policy e /pages/contact não são
+        políticas nativas do Shopify. Terms/Privacy usam /policies/*.
       {%- endcomment -%}
-      <ul class="ap-footer__legal-list">
-        <li><a href="/policies/terms-of-service">{{ 'sections.footer.terms' | t }}</a></li>
-        <li><a href="/policies/privacy-policy">{{ 'sections.footer.privacy' | t }}</a></li>
-        <li><a href="/pages/cookie-policy">{{ 'sections.footer.cookie_policy' | t }}</a></li>
-        <li>
-          <a href="https://www.livroreclamacoes.pt" target="_blank" rel="noopener noreferrer">
-            {{- 'sections.footer.complaints_book' | t -}}
-          </a>
-        </li>
-        <li><a href="/pages/contact">{{ 'sections.footer.contact' | t }}</a></li>
-      </ul>
-    </nav>
-
-    {%- comment -%}
-      FINE PRINT — sempre visível, nunca atrás de link.
-      PLACEHOLDER: nome legal, NIF e morada ainda não fornecidos. NÃO inventar.
-      Substituir os campos entre [ ] quando os dados chegarem.
-      Copy legal completa: pendente de revisão do advogado.
-    {%- endcomment -%}
-    <div class="ap-footer__fineprint">
-      <p><span class="ap-footer__placeholder">[ Nome legal da empresa — a confirmar ]</span></p>
-      <p><span class="ap-footer__placeholder">[ NIF 000 000 000 — a confirmar ]</span></p>
-      <p><span class="ap-footer__placeholder">[ Morada fiscal completa — a confirmar ]</span></p>
-      <p class="ap-footer__legal-copy">
-        <span class="ap-footer__placeholder">[ Texto legal / avisos obrigatórios — pendente de revisão do advogado ]</span>
-      </p>
-    </div>
-
-    <div class="ap-footer__bottom">
-      <small class="ap-footer__copyright">
-        &copy; {{ 'now' | date: '%Y' }} {{ shop.name | escape }}
-      </small>
-
-      {%- if section.settings.payment_enable and shop.enabled_payment_types.size > 0 -%}
-        <ul class="ap-footer__payments" role="list">
-          <li class="visually-hidden">{{ 'sections.footer.payment' | t }}</li>
-          {%- for type in shop.enabled_payment_types -%}
-            <li>{{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}</li>
-          {%- endfor -%}
+      <nav class="ap-footer__legal" aria-label="{{ 'sections.footer.legal_heading' | t }}">
+        <span class="ap-footer__legal-label">{{ 'sections.footer.legal_heading' | t }}</span>
+        <ul class="ap-footer__legal-list">
+          <li><a class="ap-footer__link" href="/policies/terms-of-service">{{ 'sections.footer.terms' | t }}</a></li>
+          <li><a class="ap-footer__link" href="/policies/privacy-policy">{{ 'sections.footer.privacy' | t }}</a></li>
+          <li><a class="ap-footer__link" href="/pages/cookie-policy">{{ 'sections.footer.cookie_policy' | t }}</a></li>
+          <li><a class="ap-footer__link" href="https://www.livroreclamacoes.pt" target="_blank" rel="noopener noreferrer">{{ 'sections.footer.complaints_book' | t }}</a></li>
+          <li><a class="ap-footer__link" href="/pages/contact">{{ 'sections.footer.contact' | t }}</a></li>
         </ul>
-      {%- endif -%}
+      </nav>
 
-      {%- if country_selector or language_selector -%}
-        <div class="ap-footer__localization">
-          {%- if country_selector -%}
-            <localization-form>
-              {%- form 'localization', id: 'FooterCountryForm', class: 'localization-form' -%}
-                <div>
-                  <h2 class="visually-hidden" id="FooterCountryLabel">{{ 'localization.country_label' | t }}</h2>
-                  {%- render 'country-localization', localPosition: 'FooterCountry' -%}
-                </div>
-              {%- endform -%}
-            </localization-form>
-          {%- endif -%}
-          {%- if language_selector -%}
-            <localization-form>
-              {%- form 'localization', id: 'FooterLanguageForm', class: 'localization-form' -%}
-                <div>
-                  <h2 class="visually-hidden" id="FooterLanguageLabel">{{ 'localization.language_label' | t }}</h2>
-                  {%- render 'language-localization', localPosition: 'FooterLanguage' -%}
-                </div>
-              {%- endform -%}
-            </localization-form>
-          {%- endif -%}
-        </div>
-      {%- endif -%}
+      {%- comment -%}
+        FINE PRINT — sempre visível, nunca atrás de link. PLACEHOLDER:
+        nome legal, NIF e morada ainda não fornecidos. NÃO inventar.
+      {%- endcomment -%}
+      <p class="ap-footer__fineprint">
+        <span class="ap-footer__placeholder">[ Nome legal, Lda. — a confirmar ]</span> ·
+        <span class="ap-footer__placeholder">[ NIF PT000 000 000 — a confirmar ]</span> ·
+        <span class="ap-footer__placeholder">[ Morada fiscal completa — a confirmar ]</span>
+      </p>
     </div>
   </div>
 </footer>
@@ -189,42 +134,15 @@
       "label": "t:sections.footer.settings.newsletter_heading.label"
     },
     {
-      "type": "checkbox",
-      "id": "enable_country_selector",
-      "default": true,
-      "label": "t:sections.footer.settings.enable_country_selector.label"
+      "type": "text",
+      "id": "footer_meta",
+      "label": "Payments / returns line",
+      "default": "Visa · Mastercard · Apple Pay · Google Pay · 14-Day Returns"
     },
     {
-      "type": "checkbox",
-      "id": "enable_language_selector",
-      "default": true,
-      "label": "t:sections.footer.settings.enable_language_selector.label"
-    },
-    {
-      "type": "checkbox",
-      "id": "payment_enable",
-      "default": true,
-      "label": "t:sections.footer.settings.payment_enable.label"
-    },
-    {
-      "type": "range",
-      "id": "padding_top",
-      "min": 0,
-      "max": 100,
-      "step": 4,
-      "unit": "px",
-      "label": "t:sections.all.padding.padding_top",
-      "default": 36
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom",
-      "min": 0,
-      "max": 100,
-      "step": 4,
-      "unit": "px",
-      "label": "t:sections.all.padding.padding_bottom",
-      "default": 36
+      "type": "url",
+      "id": "faq_url",
+      "label": "FAQ link"
     }
   ]
 }

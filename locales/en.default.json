@@ -336,7 +336,14 @@
       }
     },
     "footer": {
-      "payment": "Payment methods"
+      "payment": "Payment methods",
+      "legal_heading": "Legal",
+      "terms": "Terms & Conditions",
+      "privacy": "Privacy Policy",
+      "cookie_policy": "Cookie Policy",
+      "complaints_book": "Complaints Book",
+      "contact": "Contact",
+      "collectors_club_note": "Early access to drops, restock alerts, and collector-only editions. One email when it matters — no spam."
     },
     "featured_blog": {
       "view_all": "View all",

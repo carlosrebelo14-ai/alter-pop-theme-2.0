@@ -162,7 +162,7 @@
           {{ 'templates.search.no_results' | t: terms: predictive_search.terms }}
         </p>
         <p class="ap-search__noresults-hint">{{ 'templates.search.no_results_hint' | t }}</p>
-        <a class="ap-search__noresults-cta" href="{{ routes.all_products_collection_url }}">
+        <a class="ap-btn ap-btn--secondary ap-search__noresults-cta" href="{{ routes.all_products_collection_url }}">
           {{- 'templates.search.browse_catalog' | t -}}
         </a>
       </div>

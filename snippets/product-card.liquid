@@ -155,7 +155,7 @@
       </p>
 
       {%- if state == 'soldout' and compact != true -%}
-        <a href="{{ card_product.url }}" class="ap-card__cta" aria-describedby="{{ title_id }}">
+        <a href="{{ card_product.url }}" class="ap-btn ap-btn--secondary ap-card__cta" aria-describedby="{{ title_id }}">
           {{- 'products.card.notify_me' | t -}}
         </a>
       {%- endif -%}

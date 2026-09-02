@@ -1,0 +1,162 @@
+/* ============================================================================
+   Alterpop — Button primitive
+   ============================================================================
+   Block 2 of the visual-conformance pass. The ONE button for the theme.
+   No section defines its own button any more — it uses `.ap-btn` + a variant.
+
+   Variants
+     --primary    Marigold fill + the asymmetric brand corner. EXCLUSIVE to
+                  purchase CTAs (Shop the Universe, Add to Cart F4, Checkout
+                  F6) — those inherit the corner from here instead of
+                  reinventing it.
+     --secondary  Outline ink, radius-sm. The default action button.
+     --ghost      Text link (no box). Animated underline on hover.
+     --chip       Small pill (popular searches). Its own height by design.
+
+   Modifiers
+     --gold       Colour swap to gold-700 (footer / drawer text links).
+     --underline  Persistent underline (static prose links).
+     --block      Full width.
+
+   Uniform across every variant: font (.type-button — 600 / 14 / 0.01em),
+   flat line-height, transactional transition, `:active { scale(.96) }`,
+   one hover model per variant. Loaded globally in layout/theme.liquid.
+   `.ap-nav__link` (header nav) is deliberately NOT a button.
+   ============================================================================ */
+
+.ap-btn {
+  --ap-btn-height: 44px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  height: var(--ap-btn-height);
+  padding: 0 var(--space-lg);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-ink-900);
+
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body-strong);
+  font-size: var(--text-button);
+  line-height: var(--leading-flat);
+  letter-spacing: var(--tracking-button);
+  text-decoration: none;
+  white-space: nowrap;
+
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  user-select: none;
+  transition:
+    background var(--motion-transactional),
+    color var(--motion-transactional),
+    border-color var(--motion-transactional),
+    filter var(--motion-transactional);
+}
+
+.ap-btn:active {
+  transform: scale(0.96);
+}
+
+.ap-btn:focus-visible {
+  outline: 2px solid var(--color-ink-900);
+  outline-offset: 2px;
+}
+
+/* --- Primary — Marigold + asymmetric brand corner (0 / md / md / md) ------- */
+.ap-btn--primary {
+  border-color: transparent;
+  border-radius: 0 var(--radius-md) var(--radius-md) var(--radius-md);
+  background: var(--color-marigold);
+  color: var(--color-ink-900);
+}
+
+.ap-btn--primary:hover {
+  filter: brightness(0.94);
+}
+
+/* --- Secondary — outline ink -------------------------------------------------- */
+.ap-btn--secondary {
+  border-color: var(--color-ink-900);
+  background: transparent;
+  color: var(--color-ink-900);
+}
+
+.ap-btn--secondary:hover {
+  background: var(--color-ink-900);
+  color: var(--color-canvas);
+}
+
+/* --- Ghost — text link ------------------------------------------------------- */
+.ap-btn--ghost {
+  height: auto;
+  padding: 0;
+  gap: var(--space-xs);
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: inherit;
+  position: relative;
+}
+
+.ap-btn--ghost::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--motion-transactional);
+}
+
+.ap-btn--ghost:hover::after,
+.ap-btn--ghost:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* --- Chip — small pill ----------------------------------------------------- */
+.ap-btn--chip {
+  --ap-btn-height: 36px;
+  gap: var(--space-xs);
+  padding: 0 var(--space-md);
+  border-color: var(--color-ink-900);
+  border-radius: var(--radius-sm);
+  font-weight: var(--font-weight-body-medium);
+  letter-spacing: 0;
+}
+
+.ap-btn--chip:hover {
+  background: var(--color-ink-900);
+  color: var(--color-canvas);
+}
+
+/* --- Modifiers ------------------------------------------------------------- */
+.ap-btn--gold {
+  color: var(--color-gold-700);
+}
+
+.ap-btn--underline {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.ap-btn--underline.ap-btn--ghost::after {
+  display: none;
+}
+
+.ap-btn--block {
+  display: flex;
+  width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ap-btn { transition-duration: 0.01ms; }
+  .ap-btn:active { transform: none; }
+  .ap-btn--ghost::after { transition-duration: 0.01ms; }
+}

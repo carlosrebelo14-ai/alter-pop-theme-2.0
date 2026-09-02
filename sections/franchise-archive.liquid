@@ -55,7 +55,7 @@
       {%- endif -%}
 
       {%- if section.settings.cta_label != blank -%}
-        <a class="ap-archive__cta" href="{{ section.settings.cta_link | default: routes.all_products_collection_url }}">
+        <a class="ap-btn ap-btn--secondary ap-archive__cta" href="{{ section.settings.cta_link | default: routes.all_products_collection_url }}">
           <span class="ap-archive__cta-label">{{ section.settings.cta_label | escape }}</span>
           {%- if section.settings.cta_sublabel != blank -%}
             <span class="ap-archive__cta-sub">{{ section.settings.cta_sublabel | escape }}</span>

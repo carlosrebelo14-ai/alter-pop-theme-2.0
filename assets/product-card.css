@@ -198,34 +198,12 @@
   color: var(--color-text-muted);
 }
 
-/* CTA — Sold Out only. Outlined, ink. */
+/* CTA — Sold Out only. .ap-btn ap-btn--secondary; the card only needs the
+   top gap, full width, and a stacking context above the whole-card link. */
 .ap-card__cta {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 38px;
   margin-top: var(--space-sm);
-  padding: 0 var(--space-lg);
-  border: 1px solid var(--color-ink-900);
-  border-radius: var(--radius-sm);
-  background: transparent;
-  color: var(--color-ink-900);
-  font-family: var(--font-body);
-  font-weight: var(--rarity-soldout-label-weight);
-  font-size: 0.875rem;
-  text-decoration: none;
   position: relative;
   z-index: 2;
-  transition: background var(--motion-transactional), color var(--motion-transactional);
-}
-
-.ap-card__cta:hover {
-  background: var(--color-ink-900);
-  color: var(--color-canvas);
-}
-
-.ap-card__cta:active {
-  transform: scale(0.96);
 }
 
 .ap-card__sr {

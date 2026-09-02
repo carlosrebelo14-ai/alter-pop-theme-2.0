@@ -61,7 +61,7 @@
       {%- endif -%}
 
       {%- if section.settings.cta_label != blank -%}
-        <a class="ap-hero__cta" href="{{ hero_link | default: routes.all_products_collection_url }}">
+        <a class="ap-btn ap-btn--primary ap-hero__cta" href="{{ hero_link | default: routes.all_products_collection_url }}">
           {{- section.settings.cta_label | escape -}}
         </a>
       {%- endif -%}

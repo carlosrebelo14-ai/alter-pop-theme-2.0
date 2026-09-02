@@ -100,31 +100,12 @@
   opacity: 0.9;
 }
 
-/* "Shop the Universe" is a primary purchase CTA (DS groups it with Add to
-   Cart / Checkout): solid Marigold, ink label, asymmetric brand corner. */
+/* "Shop the Universe" is a primary purchase CTA — .ap-btn ap-btn--primary
+   carries the Marigold fill + asymmetric brand corner. Only the layout
+   (top margin, roomier horizontal padding) is section-specific. */
 .ap-hero__cta {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-sm);
   margin-top: var(--space-xl);
-  padding: var(--space-md) var(--space-xl);
-  border: 0;
-  border-radius: 0 var(--radius-md) var(--radius-md) var(--radius-md);
-  background: var(--color-marigold);
-  color: var(--color-ink-900);
-  font-family: var(--font-body);
-  font-weight: var(--font-weight-body-strong);
-  font-size: 0.9375rem;
-  text-decoration: none;
-  transition: filter var(--motion-transactional), transform var(--motion-transactional);
-}
-
-.ap-hero__cta:hover {
-  filter: brightness(0.94);
-}
-
-.ap-hero__cta:active {
-  transform: scale(0.96);
+  padding-inline: var(--space-xl);
 }
 
 @media (min-width: 750px) {
@@ -382,28 +363,8 @@
   gap: var(--space-md);
 }
 
-.ap-rail__shopall {
-  font-family: var(--font-body);
-  font-size: 0.875rem;
-  font-weight: var(--font-weight-body-medium);
-  color: var(--color-ink-900);
-  text-decoration: none;
-  white-space: nowrap;
-  position: relative;
-}
-
-.ap-rail__shopall::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -2px;
-  height: 1px;
-  width: 0;
-  background: currentColor;
-  transition: width var(--motion-transactional);
-}
-
-.ap-rail__shopall:hover::after { width: 100%; }
+/* .ap-rail__shopall = .ap-btn ap-btn--ghost (animated underline from the
+   primitive). No section-specific styling needed. */
 
 /* rail: horizontal scroll on mobile, grid on desktop */
 .ap-rail__list {
@@ -637,32 +598,9 @@
   object-fit: cover;
 }
 
-.ap-archive__cta {
-  display: inline-flex;
-  align-items: baseline;
-  gap: var(--space-sm);
-  padding: var(--space-md) var(--space-lg);
-  border: 1px solid var(--color-ink-900);
-  border-radius: var(--radius-sm);
-  background: transparent;
-  color: var(--color-ink-900);
-  text-decoration: none;
-  transition: background var(--motion-transactional), color var(--motion-transactional);
-}
-
-.ap-archive__cta:hover {
-  background: var(--color-ink-900);
-  color: var(--color-canvas);
-}
-
-.ap-archive__cta-label {
-  font-family: var(--font-body);
-  font-weight: var(--font-weight-body-strong);
-  font-size: 0.875rem;
-}
-
+/* .ap-btn ap-btn--secondary. Only the muted sub-label is section-specific. */
 .ap-archive__cta-sub {
-  font-size: 0.8125rem;
+  font-size: var(--text-caption);
   color: var(--color-text-muted);
 }
 
@@ -749,7 +687,6 @@
   .ap-doorways__tile,
   .ap-shipbar__fill,
   .ap-doorways__img,
-  .ap-rail__shopall::after,
   .ap-archive__cta {
     animation: none;
     transition: none;

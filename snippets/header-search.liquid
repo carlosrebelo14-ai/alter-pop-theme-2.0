@@ -97,7 +97,7 @@
                       {%- assign t = term | strip -%}
                       {%- if t != blank -%}
                         <li>
-                          <a class="ap-search__chip" href="{{ routes.search_url }}?q={{ t | url_encode }}">{{ t }}</a>
+                          <a class="ap-btn ap-btn--chip ap-search__chip" href="{{ routes.search_url }}?q={{ t | url_encode }}">{{ t }}</a>
                         </li>
                       {%- endif -%}
                     {%- endfor -%}

@@ -33,7 +33,7 @@
         {%- endif -%}
       </div>
       {%- if section.settings.view_all_label != blank and coll != blank -%}
-        <a class="ap-rail__shopall" href="{{ coll.url }}">
+        <a class="ap-btn ap-btn--ghost ap-rail__shopall" href="{{ coll.url }}">
           {{- section.settings.view_all_label | escape }}
           <span aria-hidden="true">&rarr;</span>
         </a>

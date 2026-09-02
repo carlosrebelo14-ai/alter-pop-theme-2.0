@@ -509,14 +509,9 @@ details[open] > .menu-drawer {
   font-size: 0.9375rem;
 }
 
+/* .ap-btn ap-btn--ghost ap-btn--gold; only the top gap is drawer-specific. */
 .menu-drawer__viewall {
-  display: inline-block;
   margin-top: var(--space-sm);
-  font-family: var(--font-body);
-  font-weight: var(--font-weight-body-medium);
-  font-size: 0.875rem;
-  color: var(--color-gold-700);
-  text-decoration: none;
 }
 
 .menu-drawer__menu {

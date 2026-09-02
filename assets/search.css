@@ -180,19 +180,7 @@
   padding: 0;
 }
 
-.ap-search__chip {
-  display: inline-flex;
-  align-items: center;
-  height: 36px;
-  padding: 0 var(--space-md);
-  border: 1px solid var(--color-ink-900);
-  border-radius: var(--radius-xs);
-  font-family: var(--font-body);
-  font-weight: var(--font-weight-body-medium);
-  font-size: 0.875rem;
-  color: var(--color-ink-900);
-  text-decoration: none;
-}
+/* .ap-search__chip = .ap-btn ap-btn--chip (no section-specific styling). */
 
 .ap-search[data-has-query="true"] [data-search-popular] { display: none; }
 
@@ -290,8 +278,10 @@
 /* "search for X ->" term button */
 .predictive-search__search-for-button { margin-top: var(--space-md); }
 
+/* Not a button primitive: a full-width listbox-option row (border-top,
+   left-aligned, row hover). Kept bespoke; uses the type tokens. */
 .predictive-search__item--term {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: var(--space-sm);
   width: 100%;
@@ -301,11 +291,15 @@
   background: none;
   font-family: var(--font-body);
   font-weight: var(--font-weight-body-strong);
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
+  line-height: var(--leading-flat);
   color: var(--color-ink-900);
   text-align: left;
   cursor: pointer;
+  transition: background var(--motion-transactional);
 }
+
+.predictive-search__item--term:active { transform: scale(0.98); }
 
 .predictive-search__item--term svg { width: 14px; height: 14px; }
 .predictive-search__item--term[aria-selected="true"],
@@ -341,19 +335,9 @@
   color: var(--color-text-muted);
 }
 
+/* .ap-btn ap-btn--secondary; only the top gap is section-specific. */
 .ap-search__noresults-cta {
   margin-top: var(--space-md);
-  display: inline-flex;
-  align-items: center;
-  height: 40px;
-  padding: 0 var(--space-lg);
-  border: 1px solid var(--color-ink-900);
-  border-radius: var(--radius-sm);
-  font-family: var(--font-body);
-  font-weight: var(--font-weight-body-strong);
-  font-size: 0.875rem;
-  color: var(--color-ink-900);
-  text-decoration: none;
 }
 
 .predictive-search-status {

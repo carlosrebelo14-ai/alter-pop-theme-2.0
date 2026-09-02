@@ -1,47 +1,65 @@
 {{ 'homepage.css' | asset_url | stylesheet_tag }}
 
 {%- comment -%}
-  Alterpop — Product rail (Phase 2). Wireframe 1b.
-  A CURATED, LIMITED showcase — New Arrivals / Bestsellers.
-  NOT the full catalog: no facets, no pagination, no "load more".
-  Uses the ONE product card (snippets/product-card.liquid). No variant.
-  Desktop: grid. Mobile: horizontal scroll rail.
+  Alterpop — Product rail. Source: Wireframe_Alterpop_3_3.pdf 1a / 1b.
+  A CURATED, LIMITED showcase — New Arrivals, Limited Editions, Gifts Under €25.
+  NOT the full catalog: no facets, no pagination.
+  Uses the ONE product card (snippets/product-card.liquid). "Shop All ->" link.
+  layout: "rail"  -> horizontal scroll on mobile, grid on desktop (New Arrivals,
+                     Limited Editions)
+  layout: "grid"  -> plain responsive grid (Gifts Under €25, with compact cards)
+  pill:            optional label next to the heading ("Limited Run").
 {%- endcomment -%}
 
 {%- liquid
   assign coll = section.settings.collection
   assign limit = section.settings.products_to_show
   assign cols = section.settings.columns_desktop | default: 4
+  assign is_grid = false
+  if section.settings.layout == 'grid'
+    assign is_grid = true
+  endif
 -%}
 
 <section class="ap-rail" style="--ap-rail-cols: {{ cols }};">
-  <div class="ap-rail__head">
-    {%- if section.settings.heading != blank -%}
-      <h2 class="ap-rail__heading">{{ section.settings.heading | escape }}</h2>
-    {%- endif -%}
-    {%- if section.settings.view_all_label != blank and coll != blank -%}
-      <a class="ap-rail__viewall" href="{{ coll.url }}">{{ section.settings.view_all_label | escape }}</a>
+  <div class="ap-rail__inner">
+    <div class="ap-rail__head">
+      <div class="ap-rail__title-wrap">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="ap-section-heading">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+        {%- if section.settings.pill != blank -%}
+          <span class="ap-pill">{{ section.settings.pill | escape }}</span>
+        {%- endif -%}
+      </div>
+      {%- if section.settings.view_all_label != blank and coll != blank -%}
+        <a class="ap-rail__shopall" href="{{ coll.url }}">
+          {{- section.settings.view_all_label | escape }}
+          <span aria-hidden="true">&rarr;</span>
+        </a>
+      {%- endif -%}
+    </div>
+
+    {%- if coll != blank and coll.products_count > 0 -%}
+      <ul class="ap-rail__list{% if is_grid %} ap-rail__list--grid{% endif %}" role="list">
+        {%- assign skip_rail_card_styles = false -%}
+        {%- for product in coll.products limit: limit -%}
+          <li>
+            {%- render 'product-card',
+              card_product: product,
+              section_id: section.id,
+              lazy_load: true,
+              compact: section.settings.compact_cards,
+              skip_styles: skip_rail_card_styles
+            -%}
+          </li>
+          {%- assign skip_rail_card_styles = true -%}
+        {%- endfor -%}
+      </ul>
+    {%- else -%}
+      <p class="ap-empty">{{ 'sections.product_rail.empty' | t }}</p>
     {%- endif -%}
   </div>
-
-  {%- if coll != blank and coll.products_count > 0 -%}
-    <ul class="ap-rail__list" role="list">
-      {%- assign skip_rail_card_styles = false -%}
-      {%- for product in coll.products limit: limit -%}
-        <li>
-          {%- render 'product-card',
-            card_product: product,
-            section_id: section.id,
-            lazy_load: true,
-            skip_styles: skip_rail_card_styles
-          -%}
-        </li>
-        {%- assign skip_rail_card_styles = true -%}
-      {%- endfor -%}
-    </ul>
-  {%- else -%}
-    <p class="ap-rail__empty">{{ 'sections.product_rail.empty' | t }}</p>
-  {%- endif -%}
 </section>
 
 {% schema %}
@@ -50,42 +68,29 @@
   "tag": "section",
   "class": "section-product-rail",
   "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "New Arrivals" },
+    { "type": "text", "id": "pill", "label": "Pill label", "info": "e.g. \"Limited Run\". Leave blank for none." },
+    { "type": "collection", "id": "collection", "label": "Collection" },
     {
-      "type": "text",
-      "id": "heading",
-      "label": "Heading",
-      "default": "New Arrivals"
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "rail", "label": "Rail (scroll on mobile)" },
+        { "value": "grid", "label": "Grid" }
+      ],
+      "default": "rail"
     },
-    {
-      "type": "collection",
-      "id": "collection",
-      "label": "Collection"
-    },
+    { "type": "checkbox", "id": "compact_cards", "label": "Compact cards (image + title + price)", "default": false },
     {
       "type": "range",
       "id": "products_to_show",
-      "min": 4,
-      "max": 16,
-      "step": 1,
-      "default": 8,
+      "min": 4, "max": 16, "step": 1, "default": 8,
       "label": "Products to show",
-      "info": "Curated and limited — this rail is not a paginated catalog."
+      "info": "Curated and limited — not a paginated catalog."
     },
-    {
-      "type": "range",
-      "id": "columns_desktop",
-      "min": 3,
-      "max": 6,
-      "step": 1,
-      "default": 4,
-      "label": "Columns on desktop"
-    },
-    {
-      "type": "text",
-      "id": "view_all_label",
-      "label": "\"View all\" label",
-      "default": "View all"
-    }
+    { "type": "range", "id": "columns_desktop", "min": 3, "max": 6, "step": 1, "default": 4, "label": "Columns on desktop" },
+    { "type": "text", "id": "view_all_label", "label": "\"Shop All\" label", "default": "Shop All" }
   ],
   "presets": [{ "name": "Product rail" }]
 }

@@ -1,0 +1,93 @@
+{{ 'homepage.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  Alterpop — Free-shipping progress bar.
+  Source: Wireframe_Alterpop_3_3.pdf 1a (sits above the hero).
+  "cart — €X more to free shipping (over €Y)" + a fill bar.
+  Server-rendered from cart.total_price; updates live on Dawn's cartUpdate
+  pub/sub event (pubsub.js is loaded globally). Informative — ink, never gold
+  (DS microinteraction 4: the progress fill is ink-900, never Marigold).
+{%- endcomment -%}
+
+{%- liquid
+  assign threshold = section.settings.threshold_amount | times: 100
+  assign current = cart.total_price
+  assign remaining = threshold | minus: current
+  if remaining < 0
+    assign remaining = 0
+  endif
+  assign pct = 0
+  if threshold > 0
+    assign pct = current | times: 100 | divided_by: threshold
+    if pct > 100
+      assign pct = 100
+    endif
+  endif
+  assign remaining_money = remaining | money
+  assign threshold_money = threshold | money
+  assign pct_now = pct | round
+-%}
+
+<free-shipping-bar
+  class="ap-shipbar"
+  data-threshold="{{ threshold }}"
+  data-over-label="{{ section.settings.reached_text | escape }}"
+>
+  <div class="ap-shipbar__inner page-width">
+    <p class="ap-shipbar__text" data-shipbar-text>
+      {%- if remaining > 0 -%}
+        {{ 'sections.shipping_bar.remaining' | t: amount: remaining_money, threshold: threshold_money }}
+      {%- else -%}
+        {{ section.settings.reached_text | escape }}
+      {%- endif -%}
+    </p>
+    <div class="ap-shipbar__track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ pct_now }}">
+      <span class="ap-shipbar__fill" data-shipbar-fill style="width: {{ pct_now }}%;"></span>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const el = document.currentScript.closest('free-shipping-bar');
+      if (!el || !window.PUB_SUB_EVENTS) return;
+      const threshold = parseInt(el.dataset.threshold, 10) || 0;
+      const fill = el.querySelector('[data-shipbar-fill]');
+      const text = el.querySelector('[data-shipbar-text]');
+      const overLabel = el.dataset.overLabel || '';
+      const fmt = (cents) =>
+        new Intl.NumberFormat(document.documentElement.lang || 'en', {
+          style: 'currency',
+          currency: (window.Shopify && Shopify.currency && Shopify.currency.active) || 'EUR',
+        }).format(cents / 100);
+      const render = (total) => {
+        if (!threshold) return;
+        const pct = Math.min(100, Math.round((total / threshold) * 100));
+        fill.style.width = pct + '%';
+        el.querySelector('[role=progressbar]').setAttribute('aria-valuenow', pct);
+        const remaining = Math.max(0, threshold - total);
+        text.textContent =
+          remaining > 0
+            ? `${fmt(remaining)} more to free shipping (over ${fmt(threshold)})`
+            : overLabel;
+      };
+      window.subscribe &&
+        window.subscribe(window.PUB_SUB_EVENTS.cartUpdate, (event) => {
+          const total = event?.cartData?.total_price ?? event?.source?.total_price;
+          if (typeof total === 'number') render(total);
+        });
+    })();
+  </script>
+</free-shipping-bar>
+
+{% schema %}
+{
+  "name": "Free-shipping bar",
+  "tag": "section",
+  "class": "section-shipping-bar",
+  "settings": [
+    { "type": "number", "id": "threshold_amount", "label": "Free-shipping threshold", "default": 50, "info": "In your store currency (e.g. 50 = €50)." },
+    { "type": "text", "id": "reached_text", "label": "Text when reached", "default": "You've unlocked free shipping" }
+  ],
+  "presets": [{ "name": "Free-shipping bar" }]
+}
+{% endschema %}

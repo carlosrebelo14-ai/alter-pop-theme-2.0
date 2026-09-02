@@ -1,5 +1,9 @@
 {
   "sections": {
+    "shipping_bar": {
+      "type": "shipping-bar",
+      "settings": { "threshold_amount": 50, "reached_text": "You've unlocked free shipping" }
+    },
     "hero": {
       "type": "hero",
       "settings": {
@@ -21,36 +25,91 @@
     },
     "explore_universes": {
       "type": "explore-universes",
-      "settings": {
-        "heading": "Explore Universes"
-      }
+      "settings": { "heading": "Explore Universes" }
     },
     "new_arrivals": {
       "type": "product-rail",
       "settings": {
         "heading": "New Arrivals",
+        "pill": "",
         "collection": "all",
+        "layout": "rail",
+        "compact_cards": false,
         "products_to_show": 8,
         "columns_desktop": 4,
-        "view_all_label": "View all"
+        "view_all_label": "Shop All"
       }
     },
     "bestsellers": {
+      "type": "bestsellers",
+      "settings": { "heading": "Bestsellers", "collection": "all", "products_to_show": 5 }
+    },
+    "franchise_archive": {
+      "type": "franchise-archive",
+      "blocks": {
+        "t1": { "type": "tile", "settings": {} },
+        "t2": { "type": "tile", "settings": {} },
+        "t3": { "type": "tile", "settings": {} }
+      },
+      "block_order": ["t1", "t2", "t3"],
+      "settings": {
+        "eyebrow": "Universe",
+        "heading": "[ Franquia ] Archive",
+        "text": "[ Uma linha editorial curta sobre esta coleção de franquia ]",
+        "cta_label": "Explore the Archive",
+        "cta_sublabel": "→ Universe Room",
+        "cta_link": ""
+      }
+    },
+    "limited_editions": {
       "type": "product-rail",
       "settings": {
-        "heading": "Bestsellers",
+        "heading": "Limited Editions",
+        "pill": "Limited Run",
         "collection": "all",
-        "products_to_show": 8,
-        "columns_desktop": 4,
-        "view_all_label": "View all"
+        "layout": "rail",
+        "compact_cards": false,
+        "products_to_show": 6,
+        "columns_desktop": 3,
+        "view_all_label": "Shop All"
       }
+    },
+    "gifts_under_25": {
+      "type": "product-rail",
+      "settings": {
+        "heading": "Gifts Under €25",
+        "pill": "",
+        "collection": "all",
+        "layout": "grid",
+        "compact_cards": true,
+        "products_to_show": 12,
+        "columns_desktop": 6,
+        "view_all_label": ""
+      }
+    },
+    "real_customers": {
+      "type": "ugc-gallery",
+      "blocks": {
+        "p1": { "type": "photo", "settings": {} },
+        "p2": { "type": "photo", "settings": {} },
+        "p3": { "type": "photo", "settings": {} },
+        "p4": { "type": "photo", "settings": {} },
+        "r1": { "type": "review", "settings": { "rating": 4, "quote": "box arrived spotless, ahead of schedule." } }
+      },
+      "block_order": ["p1", "p2", "p3", "p4", "r1"],
+      "settings": { "heading": "Real Customers, Real Collections" }
     }
   },
   "order": [
+    "shipping_bar",
     "hero",
     "trust_badges",
     "explore_universes",
     "new_arrivals",
-    "bestsellers"
+    "bestsellers",
+    "franchise_archive",
+    "limited_editions",
+    "gifts_under_25",
+    "real_customers"
   ]
 }

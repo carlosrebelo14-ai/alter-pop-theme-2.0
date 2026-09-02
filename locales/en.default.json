@@ -106,13 +106,13 @@
   },
   "products": {
     "card": {
-      "view_piece": "View piece",
-      "notify_me": "Notify me",
+      "notify_me": "Notify Me",
+      "sold_out": "Sold Out",
       "price_from": "From",
       "on_sale": "On sale",
-      "in_stock_count": {
-        "one": "{{ count }} in stock",
-        "other": "{{ count }} in stock"
+      "in_stock": {
+        "one": "{{ count }} In Stock",
+        "other": "{{ count }} In Stock"
       }
     },
     "product": {
@@ -285,6 +285,12 @@
     },
     "product_rail": {
       "empty": "No products to show yet."
+    },
+    "bestsellers": {
+      "sold_this_month": "sold this month"
+    },
+    "shipping_bar": {
+      "remaining": "{{ amount }} more to free shipping (over {{ threshold }})"
     },
     "announcements": {
       "previous_announcement": "Previous announcement",

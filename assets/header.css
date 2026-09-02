@@ -40,10 +40,6 @@
   white-space: nowrap;
   text-decoration: none;
   color: var(--color-ink-900);
-  font-family: var(--font-display);
-  font-weight: var(--font-weight-display);
-  font-size: 1.35rem;
-  letter-spacing: -0.01em;
 }
 
 .ap-header__logo img {
@@ -51,9 +47,11 @@
   height: auto;
 }
 
-.ap-header__logo-fallback {
-  font-family: var(--font-display);
-  font-weight: var(--font-weight-display-max);
+/* inline brand lockup (fallback when settings.logo is unset) */
+.ap-header__logo svg {
+  display: block;
+  height: 22px;
+  width: auto;
 }
 
 /* --- Desktop nav --------------------------------------------------------- */

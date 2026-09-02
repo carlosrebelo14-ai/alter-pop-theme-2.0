@@ -100,7 +100,7 @@
             preload: true
         }}
       {%- else -%}
-        <span class="ap-header__logo-fallback">{{ shop.name }}</span>
+        {{- 'lockup-horizontal-ink.svg' | inline_asset_content -}}
       {%- endif -%}
     </a>
     {%- if request.page_type == 'index' -%}</h1>{%- endif -%}

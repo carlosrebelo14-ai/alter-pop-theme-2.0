@@ -153,6 +153,11 @@
                 "
               >
                 {% assign skip_card_product_styles = false %}
+                {%- comment -%} Universe Room: the page is one franchise, so the card meta line drops it (wireframe 7a). {%- endcomment -%}
+                {%- assign ap_hide_franchise = false -%}
+                {%- if template.suffix == 'universe-room' -%}
+                  {%- assign ap_hide_franchise = true -%}
+                {%- endif -%}
                 {%- for product in collection.products -%}
                   {% assign lazy_load = false %}
                   {%- if forloop.index > 2 -%}
@@ -176,7 +181,8 @@
                       skip_styles: skip_card_product_styles,
                       quick_add: section.settings.quick_add,
                       section_id: section.id,
-                      product_view_context: 'collection'
+                      product_view_context: 'collection',
+                      hide_franchise: ap_hide_franchise
                     %}
                   </li>
                   {%- assign skip_card_product_styles = true -%}

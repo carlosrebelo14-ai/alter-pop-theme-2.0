@@ -1,0 +1,760 @@
+/* ============================================================================
+   Alterpop — Universe Room (Phase 3)
+   Wireframe 7a / 7b. Self-contained: tokens.css + buttons.css only.
+   Every rule is scoped to [data-template-suffix="universe-room"] so it wins
+   over Dawn's component-facets.css / template-collection.css without caring
+   about stylesheet load order. Dawn's facets.js + filter logic are kept as-is;
+   only the visuals are ours. Header enters with --motion-editorial; filters,
+   sort and the grid use --motion-transactional.
+   ============================================================================ */
+
+/* ============================================================================
+   Universe Room header (7a: image right on desktop, behind text on mobile)
+   ============================================================================ */
+.ap-uroom-header {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: 300px;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--color-ink-900);
+  animation: ap-uroom-in var(--motion-editorial) both;
+}
+
+@keyframes ap-uroom-in {
+  from { opacity: 0; transform: scale(1.02); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.ap-uroom-header__media,
+.ap-uroom-header__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+
+.ap-uroom-header--no-image .ap-uroom-header__media {
+  background:
+    radial-gradient(120% 80% at 16% 12%, rgba(224, 155, 36, 0.16), transparent 55%),
+    linear-gradient(180deg, #24222a, var(--color-ink-900));
+}
+
+.ap-uroom-header__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(18, 16, 20, 0) 30%, rgba(18, 16, 20, 0.8) 100%);
+}
+
+.ap-uroom-header__inner {
+  width: 100%;
+  max-width: var(--page-width, 1400px);
+  margin: 0 auto;
+  padding: var(--space-4xl) var(--space-xl) var(--space-2xl);
+  color: var(--color-canvas);
+}
+
+.ap-uroom-header__body {
+  max-width: 540px;
+}
+
+.ap-uroom-header__eyebrow {
+  margin: 0 0 var(--space-sm);
+  color: var(--color-marigold);
+}
+
+.ap-uroom-header__heading {
+  margin: 0;
+  max-width: 16ch;
+  color: var(--color-canvas);
+}
+
+.ap-uroom-header__text {
+  margin: var(--space-md) 0 0;
+  color: var(--color-canvas);
+  opacity: 0.9;
+}
+
+@media (min-width: 990px) {
+  .ap-uroom-header {
+    min-height: 46vh;
+    align-items: center;
+  }
+
+  .ap-uroom-header__scrim {
+    background: linear-gradient(90deg, rgba(18, 16, 20, 0.84) 0%, rgba(18, 16, 20, 0.4) 44%, rgba(18, 16, 20, 0) 70%);
+  }
+
+  .ap-uroom-header__body {
+    max-width: 46%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ap-uroom-header { animation-duration: 0.01ms; }
+}
+
+/* ============================================================================
+   Shop by Character / Brand / Type — label + a scrolling row
+   ============================================================================ */
+[data-template-suffix="universe-room"] .ap-shopby {
+  border-bottom: 1px solid var(--color-border);
+}
+
+[data-template-suffix="universe-room"] .ap-shopby__inner {
+  max-width: var(--page-width, 1400px);
+  margin: 0 auto;
+  padding: var(--space-xl);
+}
+
+[data-template-suffix="universe-room"] .ap-shopby__label {
+  margin: 0 0 var(--space-md);
+  color: var(--color-text-muted);
+}
+
+[data-template-suffix="universe-room"] .ap-shopby__row {
+  display: flex;
+  gap: var(--space-md);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+[data-template-suffix="universe-room"] .ap-shopby__row--chips {
+  flex-wrap: wrap;
+}
+
+@media (max-width: 749px) {
+  [data-template-suffix="universe-room"] .ap-shopby__row--chips {
+    flex-wrap: nowrap;
+  }
+}
+
+[data-template-suffix="universe-room"] .ap-shopby__row > li {
+  flex: 0 0 auto;
+}
+
+/* circular character avatars */
+[data-template-suffix="universe-room"] .ap-shopby__row--avatars {
+  gap: var(--space-lg);
+}
+
+[data-template-suffix="universe-room"] .ap-shopby__avatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  width: 76px;
+  text-decoration: none;
+  color: var(--color-ink-900);
+}
+
+[data-template-suffix="universe-room"] .ap-shopby__avatar-thumb {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+[data-template-suffix="universe-room"] .ap-shopby__avatar-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+[data-template-suffix="universe-room"] .ap-shopby__avatar-ph {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-display);
+  font-size: var(--text-h3);
+  color: var(--color-text-muted);
+}
+
+[data-template-suffix="universe-room"] .ap-shopby__avatar-name {
+  text-align: center;
+  color: var(--color-ink-900);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+[data-template-suffix="universe-room"] .ap-shopby__avatar:hover .ap-shopby__avatar-name {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* empty / placeholder state */
+[data-template-suffix="universe-room"] .ap-shopby__row--skeleton .ap-shopby__avatar-thumb {
+  background: var(--color-surface);
+}
+
+[data-template-suffix="universe-room"] .ap-shopby__row--skeleton .ap-shopby__avatar-name {
+  width: 48px;
+  border-radius: var(--radius-xs);
+  background: var(--color-border);
+}
+
+[data-template-suffix="universe-room"] .ap-shopby__empty-note {
+  margin: var(--space-md) 0 0;
+  color: var(--color-text-muted);
+}
+
+[data-template-suffix="universe-room"] .ap-shopby__row--chips[data-placeholder="true"] {
+  opacity: 0.72;
+}
+
+/* the chip primitive already carries the box; the room only needs it to not
+   stretch and to keep its label on one line */
+[data-template-suffix="universe-room"] .ap-shopby__row--chips .ap-btn--chip {
+  flex: 0 0 auto;
+}
+
+/* ============================================================================
+   Facets — the Dawn markup, restyled. Vertical sidebar on desktop,
+   drawer on mobile.
+   ============================================================================ */
+
+/* --- top sort bar (Sort: … right-aligned) -------------------------------- */
+[data-template-suffix="universe-room"] .facets-vertical-sort {
+  max-width: var(--page-width, 1400px);
+  margin: 0 auto;
+  padding: var(--space-lg) var(--space-xl) 0;
+}
+
+[data-template-suffix="universe-room"] .facets-vertical-form {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-lg);
+}
+
+[data-template-suffix="universe-room"] .facet-filters.sorting {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+[data-template-suffix="universe-room"] .facet-filters__field {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+[data-template-suffix="universe-room"] .facet-filters__label label {
+  font-size: var(--text-label);
+  font-weight: var(--font-weight-body-medium);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+[data-template-suffix="universe-room"] .facet-filters .select {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+[data-template-suffix="universe-room"] .facet-filters__sort {
+  appearance: none;
+  -webkit-appearance: none;
+  height: 40px;
+  padding: 0 var(--space-2xl) 0 var(--space-md);
+  border: 1px solid var(--color-ink-900);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: var(--text-nav);
+  font-weight: var(--font-weight-body-medium);
+  color: var(--color-ink-900);
+  cursor: pointer;
+}
+
+[data-template-suffix="universe-room"] .facet-filters .select .svg-wrapper {
+  position: absolute;
+  right: var(--space-sm);
+  pointer-events: none;
+  width: 16px;
+  height: 16px;
+}
+
+[data-template-suffix="universe-room"] .product-count-vertical,
+[data-template-suffix="universe-room"] .product-count {
+  font-size: var(--text-caption);
+  color: var(--color-text-muted);
+}
+
+[data-template-suffix="universe-room"] .product-count-vertical h2,
+[data-template-suffix="universe-room"] .product-count h2 {
+  margin: 0;
+  font: inherit;
+}
+
+/* --- layout: sidebar + grid ------------------------------------------------ */
+[data-template-suffix="universe-room"] .facets-vertical {
+  max-width: var(--page-width, 1400px);
+  margin: 0 auto;
+  padding: var(--space-lg) var(--space-xl) 0;
+}
+
+@media (min-width: 750px) {
+  [data-template-suffix="universe-room"] .facets-vertical {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2xl);
+  }
+
+  [data-template-suffix="universe-room"] .facets__form-vertical {
+    flex: 0 0 260px;
+    width: 260px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+  }
+
+  /* no filters configured on the store yet -> don't show an empty card */
+  [data-template-suffix="universe-room"] .facets__form-vertical:not(:has(.facets__disclosure-vertical)) {
+    display: none;
+  }
+
+  [data-template-suffix="universe-room"] .facets-vertical .facets-wrapper {
+    padding-right: 0;
+  }
+
+  [data-template-suffix="universe-room"] .facets-vertical .product-grid-container {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+}
+
+/* --- sidebar heading + active pills ------------------------------------- */
+[data-template-suffix="universe-room"] .facets__heading--vertical {
+  margin: 0 0 var(--space-md);
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-display);
+  font-size: var(--text-h3);
+  letter-spacing: var(--tracking-heading);
+  color: var(--color-ink-900);
+  text-transform: none;
+}
+
+[data-template-suffix="universe-room"] .active-facets-vertical-filter {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+[data-template-suffix="universe-room"] .active-facets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+[data-template-suffix="universe-room"] .active-facets__button-remove {
+  font-size: var(--text-caption);
+  font-weight: var(--font-weight-body-medium);
+  color: var(--color-ink-900);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* active value pill — dark, filled, with an × (wireframe 7a) */
+[data-template-suffix="universe-room"] .active-facets__button {
+  text-decoration: none;
+}
+
+[data-template-suffix="universe-room"] .active-facets__button-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  height: 28px;
+  padding: 0 var(--space-sm) 0 var(--space-md);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: var(--color-ink-900);
+  color: var(--color-canvas);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  font-weight: var(--font-weight-body-medium);
+}
+
+[data-template-suffix="universe-room"] .active-facets__button-inner .svg-wrapper {
+  width: 12px;
+  height: 12px;
+}
+
+/* --- filter groups (details/summary) ----------------------------------- */
+[data-template-suffix="universe-room"] .facets__disclosure-vertical {
+  border-top: 1px solid var(--color-border);
+}
+
+[data-template-suffix="universe-room"] .facets__disclosure-vertical:first-of-type {
+  border-top: 0;
+}
+
+[data-template-suffix="universe-room"] .facets__summary {
+  display: flex;
+  padding: var(--space-md) 0;
+  cursor: pointer;
+  list-style: none;
+}
+
+[data-template-suffix="universe-room"] .facets__summary::-webkit-details-marker {
+  display: none;
+}
+
+[data-template-suffix="universe-room"] .facets__summary > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  width: 100%;
+}
+
+[data-template-suffix="universe-room"] .facets__summary-label {
+  font-family: var(--font-body);
+  font-size: var(--text-label);
+  font-weight: var(--font-weight-body-medium);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+[data-template-suffix="universe-room"] .facets__summary svg,
+[data-template-suffix="universe-room"] .facets__summary .icon-caret {
+  width: 14px;
+  height: 14px;
+  transition: transform var(--motion-transactional);
+}
+
+[data-template-suffix="universe-room"] .facets__disclosure-vertical[open] .facets__summary svg {
+  transform: rotate(180deg);
+}
+
+[data-template-suffix="universe-room"] .facets__display-vertical {
+  padding-bottom: var(--space-md);
+}
+
+[data-template-suffix="universe-room"] .facets-wrap-vertical {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+[data-template-suffix="universe-room"] .facets__list--vertical {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* --- checkbox rows --------------------------------------------------------- */
+[data-template-suffix="universe-room"] .facets__label.facet-checkbox {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  color: var(--color-ink-900);
+  cursor: pointer;
+}
+
+[data-template-suffix="universe-room"] .facets__label.facet-checkbox input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+[data-template-suffix="universe-room"] .facets__label.facet-checkbox > svg {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--color-ink-900);
+  border-radius: var(--radius-xs);
+  color: transparent;
+}
+
+[data-template-suffix="universe-room"] .facets__label.facet-checkbox .svg-wrapper {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+}
+
+[data-template-suffix="universe-room"] .facets__label.facet-checkbox {
+  position: relative;
+  padding-left: 0;
+}
+
+[data-template-suffix="universe-room"] .facets__label.facet-checkbox input:checked ~ svg {
+  background: var(--color-ink-900);
+}
+
+[data-template-suffix="universe-room"] .facets__label.facet-checkbox input:checked ~ .svg-wrapper {
+  opacity: 1;
+  color: var(--color-canvas);
+}
+
+[data-template-suffix="universe-room"] .facets__label.facet-checkbox input:focus-visible ~ svg {
+  outline: 2px solid var(--color-ink-900);
+  outline-offset: 2px;
+}
+
+[data-template-suffix="universe-room"] .facet-checkbox__text {
+  font-size: var(--text-body);
+}
+
+[data-template-suffix="universe-room"] .facets__label.facet-checkbox.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* --- price range -------------------------------------------------------- */
+[data-template-suffix="universe-room"] .facets__price {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-sm) 0;
+}
+
+[data-template-suffix="universe-room"] .facets__price .field {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+[data-template-suffix="universe-room"] .facets__price .field__input {
+  width: 8ch;
+  height: 34px;
+  padding: 0 var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xs);
+  font-size: var(--text-caption);
+}
+
+[data-template-suffix="universe-room"] .facets__price .field__label,
+[data-template-suffix="universe-room"] .facets__price .field__currency {
+  font-size: var(--text-caption);
+  color: var(--color-text-muted);
+}
+
+/* --- show more --------------------------------------------------------- */
+[data-template-suffix="universe-room"] .button-show-more {
+  margin-top: var(--space-sm);
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: var(--text-caption);
+  font-weight: var(--font-weight-body-medium);
+  color: var(--color-ink-900);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+/* ============================================================================
+   Mobile — "Filter & Sort" trigger + drawer
+   ============================================================================ */
+@media (max-width: 749px) {
+  [data-template-suffix="universe-room"] .facets-vertical {
+    display: block;
+    padding-top: var(--space-lg);
+  }
+
+  [data-template-suffix="universe-room"] .mobile-facets__open {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    width: 100%;
+    height: 44px;
+    border: 1px solid var(--color-ink-900);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    font-family: var(--font-body);
+    font-size: var(--text-button);
+    font-weight: var(--font-weight-body-strong);
+    letter-spacing: var(--tracking-button);
+    color: var(--color-ink-900);
+  }
+
+  [data-template-suffix="universe-room"] .mobile-facets__open .svg-wrapper {
+    width: 16px;
+    height: 16px;
+  }
+
+  [data-template-suffix="universe-room"] .mobile-facets__open-wrapper {
+    list-style: none;
+  }
+
+  [data-template-suffix="universe-room"] .mobile-facets__open-wrapper::-webkit-details-marker {
+    display: none;
+  }
+}
+
+[data-template-suffix="universe-room"] .mobile-facets__inner {
+  background: var(--color-canvas);
+}
+
+[data-template-suffix="universe-room"] .mobile-facets__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-lg) var(--space-xl);
+  border-bottom: 1px solid var(--color-border);
+}
+
+[data-template-suffix="universe-room"] .mobile-facets__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-display);
+  font-size: var(--text-h3);
+  color: var(--color-ink-900);
+}
+
+[data-template-suffix="universe-room"] .mobile-facets__count {
+  margin: 0;
+  font-size: var(--text-caption);
+  color: var(--color-text-muted);
+}
+
+[data-template-suffix="universe-room"] .mobile-facets__details {
+  border-bottom: 1px solid var(--color-border);
+}
+
+[data-template-suffix="universe-room"] .mobile-facets__summary {
+  display: flex;
+  padding: var(--space-md) var(--space-xl);
+  cursor: pointer;
+  list-style: none;
+}
+
+[data-template-suffix="universe-room"] .mobile-facets__summary > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+[data-template-suffix="universe-room"] .mobile-facets__summary span:first-child {
+  font-size: var(--text-label);
+  font-weight: var(--font-weight-body-medium);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+[data-template-suffix="universe-room"] .mobile-facets__list {
+  margin: 0;
+  padding: 0 var(--space-xl) var(--space-md);
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+[data-template-suffix="universe-room"] .mobile-facets__label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--text-body);
+  color: var(--color-ink-900);
+}
+
+[data-template-suffix="universe-room"] .mobile-facets__footer {
+  display: flex;
+  gap: var(--space-md);
+  padding: var(--space-lg) var(--space-xl);
+  border-top: 1px solid var(--color-border);
+}
+
+[data-template-suffix="universe-room"] .mobile-facets__footer .button,
+[data-template-suffix="universe-room"] .mobile-facets__footer .mobile-facets__clear {
+  flex: 1 1 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  border: 1px solid var(--color-ink-900);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: var(--text-button);
+  font-weight: var(--font-weight-body-strong);
+  letter-spacing: var(--tracking-button);
+  color: var(--color-ink-900);
+  text-decoration: none;
+}
+
+[data-template-suffix="universe-room"] .mobile-facets__footer .button--primary {
+  background: var(--color-ink-900);
+  color: var(--color-canvas);
+}
+
+/* ============================================================================
+   Product grid + pagination
+   ============================================================================ */
+[data-template-suffix="universe-room"] .product-grid-container .collection {
+  padding: 0;
+}
+
+[data-template-suffix="universe-room"] .product-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-xl) var(--space-lg);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 990px) {
+  [data-template-suffix="universe-room"] .product-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+[data-template-suffix="universe-room"] .product-grid .grid__item {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+[data-template-suffix="universe-room"] .collection--empty .title-wrapper {
+  padding: var(--space-4xl) var(--space-xl);
+  text-align: center;
+}
+
+[data-template-suffix="universe-room"] .collection--empty .title {
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-display);
+  font-size: var(--text-h2);
+  color: var(--color-ink-900);
+}
+
+[data-template-suffix="universe-room"] .pagination-wrapper {
+  margin-top: var(--space-2xl);
+}

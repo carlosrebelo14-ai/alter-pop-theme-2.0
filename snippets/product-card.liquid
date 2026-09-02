@@ -29,6 +29,11 @@
   - compact:       {Boolean} image + title + price only (Gifts Under €25 grid,
                              wireframe 8a: "same component, conditional logic").
                              Default: false.
+  - hide_franchise: {Boolean} Drop FRANCHISE from the metadata line (the
+                             Universe Room is already one franchise —
+                             wireframe 7a shows "Character · wave", not the
+                             franchise). Line still renders on its own.
+                             Default: false.
 
   Presentation state is derived from a stock NUMBER already provided by the sync
   app (allowed client-side calc). Sync runs ~45 min so the number can be stale;
@@ -87,6 +92,13 @@
     # ociostock.licence / custom.parent_collection.
     assign franchise = card_product.metafields.alterpop.franchise.value
     assign line = card_product.metafields.alterpop.line.value
+
+    # Universe Room: suppress the franchise half of the meta line. The Phase 1A
+    # condition below is unchanged — with franchise blank it renders Line
+    # alone, or nothing when both are blank.
+    if hide_franchise
+      assign franchise = ''
+    endif
 
     assign title_id = 'ap-card-title-' | append: uid | append: '-' | append: card_product.id
   -%}

@@ -355,6 +355,7 @@
       role="main"
       tabindex="-1"
       data-template="{{ template.name }}"
+      {%- if template.suffix != blank %} data-template-suffix="{{ template.suffix }}"{% endif -%}
     >
       {{ content_for_layout }}
     </main>

@@ -297,6 +297,15 @@
       "remaining": "{{ amount }} more to free shipping (over {{ threshold }})",
       "empty": "Free shipping on orders over {{ threshold }}"
     },
+    "universe_room": {
+      "shop_by_character": "Shop by Character",
+      "shop_by_character_empty": "Character navigation appears here once the Character field is available in the sync app.",
+      "shop_by_brand": "Shop by Brand",
+      "shop_by_brand_empty": "Enable a Vendor filter in Search & Discovery to browse by brand.",
+      "shop_by_type": "Shop by Type",
+      "shop_by_type_empty": "A collectible-type field is needed to browse by type — product type is a genre on this store.",
+      "shop_by_placeholder": "Placeholder list — awaiting the store filter configuration."
+    },
     "announcements": {
       "previous_announcement": "Previous announcement",
       "next_announcement": "Next announcement",

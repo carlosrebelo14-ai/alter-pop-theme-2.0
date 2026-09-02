@@ -1,0 +1,87 @@
+{{ 'universe-room.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  Alterpop — Universe Room header. Source of truth: Wireframe 7a / 7b.
+  "Franchise is the space, not a filter inside a generic catalog." Full-width
+  band: eyebrow "Universe" (marigold), display heading = the franchise name,
+  one editorial line, and a full-width image on the right (desktop) / behind
+  the text with a bottom gradient (mobile). Enters with --motion-editorial
+  (fade + scale 1.02 -> 1.00) on arrival from the Universes panel (6b) or a
+  homepage universe card. Everything below the header uses --motion-transactional.
+
+  Data: the collection this template is applied to. `heading` / `subheading` /
+  `image` in the section override the collection's own title / description /
+  image. No Franchise/Universe field is needed here — the collection IS the
+  universe.
+{%- endcomment -%}
+
+{%- liquid
+  assign uroom_eyebrow = section.settings.eyebrow | default: 'Universe'
+  assign uroom_heading = section.settings.heading | default: collection.title | default: '[ Universe name ]'
+
+  assign uroom_text = section.settings.subheading
+  if uroom_text == blank and collection.description != blank
+    assign uroom_text = collection.description | strip_html | truncate: 160
+  endif
+
+  assign uroom_image = section.settings.image | default: collection.image
+-%}
+
+<section
+  class="ap-uroom-header{% if uroom_image == blank %} ap-uroom-header--no-image{% endif %}"
+  aria-label="{{ uroom_heading | escape }}"
+>
+  <div class="ap-uroom-header__media" aria-hidden="true">
+    {%- if uroom_image != blank -%}
+      {{
+        uroom_image
+        | image_url: width: 2400
+        | image_tag:
+          loading: 'eager',
+          fetchpriority: 'high',
+          sizes: '(min-width: 990px) 60vw, 100vw',
+          widths: '640, 960, 1280, 1600, 2000, 2400',
+          class: 'ap-uroom-header__img',
+          alt: ''
+      }}
+    {%- endif -%}
+  </div>
+
+  <div class="ap-uroom-header__scrim" aria-hidden="true"></div>
+
+  <div class="ap-uroom-header__inner">
+    <div class="ap-uroom-header__body">
+      <p class="ap-uroom-header__eyebrow type-label">{{ uroom_eyebrow | escape }}</p>
+      <h1 class="ap-uroom-header__heading type-display">{{ uroom_heading | escape }}</h1>
+      {%- if uroom_text != blank -%}
+        <p class="ap-uroom-header__text type-body">{{ uroom_text | escape }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Universe Room header",
+  "tag": "section",
+  "class": "section-uroom-header",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Universe" },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading (franchise name)",
+      "info": "Leave blank to use the collection title."
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Editorial line",
+      "info": "Leave blank to use the collection description."
+    },
+    { "type": "image_picker", "id": "image", "label": "Header image", "info": "Leave blank to use the collection image." }
+  ],
+  "presets": [{ "name": "Universe Room header" }],
+  "enabled_on": { "templates": ["collection"] }
+}
+{% endschema %}

@@ -1,0 +1,89 @@
+{{ 'universe-room.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  Alterpop — Shop by Brand (Universe Room). Source of truth: Wireframe 7a / 7b.
+  A label + a row of outline chips (the .ap-btn --chip primitive), one per
+  brand. Mobile: the row scrolls horizontally.
+
+  Data: the collection's own `vendor` filter (Shopify Search & Discovery).
+  `vendor` is real, usable data for grouping by brand — distinct from the
+  normalised "clean manufacturer" used in the PDP Identity Block, which does
+  NOT exist yet. If the store has no vendor filter enabled, a manual list in
+  the section settings is used as a marked fallback. NO inference.
+{%- endcomment -%}
+
+{%- liquid
+  assign brand_param = section.settings.filter_param | default: 'filter.p.vendor'
+  assign brand_filter = nil
+  for f in collection.filters
+    if f.param_name == brand_param
+      assign brand_filter = f
+    endif
+  endfor
+-%}
+
+<section class="ap-shopby ap-shopby--brand" aria-labelledby="ShopByBrand-{{ section.id }}">
+  <div class="ap-shopby__inner">
+    <p class="ap-shopby__label type-label" id="ShopByBrand-{{ section.id }}">
+      {{ 'sections.universe_room.shop_by_brand' | t }}
+    </p>
+
+    {%- if brand_filter != nil and brand_filter.values.size > 0 -%}
+      <ul class="ap-shopby__row ap-shopby__row--chips" role="list">
+        {%- for value in brand_filter.values -%}
+          <li>
+            <a
+              class="ap-btn ap-btn--chip"
+              href="{{ value.url }}"
+              {% if value.active %}aria-current="true"{% endif %}
+            >
+              {{- value.label | escape -}}
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- elsif section.settings.manual_list != blank -%}
+      <ul class="ap-shopby__row ap-shopby__row--chips" role="list" data-placeholder="true">
+        {%- assign brand_items = section.settings.manual_list | split: ',' -%}
+        {%- for item in brand_items -%}
+          {%- assign brand_name = item | strip -%}
+          {%- if brand_name != blank -%}
+            <li>
+              <a class="ap-btn ap-btn--chip" href="{{ collection.url }}?{{ brand_param }}={{ brand_name | url_encode }}">
+                {{- brand_name -}}
+              </a>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+      <p class="ap-shopby__empty-note type-caption">{{ 'sections.universe_room.shop_by_placeholder' | t }}</p>
+    {%- else -%}
+      <p class="ap-shopby__empty-note type-caption">{{ 'sections.universe_room.shop_by_brand_empty' | t }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Shop by Brand",
+  "tag": "section",
+  "class": "section-shopby-brand",
+  "settings": [
+    {
+      "type": "text",
+      "id": "filter_param",
+      "label": "Filter parameter",
+      "default": "filter.p.vendor",
+      "info": "The Search & Discovery filter to read chips from."
+    },
+    {
+      "type": "text",
+      "id": "manual_list",
+      "label": "Manual brand list (fallback)",
+      "info": "Comma-separated. Used only when the filter above is not enabled on the store. Marked as placeholder."
+    }
+  ],
+  "presets": [{ "name": "Shop by Brand" }],
+  "enabled_on": { "templates": ["collection"] }
+}
+{% endschema %}

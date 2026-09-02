@@ -1,0 +1,51 @@
+{
+  "sections": {
+    "universe-header": {
+      "type": "universe-room-header",
+      "settings": {}
+    },
+    "shop-by-character": {
+      "type": "shop-by-character",
+      "settings": {}
+    },
+    "shop-by-brand": {
+      "type": "shop-by-brand",
+      "settings": {
+        "filter_param": "filter.p.vendor"
+      }
+    },
+    "shop-by-type": {
+      "type": "shop-by-type",
+      "settings": {
+        "filter_param": "filter.p.m.custom.collectible_type"
+      }
+    },
+    "product-grid": {
+      "type": "main-collection-product-grid",
+      "settings": {
+        "products_per_page": 24,
+        "columns_desktop": 3,
+        "columns_mobile": "2",
+        "color_scheme": "scheme-1",
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": false,
+        "show_vendor": false,
+        "show_rating": false,
+        "quick_add": "none",
+        "enable_filtering": true,
+        "filter_type": "vertical",
+        "enable_sorting": true,
+        "padding_top": 4,
+        "padding_bottom": 48
+      }
+    }
+  },
+  "order": [
+    "universe-header",
+    "shop-by-character",
+    "shop-by-brand",
+    "shop-by-type",
+    "product-grid"
+  ]
+}

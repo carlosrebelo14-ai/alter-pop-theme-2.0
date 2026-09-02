@@ -144,6 +144,32 @@ uploaded copy is stale until a restart + re-verify says otherwise.
 - **Asset cleanup** deferred: `component-card.css` + `quick-add*` /
   `quick-order-list*` loads (Phase 1A follow-up); `component-menu-drawer.css` /
   `component-list-menu.css` / `component-mega-menu.css` (Phase 1B follow-up).
+- **`vendor` vs. "clean manufacturer"** (Phase 3). These are two different
+  things and must not be conflated:
+  - `product.vendor` (e.g. `"BANPRESTO"`) is real data. Fine for grouping by
+    brand in navigation chips — Shop by Brand reads it via the
+    `filter.p.vendor` Search & Discovery filter.
+  - The **normalised "clean manufacturer"** used in the PDP Identity Block
+    (F4: `Line · Manufacturer · Year`), where editorial precision matters, is
+    BLOCKED — it does not exist yet. Never substitute `vendor` there.
+- **Universe Room filters not configured on the store** (Phase 3). The store
+  exposes no Search & Discovery filters, so the sidebar (Rarity & Exclusivity,
+  Box Condition, Franchise/Universe, Availability) and the mobile filter drawer
+  render only the groups the admin config exposes — currently none but Price.
+  The UI (`assets/universe-room.css`) is built against Dawn's facet markup;
+  it fills in when filters are enabled by metafield in admin. Shop by Type
+  additionally has no clean source (`product.type` is a genre, tags are
+  unstructured) — its chips fall back to a marked manual list.
+- **`templates/collection.universe-room.json`** is not wired to any collection.
+  No clean Franchise/Universe exists to auto-assign it; assign per collection
+  in admin (Online Store → collection → Theme template). Sections:
+  `universe-room-header`, `shop-by-character`, `shop-by-brand`, `shop-by-type`,
+  then the shared `main-collection-product-grid` (vertical facets).
+- **Character field** (Phase 3) blocks Shop by Character. `shop-by-character`
+  reads `collection.metafields.alterpop.characters` (list of character
+  metaobjects: title / image / url) and shows a marked empty state until it
+  exists. The character avatars link to the Character Page (wireframe 9a/9b),
+  a separate Catalogue Experience pattern — NOT built in Phase 3.
 
 ## Decisions taken in the absence of a wireframe page
 

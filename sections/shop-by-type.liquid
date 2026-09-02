@@ -1,0 +1,90 @@
+{{ 'universe-room.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  Alterpop — Shop by Type (Universe Room). Source of truth: Wireframe 7a / 7b.
+  A label + a row of outline chips (.ap-btn --chip), one per collectible type
+  (Pop! vinyl, resin statues, 1:1 replicas, action figures, apparel).
+
+  BLOQUEADO: no clean field. `product.type` on this store is a GENRE
+  ("Anime & Manga"), not a collectible format, and the tags are unstructured.
+  The slot reads the expected Search & Discovery filter
+  (filter.p.m.custom.collectible_type by default); until that exists a manual
+  list in the section settings is used as a MARKED placeholder. NO inference
+  from tags / titles.
+{%- endcomment -%}
+
+{%- liquid
+  assign type_param = section.settings.filter_param | default: 'filter.p.m.custom.collectible_type'
+  assign type_filter = nil
+  for f in collection.filters
+    if f.param_name == type_param
+      assign type_filter = f
+    endif
+  endfor
+-%}
+
+<section class="ap-shopby ap-shopby--type" aria-labelledby="ShopByType-{{ section.id }}">
+  <div class="ap-shopby__inner">
+    <p class="ap-shopby__label type-label" id="ShopByType-{{ section.id }}">
+      {{ 'sections.universe_room.shop_by_type' | t }}
+    </p>
+
+    {%- if type_filter != nil and type_filter.values.size > 0 -%}
+      <ul class="ap-shopby__row ap-shopby__row--chips" role="list">
+        {%- for value in type_filter.values -%}
+          <li>
+            <a
+              class="ap-btn ap-btn--chip"
+              href="{{ value.url }}"
+              {% if value.active %}aria-current="true"{% endif %}
+            >
+              {{- value.label | escape -}}
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- elsif section.settings.manual_list != blank -%}
+      <ul class="ap-shopby__row ap-shopby__row--chips" role="list" data-placeholder="true">
+        {%- assign type_items = section.settings.manual_list | split: ',' -%}
+        {%- for item in type_items -%}
+          {%- assign type_name = item | strip -%}
+          {%- if type_name != blank -%}
+            <li>
+              <a class="ap-btn ap-btn--chip" href="{{ collection.url }}?{{ type_param }}={{ type_name | url_encode }}">
+                {{- type_name -}}
+              </a>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+      <p class="ap-shopby__empty-note type-caption">{{ 'sections.universe_room.shop_by_placeholder' | t }}</p>
+    {%- else -%}
+      <p class="ap-shopby__empty-note type-caption">{{ 'sections.universe_room.shop_by_type_empty' | t }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Shop by Type",
+  "tag": "section",
+  "class": "section-shopby-type",
+  "settings": [
+    {
+      "type": "text",
+      "id": "filter_param",
+      "label": "Filter parameter",
+      "default": "filter.p.m.custom.collectible_type",
+      "info": "The Search & Discovery filter to read chips from."
+    },
+    {
+      "type": "text",
+      "id": "manual_list",
+      "label": "Manual type list (placeholder)",
+      "info": "Comma-separated. product.type is a genre on this store, not a format — this list is a marked placeholder until a collectible-type field exists."
+    }
+  ],
+  "presets": [{ "name": "Shop by Type" }],
+  "enabled_on": { "templates": ["collection"] }
+}
+{% endschema %}

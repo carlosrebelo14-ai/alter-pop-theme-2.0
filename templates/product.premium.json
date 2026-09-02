@@ -3,7 +3,7 @@
     "main": {
       "type": "main-product",
       "settings": {
-        "force_tier": "none",
+        "force_tier": "premium",
         "gallery_layout": "thumbnail",
         "media_size": "large",
         "mobile_thumbnails": "show",
@@ -21,7 +21,7 @@
     },
     "reviews": {
       "type": "pdp-reviews",
-      "settings": { "force_tier": "none" }
+      "settings": { "force_tier": "premium" }
     }
   },
   "order": ["main", "cross-sell", "reviews"]

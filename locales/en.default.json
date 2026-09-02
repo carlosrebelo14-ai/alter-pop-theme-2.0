@@ -297,6 +297,35 @@
       "remaining": "{{ amount }} more to free shipping (over {{ threshold }})",
       "empty": "Free shipping on orders over {{ threshold }}"
     },
+    "pdp": {
+      "premium_piece": "Premium Piece",
+      "identity_placeholder": "[ line · manufacturer · year ]",
+      "type_placeholder": "[ type ]",
+      "in_stock_generic": "In stock",
+      "dispatch": "dispatched in 24–48h · arrives in 6–9 business days",
+      "fragile": "Fragile item — handled with care, shipped in reinforced protective packaging.",
+      "tech_specs": "Tech Specs",
+      "specifications": "Specifications",
+      "spec_pending": "[ pending ]",
+      "spec_brand": "Brand / Manufacturer",
+      "spec_category": "Category",
+      "spec_license": "License / Universe",
+      "spec_weight": "Weight",
+      "spec_dimensions": "Dimensions",
+      "seal_by": "Officially Licensed by {{ brand }}",
+      "seal_generic": "Officially Licensed",
+      "seal_sources": "Sourced from authorized licensors: Banpresto, Funko, Good Smile, Tamashii Nations, Noble Collection, Iron Studios.",
+      "xsell_heading": "Complete the {{ name }} collection",
+      "xsell_heading_generic": "Complete the collection",
+      "xsell_unlocked": "You've unlocked free shipping",
+      "reviews": "Reviews",
+      "reviews_count": {
+        "one": "{{ count }} review",
+        "other": "{{ count }} reviews"
+      },
+      "reviews_stars_label": "Rated {{ rating }} out of {{ max }}",
+      "reviews_empty": "No reviews yet."
+    },
     "universe_room": {
       "shop_by_character": "Shop by Character",
       "shop_by_character_empty": "Character navigation appears here once the Character field is available in the sync app.",

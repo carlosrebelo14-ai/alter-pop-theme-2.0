@@ -170,6 +170,37 @@ uploaded copy is stale until a restart + re-verify says otherwise.
   metaobjects: title / image / url) and shows a marked empty state until it
   exists. The character avatars link to the Character Page (wireframe 9a/9b),
   a separate Catalogue Experience pattern — NOT built in Phase 3.
+- **PDP regime + Identity Block fields** (Phase 4). `sections/main-product.liquid`
+  reads `product.metafields.alterpop.tier` ('impulse' | 'premium') — BLOCKED,
+  defaults to impulse. Dev override: the `force_tier` section setting;
+  `templates/product.premium.json` bakes `force_tier: premium` so
+  `/products/x?view=premium` previews it. The Identity Block
+  (Character / Line · Manufacturer · Year / Type · Height) reads
+  `metafields.alterpop.character` / `.line` / `.manufacturer` / `.year` /
+  `.collectible_type` — ALL BLOCKED, rendered as marked placeholders. Only
+  Height is live (`ociostock.dimensions`). Character falls back to
+  `product.title` (honest, not inference). Line only shows with 3+ pieces of
+  that line — not computable, so shown when the field is present; the Line
+  slot collapses when absent, Universe/Franchise is never a substitute.
+  Spec sheet License row uses `metafields.alterpop.license` -> raw
+  `metafields.ociostock.licence`. Reviews read the Shopify Product Reviews
+  app metafields (`metafields.reviews.rating` / `.rating_count`) — no app
+  installed, marked empty state.
+- **PDP keeps Dawn's mechanics**: `<product-info>` + product-info.js,
+  `product-media-gallery` snippet + media-gallery.js + product-modal.js
+  (the `.ap-pdp__media` wrapper carries `product product--thumbnail
+  product--large` so Dawn's gallery CSS engages; pdp.css neutralises the
+  `.product` grid), inline `<variant-selects>` (Dawn's global.js element,
+  `product-variant-options` snippet with `picker_type: 'button'`),
+  `{% render 'buy-buttons' %}` (`<product-form>` + product-form.js),
+  `{% render 'quantity-input' %}`. `assets/section-main-product.css` is
+  loaded for gallery/price sizing; `pdp.css` (loaded first, scoped `.ap-pdp`)
+  restyles on top.
+- **Add to Cart overshoot** (1.00 -> 1.03 -> 1.00, 260ms) is in
+  `assets/pdp-atc.js` + `pdp.css` `@keyframes ap-atc-overshoot`. DS
+  microinteraction reserved EXCLUSIVELY to this button. The premium spec
+  sheet's row-by-row +40ms stagger (`pdp-spec-stagger.js` + pdp.css) is the
+  system's ONLY stagger.
 
 ## Decisions taken in the absence of a wireframe page
 

@@ -1,0 +1,90 @@
+{{ 'pdp.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  Alterpop — PDP reviews. Wireframe 3a (impulse): a bare rating. 3b (premium):
+  rating + "4.6 · 32 reviews".
+
+  Data: the Shopify Product Reviews app metafields
+  (product.metafields.reviews.rating / .rating_count). No review app is
+  installed -> an explicit, marked empty state. NO fabricated reviews.
+
+  Regime mirrors the product section: product.metafields.alterpop.tier, with
+  a `force_tier` setting for development.
+{%- endcomment -%}
+
+{%- liquid
+  assign tier = product.metafields.alterpop.tier.value
+  assign forced = section.settings.force_tier
+  if forced == 'impulse' or forced == 'premium'
+    assign tier = forced
+  endif
+  assign is_premium = false
+  if tier == 'premium'
+    assign is_premium = true
+  endif
+
+  assign rating = product.metafields.reviews.rating.value
+  assign rating_count = product.metafields.reviews.rating_count.value
+  assign has_reviews = false
+  if rating != blank and rating_count != blank and rating_count > 0
+    assign has_reviews = true
+  endif
+
+  assign scale_max = 5
+  if rating.scale_max
+    assign scale_max = rating.scale_max
+  endif
+-%}
+
+<section class="ap-reviews page-width" aria-labelledby="Reviews-{{ section.id }}">
+  <h2 class="ap-reviews__heading type-h3" id="Reviews-{{ section.id }}">
+    {{ 'sections.pdp.reviews' | t }}
+  </h2>
+
+  {%- if has_reviews -%}
+    <div class="ap-reviews__summary">
+      <span class="ap-reviews__stars" role="img" aria-label="{{ 'sections.pdp.reviews_stars_label' | t: rating: rating.rating, max: scale_max }}">
+        {%- assign filled = rating.rating | round -%}
+        {%- for i in (1..scale_max) -%}
+          <span class="ap-reviews__star{% if i <= filled %} is-filled{% endif %}" aria-hidden="true"></span>
+        {%- endfor -%}
+      </span>
+      {%- if is_premium -%}
+        <span class="ap-reviews__count type-caption">
+          {{ rating.rating }} · {{ 'sections.pdp.reviews_count' | t: count: rating_count }}
+        </span>
+      {%- endif -%}
+    </div>
+  {%- else -%}
+    <div class="ap-reviews__empty" role="note">
+      <span class="ap-reviews__stars" aria-hidden="true">
+        {%- for i in (1..5) -%}
+          <span class="ap-reviews__star"></span>
+        {%- endfor -%}
+      </span>
+      <p class="ap-reviews__empty-note type-caption">{{ 'sections.pdp.reviews_empty' | t }}</p>
+    </div>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "PDP reviews",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "force_tier",
+      "label": "Force regime (development only)",
+      "options": [
+        { "value": "none", "label": "Auto (metafield -> impulse)" },
+        { "value": "impulse", "label": "Impulse" },
+        { "value": "premium", "label": "Premium" }
+      ],
+      "default": "none"
+    }
+  ],
+  "enabled_on": { "templates": ["product"] }
+}
+{% endschema %}

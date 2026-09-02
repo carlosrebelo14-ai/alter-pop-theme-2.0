@@ -1,0 +1,656 @@
+/* ============================================================================
+   Alterpop — PDP (Phase 4). Wireframe 3a / 3b / 3c.
+   Self-contained: tokens.css + buttons.css only. Dawn's product-info.js,
+   media-gallery.js, product-form.js and <quantity-input> keep working; we
+   only restyle. Scoped to .ap-pdp / .ap-xsell / .ap-reviews so it beats
+   Dawn's component-*.css regardless of load order.
+   Two regimes: .ap-pdp--impulse (flat, transactional) and
+   .ap-pdp--premium (editorial entrance, staggered spec sheet).
+   ============================================================================ */
+
+.ap-pdp {
+  display: block;
+  background: var(--color-canvas);
+}
+
+.ap-pdp__inner {
+  padding-top: var(--space-lg);
+}
+
+/* --- breadcrumb --------------------------------------------------------- */
+.ap-pdp__crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-lg);
+  color: var(--color-text-muted);
+}
+
+.ap-pdp__crumbs a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.ap-pdp__crumbs a:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.ap-pdp__crumbs [aria-current="page"] {
+  color: var(--color-ink-900);
+}
+
+/* --- layout ----------------------------------------------------------- */
+.ap-pdp__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-xl);
+}
+
+@media (min-width: 990px) {
+  .ap-pdp__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
+    gap: var(--space-4xl);
+    align-items: start;
+  }
+
+  .ap-pdp__info-inner {
+    position: sticky;
+    top: var(--space-xl);
+  }
+}
+
+/* --- gallery (Dawn media-gallery markup) ----------------------------- */
+/* neutralise Dawn's `.product` grid — we only borrow its gallery rules */
+.ap-pdp__media.product {
+  display: block;
+}
+
+.ap-pdp__media media-gallery {
+  display: block;
+}
+
+/* Mobile keeps Dawn's swipe slider (component-slider.css). Desktop: a single
+   active slide + the thumbnail strip does the switching. */
+@media (min-width: 750px) {
+  .ap-pdp__media .product__media-list {
+    display: block;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ap-pdp__media .product__media-item {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .ap-pdp__media .product__media-item:not(.is-active) {
+    display: none;
+  }
+}
+
+.ap-pdp__media .product-media-container,
+.ap-pdp__media .product__media,
+.ap-pdp__media .media {
+  border-radius: var(--radius-none);
+  background: var(--color-surface);
+}
+
+.ap-pdp__media .product__media img,
+.ap-pdp__media .media img {
+  border-radius: var(--radius-none);
+}
+
+.ap-pdp__media .slider--mobile {
+  border: 1px solid var(--color-border);
+}
+
+.ap-pdp__media .thumbnail-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+  padding: 0;
+  list-style: none;
+}
+
+.ap-pdp__media .thumbnail-list__item {
+  width: 64px;
+  height: 64px;
+}
+
+.ap-pdp__media .thumbnail {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-none);
+  padding: 0;
+}
+
+.ap-pdp__media .thumbnail.thumbnail--selected,
+.ap-pdp__media .thumbnail[aria-current] {
+  border-color: var(--color-ink-900);
+}
+
+.ap-pdp__media .product__media-toggle,
+.ap-pdp__media .product__media-icon {
+  color: var(--color-ink-900);
+}
+
+/* still-life earns the slower editorial read (premium only) */
+.ap-pdp--premium .ap-pdp__media {
+  animation: ap-pdp-editorial-in var(--motion-editorial) both;
+}
+
+@keyframes ap-pdp-editorial-in {
+  from { opacity: 0; transform: scale(1.02); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* --- premium badge --------------------------------------------------- */
+.ap-pdp__badge {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  margin: 0 0 var(--space-md);
+  padding: 0 var(--space-md);
+  border: 1px solid var(--color-ink-900);
+  border-radius: var(--radius-sm);
+  color: var(--color-ink-900);
+}
+
+/* --- identity block ------------------------------------------------- */
+.ap-pdp__identity {
+  margin-bottom: var(--space-lg);
+}
+
+.ap-pdp__name {
+  margin: 0 0 var(--space-xs);
+  color: var(--color-ink-900);
+}
+
+.ap-pdp__identity-line {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.ap-pdp__identity-line + .ap-pdp__identity-line {
+  margin-top: 2px;
+}
+
+/* marked placeholder for a BLOCKED field */
+.ap-pdp__ph {
+  color: var(--color-text-muted);
+  border-bottom: 1px dotted var(--color-border);
+}
+
+/* --- price -------------------------------------------------------------- */
+.ap-pdp .price,
+.ap-pdp__price {
+  margin: 0 0 var(--space-sm);
+}
+
+.ap-pdp .price .price-item {
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body-strong);
+  font-size: var(--text-price-pdp);
+  line-height: var(--leading-flat);
+  color: var(--color-ink-900);
+}
+
+.ap-pdp .price .price-item--sale {
+  color: var(--color-ink-900);
+}
+
+.ap-pdp .price .price-item--regular {
+  font-size: var(--text-caption);
+  color: var(--color-text-muted);
+}
+
+.ap-pdp .price__badges {
+  display: none;
+}
+
+/* --- availability + dispatch --------------------------------------- */
+.ap-pdp__availability {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm) var(--space-md);
+  margin: 0 0 var(--space-md);
+  color: var(--color-text-muted);
+}
+
+.ap-pdp__stock:not(:empty) {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  font-size: var(--text-caption);
+  font-weight: var(--rarity-limited-label-weight);
+  color: var(--color-ink-900);
+}
+
+/* --- fragile notice (premium / fragile flag) --------------------------- */
+.ap-pdp__fragile {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  margin: 0 0 var(--space-lg);
+  padding: var(--space-md);
+  border: 1px solid var(--color-fragile-ink);
+  border-radius: var(--radius-sm);
+  background: var(--color-fragile-bg);
+  color: var(--color-fragile-ink);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  line-height: var(--leading-body);
+}
+
+.ap-pdp__fragile-icon {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  margin-top: 1px;
+}
+
+.ap-pdp__fragile-icon svg { width: 100%; height: 100%; }
+
+/* --- variant picker (Dawn <variant-selects>, pill radios) ------------- */
+.ap-pdp__variants {
+  display: block;
+  margin: 0 0 var(--space-lg);
+}
+
+.ap-pdp__option {
+  margin: 0 0 var(--space-md);
+  padding: 0;
+  border: 0;
+}
+
+.ap-pdp__option .form__label {
+  display: block;
+  margin: 0 0 var(--space-sm);
+  color: var(--color-text-muted);
+}
+
+.ap-pdp__option input[type="radio"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ap-pdp__option label {
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  margin: 0 var(--space-sm) var(--space-sm) 0;
+  padding: 0 var(--space-md);
+  border: 1px solid var(--color-ink-900);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: var(--text-button);
+  font-weight: var(--font-weight-body-strong);
+  letter-spacing: var(--tracking-button);
+  color: var(--color-ink-900);
+  cursor: pointer;
+  transition: background var(--motion-transactional), color var(--motion-transactional);
+}
+
+.ap-pdp__option input[type="radio"]:checked + label {
+  background: var(--color-ink-900);
+  color: var(--color-canvas);
+}
+
+.ap-pdp__option input[type="radio"]:focus-visible + label {
+  outline: 2px solid var(--color-ink-900);
+  outline-offset: 2px;
+}
+
+.ap-pdp__option input[type="radio"].disabled + label,
+.ap-pdp__option label:has(.label-unavailable) {
+  opacity: 0.4;
+  text-decoration: line-through;
+}
+
+/* --- quantity (Dawn <quantity-input>) --------------------------------- */
+.ap-pdp__qty {
+  margin: 0 0 var(--space-lg);
+}
+
+.ap-pdp__qty .form__label {
+  display: block;
+  margin: 0 0 var(--space-sm);
+  color: var(--color-text-muted);
+}
+
+.ap-pdp .quantity {
+  display: inline-flex;
+  align-items: center;
+  height: 44px;
+  border: 1px solid var(--color-ink-900);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.ap-pdp .quantity__button {
+  width: 40px;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--color-ink-900);
+  cursor: pointer;
+}
+
+.ap-pdp .quantity__button svg { width: 14px; height: 14px; }
+
+.ap-pdp .quantity__input {
+  width: 44px;
+  height: 100%;
+  border: 0;
+  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+  background: transparent;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  color: var(--color-ink-900);
+  -moz-appearance: textfield;
+}
+
+.ap-pdp .quantity__input::-webkit-outer-spin-button,
+.ap-pdp .quantity__input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* --- Add to Cart — .ap-btn--primary look + the exclusive overshoot --- */
+.ap-pdp__atc {
+  margin: 0 0 var(--space-xl);
+}
+
+.ap-pdp .product-form__submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 48px;
+  padding: 0 var(--space-lg);
+  border: 1px solid transparent;
+  border-radius: 0 var(--radius-md) var(--radius-md) var(--radius-md);
+  background: var(--color-marigold);
+  color: var(--color-ink-900);
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body-strong);
+  font-size: var(--text-button);
+  letter-spacing: var(--tracking-button);
+  line-height: var(--leading-flat);
+  cursor: pointer;
+  transition: filter var(--motion-transactional);
+}
+
+.ap-pdp .product-form__submit:hover {
+  filter: brightness(0.94);
+}
+
+.ap-pdp .product-form__submit[disabled] {
+  background: var(--color-border);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+.ap-pdp .product-form__submit.ap-atc-bounce {
+  animation: ap-atc-overshoot 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes ap-atc-overshoot {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+
+.ap-pdp .product-form__error-message-wrapper:not([hidden]) {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+  color: var(--color-fragile-ink);
+  font-size: var(--text-caption);
+}
+
+.ap-pdp .product-form__error-message-wrapper[hidden] {
+  display: none;
+}
+
+.ap-pdp__dispatch-repeat {
+  margin: var(--space-sm) 0 0;
+  color: var(--color-text-muted);
+}
+
+/* --- spec sheet ----------------------------------------------------- */
+.ap-pdp__specs {
+  margin: 0 0 var(--space-xl);
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-lg);
+}
+
+.ap-pdp__specs-heading {
+  margin: 0 0 var(--space-md);
+  color: var(--color-ink-900);
+}
+
+.ap-pdp__specs-details {
+  border: 0;
+}
+
+.ap-pdp__specs-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  margin: 0;
+  color: var(--color-ink-900);
+  cursor: pointer;
+  list-style: none;
+}
+
+.ap-pdp__specs-summary::-webkit-details-marker { display: none; }
+
+.ap-pdp__specs-toggle {
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body);
+  font-size: var(--text-h3);
+  color: var(--color-text-muted);
+}
+
+.ap-pdp__specs-details[open] .ap-pdp__specs-toggle {
+  /* turn the + into a - */
+  font-size: 0;
+}
+
+.ap-pdp__specs-details[open] .ap-pdp__specs-toggle::before {
+  content: "\2212";
+  font-size: var(--text-h3);
+}
+
+.ap-pdp__spec-table {
+  margin: var(--space-md) 0 0;
+}
+
+.ap-pdp__spec-row {
+  display: grid;
+  grid-template-columns: 40% 1fr;
+  gap: var(--space-md);
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.ap-pdp__spec-row:first-child {
+  border-top: 1px solid var(--color-border);
+}
+
+.ap-pdp__spec-label {
+  margin: 0;
+  font-weight: var(--font-weight-body-strong);
+  color: var(--color-ink-900);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.ap-pdp__spec-value {
+  margin: 0;
+  color: var(--color-ink-900);
+}
+
+/* premium: rows stagger in on viewport entry — the system's ONLY stagger */
+.ap-pdp--premium .ap-pdp__spec-table .ap-pdp__spec-row {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 400ms cubic-bezier(0.22, 1, 0.36, 1), transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ap-pdp--premium .ap-pdp__spec-table.is-in .ap-pdp__spec-row {
+  opacity: 1;
+  transform: none;
+}
+
+.ap-pdp--premium .ap-pdp__spec-table.is-in .ap-pdp__spec-row:nth-child(1) { transition-delay: 0ms; }
+.ap-pdp--premium .ap-pdp__spec-table.is-in .ap-pdp__spec-row:nth-child(2) { transition-delay: 40ms; }
+.ap-pdp--premium .ap-pdp__spec-table.is-in .ap-pdp__spec-row:nth-child(3) { transition-delay: 80ms; }
+.ap-pdp--premium .ap-pdp__spec-table.is-in .ap-pdp__spec-row:nth-child(4) { transition-delay: 120ms; }
+.ap-pdp--premium .ap-pdp__spec-table.is-in .ap-pdp__spec-row:nth-child(5) { transition-delay: 160ms; }
+.ap-pdp--premium .ap-pdp__spec-table.is-in .ap-pdp__spec-row:nth-child(6) { transition-delay: 200ms; }
+.ap-pdp--premium .ap-pdp__spec-table.is-in .ap-pdp__spec-row:nth-child(7) { transition-delay: 240ms; }
+.ap-pdp--premium .ap-pdp__spec-table.is-in .ap-pdp__spec-row:nth-child(8) { transition-delay: 280ms; }
+
+/* --- official licensing seal (premium) ---------------------------- */
+.ap-pdp__seal {
+  margin: 0 0 var(--space-xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--color-border);
+}
+
+.ap-pdp__seal-line {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin: 0 0 var(--space-xs);
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body-strong);
+  font-size: var(--text-body);
+  color: var(--color-emerald-600);
+}
+
+.ap-pdp__seal-icon {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  color: var(--color-emerald-600);
+}
+
+.ap-pdp__seal-icon svg { width: 100%; height: 100%; }
+
+.ap-pdp__seal-note {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+/* ============================================================================
+   Cross-sell
+   ============================================================================ */
+.ap-xsell {
+  padding: var(--space-xl) var(--space-xl) var(--space-2xl);
+  border-top: 1px solid var(--color-border);
+}
+
+.ap-xsell__label {
+  margin: 0 0 var(--space-xs);
+  color: var(--color-text-muted);
+}
+
+.ap-xsell__threshold {
+  margin: 0 0 var(--space-lg);
+  color: var(--color-ink-900);
+}
+
+.ap-xsell__row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-lg);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 750px) {
+  .ap-xsell__row {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.ap-xsell__item {
+  min-width: 0;
+}
+
+/* ============================================================================
+   Reviews
+   ============================================================================ */
+.ap-reviews {
+  padding: var(--space-xl);
+  border-top: 1px solid var(--color-border);
+}
+
+.ap-reviews__heading {
+  margin: 0 0 var(--space-md);
+  color: var(--color-ink-900);
+}
+
+.ap-reviews__summary,
+.ap-reviews__empty {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.ap-reviews__stars {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.ap-reviews__star {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-ink-900);
+}
+
+.ap-reviews__star.is-filled {
+  background: var(--color-ink-900);
+}
+
+.ap-reviews__count {
+  color: var(--color-text-muted);
+}
+
+.ap-reviews__empty-note {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+/* ============================================================================
+   Reduced motion
+   ============================================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .ap-pdp--premium .ap-pdp__media { animation-duration: 0.01ms; }
+  .ap-pdp .product-form__submit.ap-atc-bounce { animation-duration: 0.01ms; }
+  .ap-pdp--premium .ap-pdp__spec-table .ap-pdp__spec-row {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

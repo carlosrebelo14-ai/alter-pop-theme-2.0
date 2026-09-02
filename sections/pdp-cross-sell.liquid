@@ -1,0 +1,70 @@
+{{ 'pdp.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  Alterpop — PDP cross-sell. Wireframe 3a/3b: "COMPLETE THE [universe]
+  COLLECTION", the free-shipping threshold line, then a rail of small cards.
+  Reinforces the €50 threshold (same number as the homepage shipping bar).
+
+  Universe/Franchise is BLOCKED -> the heading falls back to a generic word.
+  Products come from the product's first collection (no clean franchise
+  collection yet). Uses the ONE product card, compact.
+{%- endcomment -%}
+
+{%- liquid
+  assign source = product.collections | first
+  assign universe = product.metafields.alterpop.universe.value
+  assign threshold = section.settings.threshold_amount | times: 100
+  assign remaining = threshold | minus: cart.total_price
+  assign remaining_money = remaining | money
+  assign threshold_money = threshold | money
+-%}
+
+{%- if source != blank and source.products.size > 1 -%}
+  <section class="ap-xsell page-width" aria-labelledby="XSell-{{ section.id }}">
+    <p class="ap-xsell__label type-label" id="XSell-{{ section.id }}">
+      {%- if universe != blank -%}
+        {{ 'sections.pdp.xsell_heading' | t: name: universe }}
+      {%- else -%}
+        {{ 'sections.pdp.xsell_heading_generic' | t }}
+      {%- endif -%}
+    </p>
+
+    {%- if remaining > 0 -%}
+      <p class="ap-xsell__threshold type-caption">
+        {{ 'sections.shipping_bar.remaining' | t: amount: remaining_money, threshold: threshold_money }}
+      </p>
+    {%- else -%}
+      <p class="ap-xsell__threshold type-caption">{{ 'sections.pdp.xsell_unlocked' | t }}</p>
+    {%- endif -%}
+
+    <ul class="ap-xsell__row" role="list">
+      {%- assign shown = 0 -%}
+      {%- for item in source.products -%}
+        {%- if item.id != product.id and shown < 4 -%}
+          <li class="ap-xsell__item">
+            {% render 'product-card', card_product: item, compact: true, lazy_load: true, skip_styles: true %}
+          </li>
+          {%- assign shown = shown | plus: 1 -%}
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "PDP cross-sell",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "number",
+      "id": "threshold_amount",
+      "label": "Free-shipping threshold",
+      "default": 50,
+      "info": "Match the homepage shipping bar."
+    }
+  ],
+  "enabled_on": { "templates": ["product"] }
+}
+{% endschema %}

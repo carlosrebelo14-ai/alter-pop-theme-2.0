@@ -1,0 +1,24 @@
+{%- comment -%}
+  One row of the PDP spec sheet.
+  Accepts: label (text, or an i18n key when i18n:true), value, ph (Boolean:
+  show the marked "pending" placeholder when value is blank), i18n (Boolean).
+{%- endcomment -%}
+{%- liquid
+  if i18n
+    assign label_text = label | t
+  else
+    assign label_text = label
+  endif
+-%}
+<div class="ap-pdp__spec-row">
+  <dt class="ap-pdp__spec-label type-caption">{{ label_text }}</dt>
+  <dd class="ap-pdp__spec-value type-body">
+    {%- if value != blank -%}
+      {{ value | escape }}
+    {%- elsif ph -%}
+      <span class="ap-pdp__ph">{{ 'sections.pdp.spec_pending' | t }}</span>
+    {%- else -%}
+      &mdash;
+    {%- endif -%}
+  </dd>
+</div>

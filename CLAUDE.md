@@ -23,6 +23,40 @@ Therefore:
    A plain `git add` / `git commit` on the current branch is safe and does not
    need this.
 
+## Wireframe is the pixel source of truth
+
+`Wireframe_Alterpop_3_3.pdf` is in the repo root (ignored from the theme
+upload). **Before building or reworking any section, render its wireframe
+page(s) and follow them pixel-by-pixel** — proportions, type hierarchy,
+spacing, element order. The phase prompts are summaries; the wireframe is
+the source. Render with PyMuPDF (installed at `~/Library/Python/3.9`):
+
+```
+python3 - <<'EOF'
+import fitz
+d = fitz.open("Wireframe_Alterpop_3_3.pdf")
+d[N].get_pixmap(matrix=fitz.Matrix(1.5,1.5)).save("/tmp/wf/pN.png")
+EOF
+```
+
+Page map (index → wireframe label): 1-4 = 1a homepage mobile · 5-8 = 1b
+homepage desktop · 9 = 2a hero A (mobile spec) · 10 = 1d cart drawer.
+Sections are labelled with a black badge top-left of each page.
+
+Known wireframe facts that override earlier prompt summaries:
+- Hero CTA "Shop the Universe" IS Marigold + the asymmetric brand corner —
+  the DS groups it with Add to Cart / Checkout as the primary purchase-CTA
+  family. The hero eyebrow is also Marigold in the wireframe.
+- Homepage 1a/1b is much larger than Phase 2 as first built: hero, trust,
+  Explore Universes (name overlaid on the doorway, not below), New Arrivals
+  rail, **Bestsellers = a ranked numbered list with "N sold this month"**
+  (not a card rail), full-height editorial + "[Franchise] Archive" split,
+  Limited Editions rail (+ "Limited Run" pill), Gifts Under €25 grid
+  (title + price only), "Real Customers, Real Collections" UGC + review,
+  Collectors Club, footer.
+- Product card in the rails shows NO CTA button — image, title, franchise,
+  dimension, price. Franchise is a visible line (placeholder under v3).
+
 ## Verification (also a hard rule)
 
 **Render verification is always against the served HTML from the dev server,

@@ -19,6 +19,7 @@ ignore = [
   "release-notes.md",
   "PLANO_IMPLEMENTACAO.md",
   "CLAUDE.md",
+  "Wireframe_Alterpop_3_3.pdf",
   ".git/**",
   ".github/**",
   ".gitignore",

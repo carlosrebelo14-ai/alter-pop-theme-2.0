@@ -1,4 +1,4 @@
-# Alterpop.store — Plano de Implementação (v2)
+# Alterpop.store — Plano de Implementação (v3)
 ### Tema novo Shopify OS 2.0, base Dawn — substitui o tema Crave
 
 Documento de trabalho para o Claude Code.
@@ -6,6 +6,37 @@ Documento de trabalho para o Claude Code.
 **Fontes de verdade:** `Instruções para o Programador Frontend`, `Relatório de
 Handoff do Designer`, `Wireframe Alterpop_3_3.pdf` (numerado por secção), e o
 addendum "Character Page tier scope".
+
+---
+
+## ⚠️ ÂMBITO REVISTO (v3) — nenhuma fase fica bloqueada
+
+**O design define o contrato de dados. A app implementa-o depois.** Não é a
+app que dita o que o tema pode mostrar.
+
+Consequência prática: **constrói-se a estrutura completa de todas as páginas
+e componentes**, mesmo os que dependem de campos que a app ainda não fornece.
+Nenhuma fase espera por dados. A Fase 5 (Character/Line Page) deixa de estar
+em espera e entra na sequência normal.
+
+**A distinção que continua a valer:**
+
+| ✅ Correto | ❌ Proibido |
+|---|---|
+| Construir a estrutura completa e ligar o slot ao campo esperado, mesmo que venha vazio | Inferir o dado a partir de outra coisa |
+| Placeholder claramente marcado (`BLOQUEADO: aguarda app`) | Character deduzido do título do produto |
+| Estado vazio explícito quando o campo não existe | Impulse/Premium derivado do preço |
+| Layout, cortes, navegação e motion todos funcionais | Franquia extraída de tags ou `custom.parent_collection` |
+
+Quando o campo existir na app, deve **ligar e funcionar sem reescrever o
+componente**. A estrutura construída é, na prática, a especificação do que a
+app tem de fornecer.
+
+As secções marcadas "BLOQUEADO" mais abaixo neste documento referem-se agora
+apenas a **slots de dados dentro do componente**, não ao componente inteiro.
+Todos os componentes se constroem.
+
+---
 
 **Decisões de arranque (v2):**
 - Base: **Dawn** (tema oficial Shopify, OS 2.0, neutro). Não o Crave.
@@ -257,23 +288,25 @@ Usa o snippet product-card.liquid da Fase 1A. Não criar variantes.
 ---
 
 # FASE 3 — Universe Room
-*Wireframe: 7a, 7b* — **PARCIALMENTE BLOQUEADO**
+*Wireframe: 7a, 7b* — construir por inteiro
 
 ```
 - templates/collection.universe-room.json
 - sections/universe-room-header.liquid (fade + scale na entrada)
+- sections/shop-by-character.liquid
 - sections/shop-by-brand.liquid, sections/shop-by-type.liquid
 - Filtros laterais: Rarity, Box Condition, Price, Franchise, Availability
 
-BLOQUEADO: sections/shop-by-character.liquid exige o campo Character
-resolvido pela app. Implementar a shell com estado vazio explícito; não
-inferir personagens a partir de títulos de produto.
+Shop by Character: construir a secção completa (thumbnails circulares,
+layout, navegação). O slot de dados lê o campo Character da app, que ainda
+não existe — deixar ligado ao campo esperado, com placeholder marcado e
+estado vazio explícito. NÃO inferir personagens a partir de títulos.
 ```
 
 ---
 
 # FASE 4 — PDP Impulse / Premium
-*Wireframe: 3a, 3b, 3c* — **PARCIALMENTE BLOQUEADO**
+*Wireframe: 3a, 3b, 3c* — construir por inteiro
 
 ```
 - templates/product.impulse.json e product.premium.json (ou secção
@@ -297,18 +330,23 @@ da imagem still-life, reviews com contador.
 Overshoot de escala (1.00 para 1.03 para 1.00, 260ms): EXCLUSIVO ao botão
 Add to Cart.
 
-BLOQUEADO: Line, Manufacturer limpo, Year, flag tier, fornecedor de licença
-por SKU. Praticamente todo o Identity Block e o selo "Officially Licensed by
-[Supplier]" dependem da app. Construir a shell, marcar os slots, não inventar
-valores.
+Slots sem dados ainda (Line, Manufacturer limpo, Year, flag tier, fornecedor
+de licença por SKU): construir o Identity Block e o selo "Officially Licensed
+by [Supplier]" por inteiro, ligados aos campos esperados, com placeholder
+marcado quando vierem vazios. Ambos os regimes (Impulse e Premium) devem
+existir e ser testáveis — se a flag de tier não existir, permitir forçar o
+regime por parâmetro de URL ou setting de secção, só para desenvolvimento.
+Não inventar valores nem derivar o tier do preço.
 ```
 
 ---
 
 # FASE 5 — Character Page + Line Page
-*Wireframe: 9a, 9b* — **BLOQUEADO POR INTEIRO**
+*Wireframe: 9a, 9b* — construir por inteiro
 
-Não iniciar até Character e Line chegarem da app.
+Entra na sequência normal (âmbito v3). Layout, cortes, navegação relacional
+e Compare Drawer todos funcionais; os slots de Character e Line ligam ao
+campo esperado e mostram estado vazio até a app os fornecer.
 
 ```
 - templates/page.character.json, templates/page.line.json
@@ -385,29 +423,53 @@ Se algum destes aparecer disponível mas em formato diferente do esperado
 (metafield vs. tag vs. coleção), confirmar a forma exata antes de escrever os
 Liquid objects/schemas. Não assumir.
 
+**No âmbito v3 esta tabela deixa de ser uma lista de bloqueios de trabalho e
+passa a ser o backlog do lado da app.** Os componentes constroem-se todos; o
+que falta é ligar os campos. Estado atual dos dados:
+
+| Campo | Estado |
+|---|---|
+| `inventory_quantity` | ✅ live, sync 45 min — alimenta os estados de rarity |
+| `ociostock.dimensions` | ✅ live — metadata line do card |
+| `ociostock.licence` | ⚠️ existe mas em bruto e multi-idioma — **não serve** como Franchise limpo |
+| Franchise/Universe (limpo) | ⛔ a criar — maior alavancagem: desbloqueia metadata line + Universe Room |
+| Character | ⛔ a criar |
+| Line (+ regra 3+ peças) | ⛔ a criar |
+| Flag Impulse/Premium | ⛔ a criar |
+| Manufacturer limpo | ⛔ a criar |
+| Fornecedor de licença por SKU | ⛔ a criar |
+| Flag fragile/collector's piece | ❓ por confirmar |
+
 ---
 
 ## Ordem de trabalho
 
+Sequência linear — nenhuma fase espera por dados (âmbito v3).
+
 ```
-FASE 0  Setup Dawn + limpeza + tokens
+FASE 0  Setup Dawn + limpeza + tokens              ✅ concluída
    |
-FASE 1  Componentes globais (Card > Header > Search > Footer)
+FASE 1  Componentes globais                        ✅ concluída
+        (Card > Header > Search > Footer)
    |
-FASE 2  Homepage
+FASE 2  Homepage                                   ← a seguir
    |
-FASE 3  Universe Room (shell; Shop by Character bloqueado)
+FASE 3  Universe Room
    |
-FASE 4  PDP (shell; Identity Block bloqueado)
+FASE 4  PDP Impulse / Premium
+   |
+FASE 5  Character Page + Line Page
    |
 FASE 6  Cart + Filter Drawer
    |
 FASE 7  Checkout (configuração, não programação)
    |
 FASE 8  Legal + Cookie Banner
-   |
-FASE 5  Character/Line Page — quando os dados da app chegarem
 ```
+
+Depois de todas as fases: **passagem de ligação**, quando os campos da app
+existirem — percorrer os slots marcados `BLOQUEADO: aguarda app` e ligá-los.
+Não deve exigir reescrita de componentes.
 
 ---
 

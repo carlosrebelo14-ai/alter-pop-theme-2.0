@@ -58,3 +58,19 @@ uploaded copy is stale until a restart + re-verify says otherwise.
 - Fast-forward merge to `main`, push, delete the branch. No PRs.
 - `a717245` is the untouched Dawn 16.0.0 baseline — keep it as the reference
   point for the cumulative diff.
+
+## Open TODOs / unverified assumptions
+
+- **Header curation collection handles** (Phase 1B) are best-guess and NOT yet
+  verified against the store: `new-arrivals`, `limited-editions-exclusives`,
+  `gifts-under-25`, `outlet` (used in `sections/header.liquid` +
+  `snippets/mobile-drawer.liquid`). Confirm the real handles later; they do
+  not come from the admin menu (shared with the live theme).
+- **Franchise/Universe field** from the sync app does not exist yet — blocks
+  the Product Card metadata line, the Universes Panel list, Universe Room,
+  PDP Identity Block, Character/Line pages. Only raw
+  `metafields.ociostock.licence` exists. Never infer from tags / collections /
+  `custom.parent_collection`.
+- **Asset cleanup** deferred: `component-card.css` + `quick-add*` /
+  `quick-order-list*` loads (Phase 1A follow-up); `component-menu-drawer.css` /
+  `component-list-menu.css` / `component-mega-menu.css` (Phase 1B follow-up).

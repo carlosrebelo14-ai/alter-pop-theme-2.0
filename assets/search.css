@@ -101,7 +101,7 @@
   border: 0;
   background: none;
   font-family: var(--font-body);
-  font-size: 1.0625rem;
+  font-size: 16px; /* 16 — DS scale (>=16 also avoids iOS focus-zoom) */
   color: var(--color-ink-900);
 }
 
@@ -165,8 +165,9 @@
   margin: 0 0 var(--space-md);
   font-family: var(--font-body);
   font-weight: var(--font-weight-body-medium);
-  font-size: 0.6875rem;
-  letter-spacing: 0.08em;
+  font-size: var(--text-label);
+  line-height: var(--leading-flat);
+  letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   color: var(--color-text-muted);
 }
@@ -200,8 +201,9 @@
   margin: 0 0 var(--space-sm);
   font-family: var(--font-body);
   font-weight: var(--font-weight-body-medium);
-  font-size: 0.6875rem;
-  letter-spacing: 0.08em;
+  font-size: var(--text-label);
+  line-height: var(--leading-flat);
+  letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   color: var(--color-text-muted);
 }
@@ -220,7 +222,7 @@
   border-radius: var(--radius-xs);
   text-decoration: none;
   color: var(--color-ink-900);
-  font-size: 0.9375rem;
+  font-size: 15px;
 }
 
 .predictive-search__list-item[aria-selected="true"] .predictive-search__item,
@@ -262,7 +264,7 @@
 
 .ap-psr__title {
   font-family: var(--font-body);
-  font-size: 0.875rem;
+  font-size: 14px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -271,7 +273,7 @@
 .ap-psr__price {
   font-family: var(--font-body);
   font-weight: var(--font-weight-body-strong);
-  font-size: 0.875rem;
+  font-size: 14px;
   white-space: nowrap;
 }
 
@@ -325,13 +327,13 @@
   margin: var(--space-sm) 0 0;
   font-family: var(--font-display);
   font-weight: var(--font-weight-display);
-  font-size: 1.125rem;
+  font-size: 18px;
   color: var(--color-ink-900);
 }
 
 .ap-search__noresults-hint {
   margin: 0;
-  font-size: 0.875rem;
+  font-size: 14px;
   color: var(--color-text-muted);
 }
 

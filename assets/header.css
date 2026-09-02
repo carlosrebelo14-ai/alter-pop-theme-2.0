@@ -30,7 +30,7 @@
   margin: 0;
   display: flex;
   min-width: 0;
-  font-size: 1rem; /* override Dawn's giant h1 on the index page */
+  font-size: 16px; /* override Dawn's giant h1 on the index page */
   line-height: 1;
 }
 
@@ -73,9 +73,9 @@
   align-items: center;
   gap: var(--space-xs);
   padding: var(--space-xs) 0;
-  font-size: 0.875rem;
+  font-size: var(--text-nav);
   font-weight: var(--font-weight-body-medium);
-  line-height: 1;
+  line-height: var(--leading-flat);
   color: var(--color-ink-900);
   text-decoration: none;
   background: none;
@@ -145,7 +145,7 @@
 }
 
 .ap-header__localization .localization-form__select {
-  font-size: 0.75rem;
+  font-size: 12px;
   padding-block: 8px;
 }
 
@@ -170,7 +170,7 @@
   display: inline-flex;
   align-items: center;
   font-family: var(--font-body);
-  font-size: 0.875rem;
+  font-size: 14px;
   font-weight: var(--font-weight-body-medium);
   color: var(--color-ink-900);
   text-decoration: none;
@@ -190,7 +190,7 @@
   border: 1px solid var(--color-ink-900);
   border-radius: var(--radius-sm);
   font-family: var(--font-body);
-  font-size: 0.875rem;
+  font-size: 14px;
   font-weight: var(--font-weight-body-medium);
   color: var(--color-ink-900);
   text-decoration: none;
@@ -206,7 +206,7 @@
   border-radius: var(--radius-full);
   background: var(--color-ink-900);
   color: var(--color-canvas);
-  font-size: 0.6875rem;
+  font-size: 11px;
   font-weight: var(--font-weight-body-strong);
   line-height: 1;
 }
@@ -325,14 +325,14 @@
   justify-content: center;
   font-family: var(--font-display);
   font-weight: var(--font-weight-display);
-  font-size: 1rem;
+  font-size: 16px;
   color: var(--color-text-muted);
 }
 
 .ap-universes__name {
   font-family: var(--font-body);
   font-weight: var(--font-weight-body-medium);
-  font-size: 0.875rem;
+  font-size: 14px;
 }
 
 /* ============================================================================
@@ -449,8 +449,9 @@ details[open] > .menu-drawer {
   margin: 0 0 var(--space-sm);
   font-family: var(--font-body);
   font-weight: var(--font-weight-body-medium);
-  font-size: 0.6875rem;
-  letter-spacing: 0.08em;
+  font-size: var(--text-label);
+  line-height: var(--leading-flat);
+  letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   color: var(--color-text-muted);
 }
@@ -497,14 +498,14 @@ details[open] > .menu-drawer {
   justify-content: center;
   font-family: var(--font-display);
   font-weight: var(--font-weight-display);
-  font-size: 0.9375rem;
+  font-size: 15px;
   color: var(--color-text-muted);
 }
 
 .menu-drawer__universe-name {
   font-family: var(--font-body);
   font-weight: var(--font-weight-body-medium);
-  font-size: 0.9375rem;
+  font-size: 15px;
 }
 
 /* .ap-btn ap-btn--ghost ap-btn--gold; only the top gap is drawer-specific. */
@@ -531,7 +532,7 @@ details[open] > .menu-drawer {
   width: 100%;
   padding: var(--space-md) 0;
   font-family: var(--font-body);
-  font-size: 1rem;
+  font-size: 16px;
   font-weight: var(--font-weight-body-medium);
   color: var(--color-ink-900);
   text-decoration: none;

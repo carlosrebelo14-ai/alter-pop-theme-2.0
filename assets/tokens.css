@@ -55,25 +55,27 @@
   /* --- Type scale ---------------------------------------------------------
      The DS scale — the ONLY sizes the theme uses:
        11 12 13 14 15 16 18 19 20 22 26 34 64 (px).
+     Authored in px on purpose: Dawn sets `html { font-size: 62.5% }`, so a
+     bare `rem` here is 10px, not 16px. px keeps the token literal.
      No section defines its own font-size; it references a token below or
      applies a `.type-*` class. Four roles step up at >=750px (see the
      media block further down); the rest are fixed. Each size is paired with
      one weight + one letter-spacing + one line-height — use them together
      via the matching `.type-*` class, don't recombine.
      mobile-first — desktop steps in the @media block near the end. */
-  --text-display: 2.125rem;        /* 34 -> 64 */
-  --text-h2: 1.25rem;              /* 20 -> 26 */
-  --text-h3: 1rem;                 /* 16 -> 19 */
-  --text-product-title: 1.125rem;  /* 18 -> 22 */
-  --text-price-pdp: 1.25rem;       /* 20  (fixed) */
-  --text-price-card: 0.9375rem;    /* 15  (fixed) */
-  --text-metadata: 0.75rem;        /* 12  (fixed) — FRANCHISE · LINE line */
-  --text-label: 0.75rem;           /* 12  (fixed) — eyebrows / uppercase labels */
-  --text-nav: 0.875rem;            /* 14  (fixed) */
-  --text-button: 0.875rem;         /* 14  (fixed) */
-  --text-body: 0.9375rem;          /* 15  (fixed) */
-  --text-caption: 0.8125rem;       /* 13  (fixed) — muted secondary / dimension line */
-  --text-microcopy: 0.6875rem;     /* 11  (fixed) */
+  --text-display: 34px;            /* -> 64 */
+  --text-h2: 20px;                 /* -> 26 */
+  --text-h3: 16px;                 /* -> 19 */
+  --text-product-title: 18px;      /* -> 22 */
+  --text-price-pdp: 20px;          /* fixed */
+  --text-price-card: 15px;         /* fixed */
+  --text-metadata: 12px;           /* fixed — FRANCHISE · LINE line */
+  --text-label: 12px;              /* fixed — eyebrows / uppercase labels */
+  --text-nav: 14px;                /* fixed */
+  --text-button: 14px;             /* fixed */
+  --text-body: 15px;               /* fixed */
+  --text-caption: 13px;            /* fixed — muted secondary / dimension line */
+  --text-microcopy: 11px;          /* fixed */
 
   /* letter-spacing — ONE value per role. Labels are 0.04em everywhere. */
   --tracking-label: 0.04em;        /* every uppercase label / eyebrow / metadata */
@@ -166,10 +168,10 @@
    ============================================================================ */
 @media (min-width: 750px) {
   :root {
-    --text-display: 4rem;            /* 64 */
-    --text-h2: 1.625rem;            /* 26 */
-    --text-h3: 1.1875rem;           /* 19 */
-    --text-product-title: 1.375rem; /* 22 */
+    --text-display: 64px;
+    --text-h2: 26px;
+    --text-h3: 19px;
+    --text-product-title: 22px;
     --tracking-display: -0.02em;
   }
 }

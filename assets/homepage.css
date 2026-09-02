@@ -74,9 +74,10 @@
 .ap-hero__eyebrow {
   margin: 0 0 var(--space-sm);
   font-family: var(--font-body);
-  font-weight: var(--font-weight-body-strong);
-  font-size: 0.6875rem;
-  letter-spacing: 0.14em;
+  font-weight: var(--font-weight-body-medium);
+  font-size: var(--text-label);
+  line-height: var(--leading-flat);
+  letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   color: var(--color-marigold);
 }
@@ -84,18 +85,18 @@
 .ap-hero__heading {
   margin: 0;
   font-family: var(--font-display);
-  font-weight: var(--font-weight-display-max);
-  font-size: clamp(2.5rem, 8vw, 4.25rem);
-  line-height: 1;
-  letter-spacing: -0.02em;
+  font-weight: var(--font-weight-display);
+  font-size: var(--text-display);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
   color: var(--color-canvas); /* override Dawn's h1 { color: var(--color-foreground) } on the dark hero */
 }
 
 .ap-hero__sub {
   margin: var(--space-md) 0 0;
   max-width: 42ch;
-  font-size: 1rem;
-  line-height: 1.5;
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
   color: var(--color-canvas);
   opacity: 0.9;
 }
@@ -136,14 +137,15 @@
   margin: 0;
   font-family: var(--font-display);
   font-weight: var(--font-weight-display);
-  font-size: clamp(1.375rem, 3.2vw, 1.875rem);
-  letter-spacing: -0.01em;
+  font-size: var(--text-h2);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-heading);
   color: var(--color-ink-900);
 }
 
 .ap-section-note {
   margin: var(--space-xs) 0 0;
-  font-size: 0.8125rem;
+  font-size: var(--text-caption);
   color: var(--color-text-muted);
 }
 
@@ -152,7 +154,7 @@
   border: 1px dashed var(--color-border);
   border-radius: var(--radius-md);
   color: var(--color-text-muted);
-  font-size: 0.875rem;
+  font-size: 14px;
   text-align: center;
 }
 
@@ -167,7 +169,7 @@
   background: var(--color-surface);
   font-family: var(--font-body);
   font-weight: var(--font-weight-body-medium);
-  font-size: 0.75rem;
+  font-size: 12px;
   color: var(--color-ink-900);
 }
 
@@ -191,7 +193,7 @@
   margin: 0;
   flex: 0 0 auto;
   font-family: var(--font-body);
-  font-size: 0.75rem;
+  font-size: 12px;
   color: var(--color-ink-900);
 }
 
@@ -247,7 +249,7 @@
 
 .ap-trust__item span {
   font-family: var(--font-body);
-  font-size: 0.8125rem;
+  font-size: 13px;
   color: var(--color-ink-900);
   opacity: 0.75;
 }
@@ -312,10 +314,10 @@
   align-items: center;
   justify-content: center;
   font-family: var(--font-display);
-  font-weight: var(--font-weight-display-max);
-  font-size: 2.25rem;
+  font-weight: var(--font-weight-display);
+  font-size: 2.125rem; /* 34 — DS scale step (decorative monogram, fixed) */
   color: rgba(247, 246, 242, 0.35);
-  background: linear-gradient(135deg, #2b2930, var(--color-ink-900));
+  background: var(--color-ink-900);
 }
 
 .ap-doorways__tile:hover .ap-doorways__img {
@@ -336,7 +338,7 @@
   z-index: 1;
   font-family: var(--font-display);
   font-weight: var(--font-weight-display);
-  font-size: 1rem;
+  font-size: 16px;
   color: var(--color-canvas);
 }
 
@@ -433,7 +435,7 @@
 .ap-best__rank {
   font-family: var(--font-body);
   font-weight: var(--font-weight-body-strong);
-  font-size: 0.9375rem;
+  font-size: 15px;
   color: var(--color-text-muted);
 }
 
@@ -456,7 +458,7 @@
   margin: 0;
   font-family: var(--font-display);
   font-weight: var(--font-weight-display);
-  font-size: 0.9375rem;
+  font-size: 15px;
   color: var(--color-ink-900);
 }
 
@@ -466,7 +468,7 @@
 .ap-best__meta {
   margin: 2px 0 0;
   font-family: var(--font-body);
-  font-size: 0.75rem;
+  font-size: 12px;
   color: var(--color-text-muted);
 }
 
@@ -479,7 +481,7 @@
   margin: 0;
   font-family: var(--font-body);
   font-weight: var(--font-weight-body-strong);
-  font-size: 0.875rem;
+  font-size: 14px;
   color: var(--color-ink-900);
   white-space: nowrap;
 }
@@ -494,7 +496,7 @@
     align-items: start;
     gap: var(--space-sm);
   }
-  .ap-best__rank { font-size: 1.125rem; }
+  .ap-best__rank { font-size: 18px; }
   .ap-best__media { width: 100%; margin-top: var(--space-xs); }
   .ap-best__price { margin-top: var(--space-xs); }
 }
@@ -551,8 +553,9 @@
   margin: 0;
   font-family: var(--font-body);
   font-weight: var(--font-weight-body-medium);
-  font-size: 0.6875rem;
-  letter-spacing: 0.1em;
+  font-size: var(--text-label);
+  line-height: var(--leading-flat);
+  letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   color: var(--color-text-muted);
 }
@@ -561,15 +564,17 @@
   margin: 0;
   font-family: var(--font-display);
   font-weight: var(--font-weight-display);
-  font-size: clamp(1.25rem, 3vw, 1.625rem);
+  font-size: var(--text-h2);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-heading);
   color: var(--color-ink-900);
 }
 
 .ap-archive__text {
   margin: 0;
   max-width: 44ch;
-  font-size: 0.9375rem;
-  line-height: 1.5;
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
   color: var(--color-ink-900);
 }
 
@@ -672,14 +677,14 @@
 .ap-ugc__quote {
   margin: 0;
   font-family: var(--font-body);
-  font-size: 0.9375rem;
+  font-size: 15px;
   line-height: 1.5;
   color: var(--color-ink-900);
 }
 
 .ap-ugc__by {
   margin: 0;
-  font-size: 0.75rem;
+  font-size: 12px;
   color: var(--color-text-muted);
 }
 

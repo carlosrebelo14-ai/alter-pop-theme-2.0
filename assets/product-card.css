@@ -114,7 +114,7 @@
   background: var(--color-surface);
   font-family: var(--font-body);
   font-weight: var(--rarity-limited-label-weight);
-  font-size: 0.8125rem;
+  font-size: 13px;
   line-height: 1;
   color: var(--rarity-limited-label-color);
 }
@@ -122,7 +122,7 @@
 .ap-card__soldout {
   font-family: var(--font-body);
   font-weight: var(--font-weight-body-strong);
-  font-size: 0.875rem;
+  font-size: 14px;
   color: var(--color-ink-900);
 }
 
@@ -132,8 +132,9 @@
   margin: 0;
   font-family: var(--font-body);
   font-weight: var(--font-weight-body-medium);
-  font-size: 0.6875rem;
-  letter-spacing: 0.06em;
+  font-size: var(--text-metadata);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   color: var(--color-text-muted);
 }
@@ -142,9 +143,9 @@
   margin: 0;
   font-family: var(--font-display);
   font-weight: var(--font-weight-display);
-  font-size: 1rem;
-  line-height: 1.2;
-  letter-spacing: 0;
+  font-size: 16px; /* 16 — DS scale; held below --text-product-title pending the Character-field rework */
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-heading);
   color: var(--color-ink-900);
   /* clamp to 2 lines and reserve that height so prices align across a grid.
      (Wireframe uses short names; the real catalog has long ones.) */
@@ -171,7 +172,7 @@
   margin: calc(-1 * var(--space-xs)) 0 0;
   font-family: var(--font-body);
   font-weight: var(--font-weight-body);
-  font-size: 0.8125rem;
+  font-size: var(--text-caption);
   color: var(--color-text-muted);
 }
 
@@ -182,8 +183,8 @@
   gap: var(--space-sm);
   font-family: var(--font-body);
   font-weight: var(--font-weight-body-strong);
-  font-size: 0.9375rem;
-  line-height: 1.2;
+  font-size: var(--text-price-card);
+  line-height: var(--leading-flat);
   color: var(--color-ink-900);
 }
 

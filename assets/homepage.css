@@ -86,8 +86,9 @@
   font-family: var(--font-display);
   font-weight: var(--font-weight-display-max);
   font-size: clamp(2.5rem, 8vw, 4.25rem);
-  line-height: 1.0;
+  line-height: 1;
   letter-spacing: -0.02em;
+  color: var(--color-canvas); /* override Dawn's h1 { color: var(--color-foreground) } on the dark hero */
 }
 
 .ap-hero__sub {
@@ -95,6 +96,7 @@
   max-width: 42ch;
   font-size: 1rem;
   line-height: 1.5;
+  color: var(--color-canvas);
   opacity: 0.9;
 }
 

@@ -18,12 +18,20 @@
 .ap-hero {
   position: relative;
   width: 100%;
-  min-height: 78vh;
   display: flex;
   align-items: flex-end;
   overflow: hidden;
   background: var(--color-ink-900);
   isolation: isolate;
+}
+
+/* No image bound yet: a compact band, not a wall of black. */
+.ap-hero:not(.ap-hero--has-image) {
+  min-height: 0;
+}
+
+.ap-hero--has-image {
+  min-height: 78vh;
 }
 
 .ap-hero__media,
@@ -54,9 +62,13 @@
   width: 100%;
   max-width: var(--page-width, 1400px);
   margin: 0 auto;
-  padding: var(--space-5xl) var(--space-xl) var(--space-2xl);
+  padding: var(--space-3xl) var(--space-xl);
   color: var(--color-canvas);
   animation: ap-hp-editorial-in var(--motion-editorial) both;
+}
+
+.ap-hero--has-image .ap-hero__inner {
+  padding: var(--space-5xl) var(--space-xl) var(--space-2xl);
 }
 
 .ap-hero__eyebrow {
@@ -114,18 +126,22 @@
 }
 
 @media (min-width: 750px) {
-  .ap-hero {
+  .ap-hero--has-image {
     min-height: 46vh;
     align-items: center;
   }
-  .ap-hero__scrim {
+  .ap-hero--has-image .ap-hero__scrim {
     background: linear-gradient(90deg, rgba(18, 16, 20, 0.82) 0%, rgba(18, 16, 20, 0.35) 42%, rgba(18, 16, 20, 0) 68%);
   }
-  .ap-hero__inner {
+  .ap-hero--has-image .ap-hero__inner {
     padding-block: var(--space-4xl);
   }
-  .ap-hero__body {
+  .ap-hero--has-image .ap-hero__body {
     max-width: 46%;
+  }
+  /* no image: let the text breathe across a sensible measure, not a strip */
+  .ap-hero:not(.ap-hero--has-image) .ap-hero__body {
+    max-width: 40rem;
   }
 }
 
@@ -491,6 +507,11 @@
   color: var(--color-text-muted);
 }
 
+/* marked placeholder for the "N sold this month" figure (BLOQUEADO) */
+.ap-best__ph {
+  border-bottom: 1px dashed var(--color-border);
+}
+
 .ap-best__price {
   margin: 0;
   font-family: var(--font-body);
@@ -526,10 +547,18 @@
 }
 
 @media (min-width: 750px) {
-  .ap-archive__inner {
+  .ap-archive:not(.ap-archive--no-image) .ap-archive__inner {
     grid-template-columns: 1fr 1fr;
     align-items: stretch;
   }
+}
+
+/* No editorial image bound: single-column text block, sensible measure —
+   the 50/50 split cannot carry an empty half. */
+.ap-archive--no-image .ap-archive__body {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding-block: var(--space-4xl);
 }
 
 .ap-archive__media { position: relative; overflow: hidden; }

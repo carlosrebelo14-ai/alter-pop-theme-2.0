@@ -22,9 +22,13 @@
     assign hero_heading = featured.title
     assign hero_link = featured.url
   endif
+  assign has_image = false
+  if section.settings.image != blank
+    assign has_image = true
+  endif
 -%}
 
-<section class="ap-hero" aria-label="{{ section.settings.eyebrow | default: 'Featured' | escape }}">
+<section class="ap-hero{% if has_image %} ap-hero--has-image{% endif %}" aria-label="{{ section.settings.eyebrow | default: 'Featured' | escape }}">
   {%- if section.settings.image != blank -%}
     <div class="ap-hero__media">
       {{

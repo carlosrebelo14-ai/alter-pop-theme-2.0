@@ -26,16 +26,23 @@
   assign remaining_money = remaining | money
   assign threshold_money = threshold | money
   assign pct_now = pct | round
+  assign is_empty = false
+  if cart == empty or cart.item_count == 0
+    assign is_empty = true
+  endif
 -%}
 
 <free-shipping-bar
   class="ap-shipbar"
   data-threshold="{{ threshold }}"
   data-over-label="{{ section.settings.reached_text | escape }}"
+  data-empty-label="{{ 'sections.shipping_bar.empty' | t: threshold: threshold_money }}"
 >
   <div class="ap-shipbar__inner page-width">
     <p class="ap-shipbar__text" data-shipbar-text>
-      {%- if remaining > 0 -%}
+      {%- if is_empty -%}
+        {{ 'sections.shipping_bar.empty' | t: threshold: threshold_money }}
+      {%- elsif remaining > 0 -%}
         {{ 'sections.shipping_bar.remaining' | t: amount: remaining_money, threshold: threshold_money }}
       {%- else -%}
         {{ section.settings.reached_text | escape }}
@@ -54,26 +61,31 @@
       const fill = el.querySelector('[data-shipbar-fill]');
       const text = el.querySelector('[data-shipbar-text]');
       const overLabel = el.dataset.overLabel || '';
+      const emptyLabel = el.dataset.emptyLabel || '';
       const fmt = (cents) =>
         new Intl.NumberFormat(document.documentElement.lang || 'en', {
           style: 'currency',
           currency: (window.Shopify && Shopify.currency && Shopify.currency.active) || 'EUR',
         }).format(cents / 100);
-      const render = (total) => {
+      const render = (total, itemCount) => {
         if (!threshold) return;
         const pct = Math.min(100, Math.round((total / threshold) * 100));
         fill.style.width = pct + '%';
         el.querySelector('[role=progressbar]').setAttribute('aria-valuenow', pct);
         const remaining = Math.max(0, threshold - total);
-        text.textContent =
-          remaining > 0
-            ? `${fmt(remaining)} more to free shipping (over ${fmt(threshold)})`
-            : overLabel;
+        if (itemCount === 0) {
+          text.textContent = emptyLabel;
+        } else if (remaining > 0) {
+          text.textContent = `${fmt(remaining)} more to free shipping (over ${fmt(threshold)})`;
+        } else {
+          text.textContent = overLabel;
+        }
       };
       window.subscribe &&
         window.subscribe(window.PUB_SUB_EVENTS.cartUpdate, (event) => {
-          const total = event?.cartData?.total_price ?? event?.source?.total_price;
-          if (typeof total === 'number') render(total);
+          const cart = event?.cartData ?? event?.source ?? {};
+          const total = cart.total_price;
+          if (typeof total === 'number') render(total, cart.item_count);
         });
     })();
   </script>

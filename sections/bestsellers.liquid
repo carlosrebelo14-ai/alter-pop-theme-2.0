@@ -45,13 +45,19 @@
               <h3 class="ap-best__title">
                 <a href="{{ product.url }}" class="ap-best__title-link">{{ product.title | escape }}</a>
               </h3>
+              {%- comment -%}
+                Meta: FRANCHISE · dimension · N sold this month.
+                franchise + sold (metafields.alterpop.*) are BLOQUEADO — sold
+                is shown as a MARKED placeholder (not omitted) so the ranked
+                list keeps its visible justification. No inference.
+              {%- endcomment -%}
               <p class="ap-best__meta">
-                {%- if franchise != blank -%}{{ franchise | escape }}{%- endif -%}
-                {%- if franchise != blank and dimension != blank -%} · {% endif -%}
-                {%- if dimension != blank -%}{{ dimension | escape }}{%- endif -%}
+                {%- if franchise != blank -%}{{ franchise | escape }}&nbsp;·&nbsp;{%- endif -%}
+                {%- if dimension != blank -%}{{ dimension | escape }}&nbsp;·&nbsp;{%- endif -%}
                 {%- if sold != blank -%}
-                  {%- if franchise != blank or dimension != blank -%} · {% endif -%}
                   {{ sold | escape }} {{ 'sections.bestsellers.sold_this_month' | t }}
+                {%- else -%}
+                  <span class="ap-best__ph">{{ 'sections.bestsellers.sold_placeholder' | t }}</span>
                 {%- endif -%}
               </p>
               <p class="ap-best__price">{{ product.price | money }}</p>

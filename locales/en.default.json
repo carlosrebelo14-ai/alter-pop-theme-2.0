@@ -287,10 +287,12 @@
       "empty": "No products to show yet."
     },
     "bestsellers": {
-      "sold_this_month": "sold this month"
+      "sold_this_month": "sold this month",
+      "sold_placeholder": "[ vendas/mês — aguarda app ]"
     },
     "shipping_bar": {
-      "remaining": "{{ amount }} more to free shipping (over {{ threshold }})"
+      "remaining": "{{ amount }} more to free shipping (over {{ threshold }})",
+      "empty": "Free shipping on orders over {{ threshold }}"
     },
     "announcements": {
       "previous_announcement": "Previous announcement",
@@ -359,6 +361,7 @@
       "complaints_book": "Complaints Book",
       "contact": "Contact",
       "faq": "FAQ",
+      "join": "Join",
       "collectors_club_note": "new drops before they hit the catalog."
     },
     "featured_blog": {

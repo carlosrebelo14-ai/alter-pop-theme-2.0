@@ -25,15 +25,29 @@
   color: inherit;
 }
 
+/* the media link is the whole-card click target */
+.ap-card__media-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* Fixed square box for EVERY state — this is what keeps titles / pills /
+   prices aligned across all columns of a grid (wireframe 8a). The image
+   proportion never changes the card's layout rhythm. */
 .ap-card__media {
   position: relative;
   aspect-ratio: 1 / 1;
+  width: 100%;
   overflow: hidden;
   border-radius: var(--radius-none);
   background: var(--color-surface);
 }
 
 .ap-card__img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -52,10 +66,18 @@
   transform: scale(1.03);
 }
 
-/* Limited: the image area is ~8% larger — it bleeds past the text column. */
-.ap-card--limited .ap-card__media {
-  width: 108%;
-  margin-inline: -4%;
+/* Limited: "+8% image area" (wireframe 8a) done as an 8% zoom INSIDE the
+   fixed square box, so the card height — and therefore the grid alignment —
+   is unchanged. (Deviation from the literal 8a mock, where the Limited box
+   is physically wider; the user's priority is a clean grid.) */
+.ap-card--limited .ap-card__img {
+  transform: scale(1.08);
+}
+
+.ap-card:hover .ap-card--limited .ap-card__img,
+.ap-card--limited:hover .ap-card__img,
+.ap-card--limited:focus-within .ap-card__img {
+  transform: scale(1.11);
 }
 
 /* Sold Out: image at 70% opacity. */
@@ -116,19 +138,25 @@
   line-height: 1.2;
   letter-spacing: 0;
   color: var(--color-ink-900);
+  /* clamp to 2 lines and reserve that height so prices align across a grid.
+     (Wireframe uses short names; the real catalog has long ones.) */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.4em;
+}
+
+.ap-card--compact .ap-card__title {
+  -webkit-line-clamp: 1;
+  min-height: 1.2em;
 }
 
 .ap-card__title-link {
   color: inherit;
   text-decoration: none;
-}
-
-/* whole card is clickable via the title link */
-.ap-card__title-link::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
+  position: relative;
+  z-index: 2;
 }
 
 .ap-card__dim {

@@ -13,15 +13,19 @@
   heading default is a marked placeholder.
 {%- endcomment -%}
 
-<section class="ap-archive">
+{%- liquid
+  assign has_image = false
+  if section.settings.image != blank
+    assign has_image = true
+  endif
+-%}
+<section class="ap-archive{% unless has_image %} ap-archive--no-image{% endunless %}">
   <div class="ap-archive__inner">
-    <div class="ap-archive__media">
-      {%- if section.settings.image != blank -%}
+    {%- if has_image -%}
+      <div class="ap-archive__media">
         {{ section.settings.image | image_url: width: 1400 | image_tag: loading: 'lazy', class: 'ap-archive__img', sizes: '(min-width: 750px) 50vw, 100vw', widths: '600, 900, 1200, 1400', alt: section.settings.image.alt | default: section.settings.heading | escape }}
-      {%- else -%}
-        <div class="ap-archive__img ap-archive__img--placeholder" role="presentation"></div>
-      {%- endif -%}
-    </div>
+      </div>
+    {%- endif -%}
 
     <div class="ap-archive__body">
       {%- if section.settings.eyebrow != blank -%}

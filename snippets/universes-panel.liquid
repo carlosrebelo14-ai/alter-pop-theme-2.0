@@ -1,90 +1,55 @@
 {% comment %}
-  Alterpop — Universes Panel
-  =========================
-  A TRIGGER + overlay panel (NOT a mega-menu). 6-8 franchises, name + square
-  thumbnail. No columns of sub-links, no subcategories.
+  Alterpop — Universes Panel. Source of truth: Wireframe_Alterpop_3_3.pdf 6b.
+  "Trigger, not mega-menu: a single thin horizontal strip (~96px) under the
+  nav, 6-8 franchises by name + small square thumbnail, no columns/categories.
+  Opens/closes on --motion-editorial. A discovery moment, not a transaction."
 
-  Wraps Dawn's <details-modal> (assets/details-modal.js) so we inherit its
-  a11y for free: focus trap into [tabindex="-1"], Escape to close,
-  click-outside to close, body scroll lock, aria on the summary.
+  Plain <details> (id starts with "Details-" so global.js wires Escape-to-close
+  + aria). The strip is absolutely positioned full-width under .header-wrapper.
 
-  ---------------------------------------------------------------------------
-  BLOQUEADO: aguarda app — a lista de Universes/Franchises.
-  A fonte real é o campo Franchise/Universe *limpo* da app de sincronização.
-  Esse campo AINDA NÃO EXISTE — só há `metafields.ociostock.licence`, em bruto
-  e multi-idioma ("El Señor De Los Anillos"). NÃO inferir universos a partir
-  de tags, coleções ou custom.parent_collection.
-
-  Quando a app fornecer o campo, substituir o bloco "dev placeholder" abaixo por
-  a fonte real, p.ex.:
-    assign ap_universes = shop.metafields.alterpop.universes.value
-  em que cada item expõe { title, url, image }.
-  ---------------------------------------------------------------------------
+  BLOQUEADO: aguarda app — the Universes/Franchises list.
+  Same slot as the mobile drawer: shop.metafields.alterpop.universes.value,
+  each item { title, url, image }. Empty -> dev placeholder list. NO inference.
 {% endcomment %}
 
 {%- liquid
-  # Real source — BLOQUEADO (see comment above). Empty until the app provides it.
   assign ap_universes = shop.metafields.alterpop.universes.value
-
-  # --- dev placeholder only: used while the app field is blocked -------------
   assign ap_universes_is_placeholder = false
   if ap_universes == blank
     assign ap_universes_is_placeholder = true
-    assign ph_titles = 'One Piece,Harry Potter,Naruto,Marvel,Star Wars,Dragon Ball,Demon Slayer,The Witcher' | split: ','
+    assign ph_titles = 'Star Wars,Demon Slayer,One Piece,Stranger Things,The Mandalorian,Attack on Titan,Marvel' | split: ','
   endif
 -%}
 
-<details-modal class="ap-universes">
-  <details id="Details-universes-panel">
-    <summary
-      class="ap-nav__link ap-universes__trigger"
-      aria-haspopup="dialog"
-      aria-label="{{ 'sections.header.universes' | t }}"
-    >
-      {{ 'sections.header.universes' | t }}
-      <svg class="ap-nav__caret" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
-        <path d="M5 7.5 10 12.5 15 7.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </summary>
+<details class="ap-universes" id="Details-universes-strip">
+  <summary class="ap-nav__link ap-universes__trigger" aria-haspopup="true">
+    {{ 'sections.header.universes' | t }}
+    <svg class="ap-nav__caret" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+      <path d="M5 7.5 10 12.5 15 7.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </summary>
 
-    <div
-      class="ap-universes__panel"
-      role="dialog"
-      aria-modal="true"
-      aria-label="{{ 'sections.header.universes_panel_title' | t }}"
-      tabindex="-1"
-    >
-      <div class="ap-universes__panel-head">
-        <h2 class="ap-universes__title">{{ 'sections.header.universes_panel_title' | t }}</h2>
-        <button type="button" class="ap-universes__close" aria-label="{{ 'sections.header.close' | t }}">
-          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
-            <path d="M5 5 15 15M15 5 5 15" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
-          </svg>
-        </button>
-      </div>
-
-      <ul class="ap-universes__grid">
+  <div class="ap-universes__strip">
+    <div class="ap-universes__strip-inner page-width">
+      <ul class="ap-universes__row" role="list">
         {%- if ap_universes_is_placeholder -%}
-          <li class="ap-universes__placeholder-note" data-dev-placeholder>
-            {{ 'sections.header.universes_placeholder_note' | t }}
-          </li>
           {%- for title in ph_titles -%}
-            <li class="ap-universes__item">
+            <li>
               <a href="{{ routes.all_products_collection_url }}">
-                <span class="ap-universes__thumb" aria-hidden="true">{{ title | slice: 0, 1 }}</span>
+                <span class="ap-universes__thumb ap-universes__thumb--ph" aria-hidden="true">{{ title | slice: 0, 1 }}</span>
                 <span class="ap-universes__name">{{ title }}</span>
               </a>
             </li>
           {%- endfor -%}
         {%- else -%}
           {%- for universe in ap_universes -%}
-            <li class="ap-universes__item">
+            <li>
               <a href="{{ universe.url }}">
                 <span class="ap-universes__thumb">
                   {%- if universe.image -%}
-                    {{ universe.image | image_url: width: 240 | image_tag: loading: 'lazy', alt: universe.title | escape }}
+                    {{ universe.image | image_url: width: 96 | image_tag: loading: 'lazy', alt: universe.title | escape }}
                   {%- else -%}
-                    {{ universe.title | slice: 0, 1 }}
+                    <span class="ap-universes__thumb--ph" aria-hidden="true">{{ universe.title | slice: 0, 1 }}</span>
                   {%- endif -%}
                 </span>
                 <span class="ap-universes__name">{{ universe.title | escape }}</span>
@@ -94,5 +59,5 @@
         {%- endif -%}
       </ul>
     </div>
-  </details>
-</details-modal>
+  </div>
+</details>

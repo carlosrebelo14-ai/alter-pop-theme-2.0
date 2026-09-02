@@ -8,12 +8,19 @@
    Marigold never appears in navigation.
    ============================================================================ */
 
+/* the strip / search overlay anchor to this */
+.header-wrapper {
+  position: relative;
+  z-index: 30;
+}
+
 .ap-header {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
   column-gap: var(--space-lg);
-  padding: var(--space-md) var(--space-xl);
+  min-height: 72px; /* wireframe 6a */
+  padding: var(--space-sm) var(--space-xl);
   background: var(--color-canvas);
   border-bottom: 1px solid var(--color-border);
   font-family: var(--font-body);
@@ -23,6 +30,8 @@
   margin: 0;
   display: flex;
   min-width: 0;
+  font-size: 1rem; /* override Dawn's giant h1 on the index page */
+  line-height: 1;
 }
 
 .ap-header__logo {
@@ -108,23 +117,38 @@
   transform: rotate(180deg);
 }
 
-/* --- Header right cluster --------------------------------------------------- */
+/* --- Header right cluster (wireframe 6a: search icon · Account · Cart) ----- */
 .ap-header__actions {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-md);
+  gap: var(--space-lg);
   justify-self: end;
 }
 
-/* Localization selectors are desktop-only in the header; mobile uses the drawer. */
+/* Country / currency selector — NOT shown on any wireframe page; kept
+   (removing it risks multi-currency), flagged for the designer. Dawn's
+   component-localization-form.css drives the compact dropdown. */
 .ap-header__localization {
   display: none;
 }
 
 @media (min-width: 990px) {
   .ap-header__localization {
-    display: inline-flex;
+    display: flex;
+    align-items: center;
+    height: 44px;
   }
+}
+
+.ap-header__localization > form,
+.ap-header__localization > form > div {
+  display: flex;
+  align-items: center;
+}
+
+.ap-header__localization .localization-form__select {
+  font-size: 0.75rem;
+  padding-block: 8px;
 }
 
 .ap-header__icon {
@@ -143,136 +167,149 @@
   height: 22px;
 }
 
+/* Account — text label, not an icon (6a) */
+.ap-header__account {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-body-medium);
+  color: var(--color-ink-900);
+  text-decoration: none;
+}
+
+.ap-header__account:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Cart — "Cart" text + count in a dark circle, inside a bordered box (6a) */
+.ap-header__cart {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 6px 10px;
+  border: 1px solid var(--color-ink-900);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-body-medium);
+  color: var(--color-ink-900);
+  text-decoration: none;
+}
+
 .ap-header__cart-count {
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  min-width: 16px;
-  height: 16px;
-  padding: 0 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
   border-radius: var(--radius-full);
   background: var(--color-ink-900);
   color: var(--color-canvas);
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   font-weight: var(--font-weight-body-strong);
-  line-height: 16px;
-  text-align: center;
+  line-height: 1;
 }
 
 /* ============================================================================
-   Universes Panel — a TRIGGER + overlay panel. NOT a mega-menu.
-   Wraps <details-modal>: focus trap, Escape, click-outside from details-modal.js.
+   Universes Panel — a full-width horizontal STRIP under the header (6b).
+   "Trigger, not mega-menu." Plain <details>; strip is absolutely positioned
+   against .header-wrapper. Opens with --motion-editorial.
    ============================================================================ */
 .ap-universes {
-  position: relative;
   display: none;
 }
 
 @media (min-width: 990px) {
   .ap-universes {
-    display: inline-flex;
+    display: block;
   }
 }
 
-.ap-universes details {
-  position: static;
-}
-
-.ap-universes summary {
+.ap-universes > summary {
   list-style: none;
-}
-
-.ap-universes summary::-webkit-details-marker {
-  display: none;
-}
-
-.ap-universes__panel {
-  position: absolute;
-  z-index: 40;
-  top: calc(100% + var(--space-md));
-  left: 0;
-  width: min(680px, calc(100vw - 3rem));
-  max-height: min(70vh, 560px);
-  overflow-y: auto;
-  padding: var(--space-xl);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-}
-
-.ap-universes details:not([open]) .ap-universes__panel {
-  display: none;
-}
-
-.ap-universes__panel-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: var(--space-lg);
-}
-
-.ap-universes__title {
-  margin: 0;
-  font-family: var(--font-display);
-  font-weight: var(--font-weight-display);
-  font-size: 1.05rem;
-  color: var(--color-ink-900);
-}
-
-.ap-universes__close {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: transparent;
-  color: var(--color-ink-900);
   cursor: pointer;
 }
 
-.ap-universes__close svg {
-  width: 14px;
-  height: 14px;
+.ap-universes > summary::-webkit-details-marker {
+  display: none;
 }
 
-.ap-universes__grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-lg);
+.ap-universes[open] > summary .ap-nav__caret {
+  transform: rotate(180deg);
+}
+
+.ap-universes[open] > summary::after {
+  width: 100%;
+}
+
+.ap-universes__strip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  z-index: 40;
+  background: var(--color-canvas);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.ap-universes:not([open]) .ap-universes__strip {
+  display: none;
+}
+
+.ap-universes[open] .ap-universes__strip {
+  animation: ap-universes-open var(--motion-editorial) both;
+}
+
+@keyframes ap-universes-open {
+  from { opacity: 0; transform: scale(1.02); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.ap-universes__strip-inner {
+  padding: var(--space-lg) var(--space-xl);
+}
+
+.ap-universes__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xl);
   list-style: none;
   margin: 0;
   padding: 0;
+  overflow-x: auto;
 }
 
-@media (max-width: 749px) {
-  .ap-universes__grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+.ap-universes__row li {
+  flex: 0 0 auto;
 }
 
-.ap-universes__item a {
-  display: flex;
-  flex-direction: column;
+.ap-universes__row li a {
+  display: inline-flex;
+  align-items: center;
   gap: var(--space-sm);
   text-decoration: none;
   color: var(--color-ink-900);
+  white-space: nowrap;
+}
+
+.ap-universes__name {
+  white-space: nowrap;
 }
 
 .ap-universes__thumb {
-  aspect-ratio: 1 / 1;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius-none);
   border: 1px solid var(--color-border);
-  background: var(--color-canvas);
-  font-family: var(--font-display);
-  font-weight: var(--font-weight-display);
-  font-size: 1.1rem;
-  color: var(--color-text-muted);
+  border-radius: var(--radius-none);
+  background: var(--color-surface);
   overflow: hidden;
 }
 
@@ -282,16 +319,22 @@
   object-fit: cover;
 }
 
-.ap-universes__name {
-  font-size: 0.875rem;
-  font-weight: var(--font-weight-body-medium);
+.ap-universes__thumb--ph {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-display);
+  font-size: 1rem;
+  color: var(--color-text-muted);
 }
 
-.ap-universes__placeholder-note {
-  grid-column: 1 / -1;
-  margin: 0 0 var(--space-xs);
-  font-size: 0.75rem;
-  color: var(--color-text-muted);
+.ap-universes__name {
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body-medium);
+  font-size: 0.875rem;
 }
 
 /* ============================================================================
@@ -346,6 +389,14 @@ details[open] > .header__icon--menu .icon-close {
   display: block;
 }
 
+/* when open, the X sits at the drawer's top-right (wireframe 5a/6c) */
+.menu-drawer-container[open] > .header__icon--menu {
+  position: fixed;
+  z-index: 71;
+  top: var(--space-md);
+  left: calc(min(88vw, 380px) - 52px);
+}
+
 .menu-drawer {
   position: fixed;
   z-index: 60;
@@ -376,14 +427,103 @@ details[open] > .menu-drawer {
   height: 100%;
 }
 
+.menu-drawer__brand {
+  display: flex;
+  align-items: center;
+  padding: var(--space-lg) var(--space-xl);
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-ink-900);
+}
+
+.menu-drawer__brand svg,
+.menu-drawer__brand-img {
+  display: block;
+  height: 18px;
+  width: auto;
+}
+
 .menu-drawer__navigation {
-  padding: var(--space-5xl) var(--space-xl) var(--space-lg);
+  padding: var(--space-lg) var(--space-xl);
+}
+
+/* Universes — plain vertical list, always visible (6c: NOT accordion) */
+.menu-drawer__section-label {
+  margin: 0 0 var(--space-sm);
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body-medium);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.menu-drawer__universes-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu-drawer__universe {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-sm) 0;
+  text-decoration: none;
+  color: var(--color-ink-900);
+}
+
+.menu-drawer__universe-thumb {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-none);
+  background: var(--color-surface);
+  overflow: hidden;
+}
+
+.menu-drawer__universe-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.menu-drawer__universe-thumb--ph {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-display);
+  font-size: 0.9375rem;
+  color: var(--color-text-muted);
+}
+
+.menu-drawer__universe-name {
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body-medium);
+  font-size: 0.9375rem;
+}
+
+.menu-drawer__viewall {
+  display: inline-block;
+  margin-top: var(--space-sm);
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body-medium);
+  font-size: 0.875rem;
+  color: var(--color-gold-700);
+  text-decoration: none;
 }
 
 .menu-drawer__menu {
   list-style: none;
-  margin: 0;
-  padding: 0;
+  margin: var(--space-lg) 0 0;
+  padding: var(--space-md) 0 0;
+  border-top: 1px solid var(--color-border);
 }
 
 .menu-drawer__menu > li + li {

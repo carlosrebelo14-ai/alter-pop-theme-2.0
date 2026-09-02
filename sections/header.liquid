@@ -13,6 +13,10 @@
 {{ 'header.css' | asset_url | stylesheet_tag }}
 {{ 'search.css' | asset_url | stylesheet_tag }}
 <link rel="stylesheet" href="{{ 'component-cart-notification.css' | asset_url }}" media="print" onload="this.media='all'">
+{%- if localization.available_countries.size > 1 or localization.available_languages.size > 1 -%}
+  {%- comment -%} Dawn's compact country/currency dropdown — kept (not in the wireframe, flagged). {%- endcomment -%}
+  {{ 'component-localization-form.css' | asset_url | stylesheet_tag }}
+{%- endif -%}
 {%- if settings.predictive_search_enabled -%}
   <link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}" media="print" onload="this.media='all'">
 {%- endif -%}
@@ -26,7 +30,7 @@
     .section-header { margin-bottom: {{ section.settings.margin_bottom }}px; }
   }
 
-  shopify-account.ap-header__icon {
+  shopify-account.ap-header__account {
     --shopify-account-font-heading: var(--font-heading-family);
     --shopify-account-font-body: var(--font-body-family);
     --shopify-account-radius-base: var(--radius-md);
@@ -38,7 +42,6 @@
     --shopify-account-color-accent-text: var(--color-canvas);
     --shopify-account-dialog-position-top: var(--header-height, 0px);
   }
-  shopify-account.ap-header__icon:not(:defined) { min-width: 40px; height: 40px; }
 {%- endstyle -%}
 
 <script src="{{ 'cart-notification.js' | asset_url }}" defer="defer"></script>
@@ -102,17 +105,17 @@
     </a>
     {%- if request.page_type == 'index' -%}</h1>{%- endif -%}
 
+    {%- comment -%}
+      Wireframe 6a: 4 nav items — Universes / New Arrivals /
+      Limited Editions & Exclusives / Gifts Under €25 / Outlet (one item).
+      TODO: confirmar handles das coleções de curadoria — não vêm do menu do
+      admin (partilhado com o live).
+    {%- endcomment -%}
     <nav class="ap-nav" aria-label="{{ 'sections.header.menu' | t }}">
       {% render 'universes-panel' %}
       <a href="{{ curation_base }}/new-arrivals" class="ap-nav__link">{{ 'sections.header.new_arrivals' | t }}</a>
       <a href="{{ curation_base }}/limited-editions-exclusives" class="ap-nav__link">{{ 'sections.header.limited_editions' | t }}</a>
-      <a href="{{ curation_base }}/gifts-under-25" class="ap-nav__link">{{ 'sections.header.gifts_under_25' | t }}</a>
-      <a href="{{ curation_base }}/outlet" class="ap-nav__link">{{ 'sections.header.outlet' | t }}</a>
-      {%- comment -%}
-        TODO: confirmar handles das coleções de curadoria (new-arrivals /
-        limited-editions-exclusives / gifts-under-25 / outlet). Podem ainda
-        não existir na loja. Não vêm do menu do admin (partilhado com o live).
-      {%- endcomment -%}
+      <a href="{{ curation_base }}/gifts-under-25" class="ap-nav__link">{{ 'sections.header.gifts_outlet' | t }}</a>
     </nav>
 
     <div class="ap-header__actions">
@@ -137,27 +140,30 @@
         </localization-form>
       {%- endif -%}
 
-      {% render 'header-search', input_id: 'Search-In-Modal' %}
+      {% render 'header-search',
+        input_id: 'Search-In-Modal',
+        popular_searches: section.settings.popular_searches
+      %}
 
+      {%- comment -%} Account — text label, not an icon (wireframe 6a). {%- endcomment -%}
       {%- if shop.customer_accounts_enabled -%}
         <shopify-account
           menu="{{ settings.customer_account_menu | default: 'customer-account-main-menu' }}"
-          class="ap-header__icon ap-header__icon--account"
+          class="ap-header__account"
         >
-          <span slot="signed-out-avatar" class="svg-wrapper">{{ 'icon-account.svg' | inline_asset_content }}</span>
-          <span slot="signed-out-avatar" class="visually-hidden">{{ 'customer.log_in' | t }}</span>
+          <span slot="signed-out-avatar">{{ 'sections.header.account' | t }}</span>
         </shopify-account>
+      {%- else -%}
+        <a href="{{ routes.account_url }}" class="ap-header__account">{{ 'sections.header.account' | t }}</a>
       {%- endif -%}
 
       {%- for block in section.blocks -%}
         {%- if block.type == '@app' -%}{% render block %}{%- endif -%}
       {%- endfor -%}
 
-      <a href="{{ routes.cart_url }}" class="ap-header__icon ap-header__icon--cart" id="cart-icon-bubble">
-        <span class="svg-wrapper">
-          {%- if cart == empty -%}{{ 'icon-cart-empty.svg' | inline_asset_content }}{%- else -%}{{ 'icon-cart.svg' | inline_asset_content }}{%- endif -%}
-        </span>
-        <span class="visually-hidden">{{ 'templates.cart.cart' | t }}</span>
+      {%- comment -%} Cart — "Cart" text + count in a dark circle, bordered box (6a). {%- endcomment -%}
+      <a href="{{ routes.cart_url }}" class="ap-header__cart" id="cart-icon-bubble">
+        <span>{{ 'templates.cart.cart' | t }}</span>
         {%- if cart != empty -%}
           <span class="ap-header__cart-count" aria-hidden="true">{{ cart.item_count }}</span>
           <span class="visually-hidden">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
@@ -352,6 +358,13 @@
   "class": "section-header",
   "max_blocks": 3,
   "settings": [
+    {
+      "type": "text",
+      "id": "popular_searches",
+      "label": "Popular searches",
+      "info": "Comma-separated terms shown as chips in the empty search overlay.",
+      "default": "Demon Slayer, One Piece, Star Wars, Stranger Things"
+    },
     {
       "type": "select",
       "id": "logo_position",

@@ -95,6 +95,14 @@
   flex: 1 1 auto;
 }
 
+/* Status slot — always present (even on Available) so titles / prices align
+   across every column of a grid. The pill / "Sold Out" label fills it. */
+.ap-card__status {
+  display: flex;
+  align-items: center;
+  min-height: 26px;
+}
+
 /* Status line (directly under the image) */
 .ap-card__stock {
   display: inline-flex;

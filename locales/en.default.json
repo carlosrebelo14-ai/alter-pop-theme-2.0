@@ -37,7 +37,8 @@
     },
     "search": {
       "search": "Search",
-      "reset": "Clear search term"
+      "reset": "Clear search term",
+      "search_the_catalog": "Search the Catalog"
     },
     "cart": {
       "view": "View cart ({{ count }})",
@@ -254,7 +255,9 @@
       "title": "Search results",
       "search_for": "Search for “{{ terms }}”",
       "suggestions": "Suggestions",
-      "pages": "Pages"
+      "pages": "Pages",
+      "no_results_hint": "Try a character or series name.",
+      "browse_catalog": "Browse the catalog"
     },
     "cart": {
       "cart": "Cart"
@@ -301,7 +304,6 @@
       "announcement": "Announcement",
       "announcement_bar": "Announcement bar"
     },
-
     "header": {
       "announcement": "Announcement",
       "menu": "Menu",
@@ -316,7 +318,11 @@
       "cart_count": {
         "one": "{{ count }} item",
         "other": "{{ count }} items"
-      }
+      },
+      "gifts_outlet": "Gifts Under €25 / Outlet",
+      "view_all_universes": "View All Universes",
+      "account": "Account",
+      "popular_searches": "Popular Searches"
     },
     "cart": {
       "title": "Your cart",

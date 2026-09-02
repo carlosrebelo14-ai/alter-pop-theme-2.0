@@ -106,6 +106,12 @@
           </div>
         {%- endif -%}
 
+        {%- comment -%}
+          Compact list (thumbnail + title + price) — NOT the full product
+          card. Decision taken in the absence of a wireframe page (recorded
+          in CLAUDE.md): 8a lists the card as used in New Arrivals /
+          Bestsellers / Universe Room / Gifts Under €25, not search.
+        {%- endcomment -%}
         {%- if products_count > 0 -%}
           <div class="predictive-search__group">
             <h2 id="predictive-search-products" class="predictive-search__heading">
@@ -117,7 +123,6 @@
               role="group"
               aria-labelledby="predictive-search-products"
             >
-              {%- assign skip_ps_card_styles = false -%}
               {%- for product in predictive_search.resources.products -%}
                 <li
                   id="predictive-search-option-product-{{ forloop.index }}"
@@ -126,20 +131,40 @@
                   aria-selected="false"
                 >
                   <product-component view-event-payload="{{ product | standard_event_data: 'view', context: 'search' | escape }}">
-                    {%- render 'product-card',
-                      card_product: product,
-                      section_id: 'predictive-search',
-                      lazy_load: false,
-                      skip_styles: skip_ps_card_styles
-                    -%}
+                    <a href="{{ product.url }}" class="ap-psr" tabindex="-1">
+                      <span class="ap-psr__media">
+                        {%- if product.featured_media -%}
+                          <img src="{{ product.featured_media | image_url: width: 120 }}" alt="" width="48" height="48" loading="lazy">
+                        {%- endif -%}
+                      </span>
+                      <span class="ap-psr__title">{{ product.title | escape }}</span>
+                      <span class="ap-psr__price">{{ product.price | money }}</span>
+                    </a>
                   </product-component>
                 </li>
-                {%- assign skip_ps_card_styles = true -%}
               {%- endfor -%}
             </ul>
           </div>
         {%- endif -%}
 
+      </div>
+    {%- else -%}
+      {%- comment -%}
+        No-results state (wireframe 5c). The "{N} pieces in {franchise}" line
+        needs the Franchise field (BLOQUEADO) — omitted; generic helper +
+        a way out instead.
+      {%- endcomment -%}
+      <div class="ap-search__noresults">
+        <span class="ap-search__noresults-mark" aria-hidden="true">
+          {{- 'symbol-ink.svg' | inline_asset_content -}}
+        </span>
+        <p class="ap-search__noresults-heading">
+          {{ 'templates.search.no_results' | t: terms: predictive_search.terms }}
+        </p>
+        <p class="ap-search__noresults-hint">{{ 'templates.search.no_results_hint' | t }}</p>
+        <a class="ap-search__noresults-cta" href="{{ routes.all_products_collection_url }}">
+          {{- 'templates.search.browse_catalog' | t -}}
+        </a>
       </div>
     {%- endif -%}
 

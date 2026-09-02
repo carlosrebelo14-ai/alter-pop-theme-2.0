@@ -113,11 +113,14 @@
 
     <div class="ap-card__body">
       {%- unless compact -%}
-        {%- if state == 'limited' -%}
-          <span class="ap-card__stock">{{ 'products.card.in_stock' | t: count: qty }}</span>
-        {%- elsif state == 'soldout' -%}
-          <span class="ap-card__soldout">{{ 'products.card.sold_out' | t }}</span>
-        {%- endif -%}
+        {%- comment -%} status slot is always rendered so the grid stays flush {%- endcomment -%}
+        <span class="ap-card__status">
+          {%- if state == 'limited' -%}
+            <span class="ap-card__stock">{{ 'products.card.in_stock' | t: count: qty }}</span>
+          {%- elsif state == 'soldout' -%}
+            <span class="ap-card__soldout">{{ 'products.card.sold_out' | t }}</span>
+          {%- endif -%}
+        </span>
 
         {%- if franchise != blank or line != blank -%}
           <p class="ap-card__meta">

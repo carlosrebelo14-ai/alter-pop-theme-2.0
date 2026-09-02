@@ -1,64 +1,56 @@
 {% comment %}
-  Alterpop — Search Overlay (header). Wireframe 5c.
-  Full-width on mobile, centered panel on desktop.
+  Alterpop — Search Overlay (header). Source of truth:
+  Wireframe_Alterpop_3_3.pdf 5c / 5d.
 
-  Structure + visuals are ours (assets/search.css, tokens.css only).
-  Dawn behaviour kept intact:
+  "Overlay replaces the header nav row full-width instead of squeezing an
+  inline input." A full-width bar at the header position: wordmark + search
+  icon + 'Search the Catalog' input + close (far right). Below it a panel:
+  POPULAR SEARCHES chips (empty state) / predictive results (compact list) /
+  no-results state.
+
+  Behaviour kept from Dawn:
     - <details-modal> (details-modal.js): focus trap into [tabindex="-1"],
-      Escape, click-outside via .modal-overlay, body scroll lock, close button.
-    - <predictive-search> / <search-form> (predictive-search.js / search-form.js):
-      debounced fetch of ?section_id=predictive-search, keyboard nav, reset.
-  Required hooks kept: input[type="search"], button[type="reset"],
-    [data-predictive-search], .predictive-search-status, button[type="button"].
+      Escape, click-outside via .modal-overlay, body scroll lock, one
+      button[type="button"] close.
+    - <predictive-search> / <search-form> (predictive-search.js /
+      search-form.js). Hooks kept: input[type=search], button[type=reset],
+      [data-predictive-search], .predictive-search-status.
   No Marigold here.
 
   Accepts:
   - input_id: {String} id for the search input (required)
+  - popular_searches: {String} comma-separated terms for the empty-state chips
 {% endcomment %}
 
-<details-modal class="ap-search">
+<details-modal class="ap-search" data-has-query="false">
   <details>
     <summary
       class="ap-search__toggle"
       aria-haspopup="dialog"
       aria-label="{{ 'general.search.search' | t }}"
     >
-      <svg class="ap-search__icon-search" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+      <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
         <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.75"/>
         <path d="m14 14 4 4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
       </svg>
-      <svg class="ap-search__icon-close" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
-        <path d="M5 5 15 15M15 5 5 15" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
-      </svg>
     </summary>
 
-    <div
-      class="ap-search__dialog"
-      role="dialog"
-      aria-modal="true"
-      aria-label="{{ 'general.search.search' | t }}"
-    >
+    <div class="ap-search__dialog" role="dialog" aria-modal="true" aria-label="{{ 'general.search.search' | t }}">
       <div class="ap-search__overlay modal-overlay"></div>
 
-      <div class="ap-search__panel" tabindex="-1">
-        <button
-          type="button"
-          class="ap-search__close"
-          aria-label="{{ 'accessibility.close' | t }}"
-        >
-          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
-            <path d="M5 5 15 15M15 5 5 15" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
-          </svg>
-        </button>
+      <div class="ap-search__bar">
+        <div class="ap-search__bar-inner page-width">
+          <a href="{{ routes.root_url }}" class="ap-search__brand" aria-hidden="true" tabindex="-1">
+            {{- 'lockup-horizontal-ink.svg' | inline_asset_content -}}
+          </a>
 
-        {%- if settings.predictive_search_enabled -%}
-          <predictive-search class="ap-search__form" data-loading-text="{{ 'accessibility.loading' | t }}">
-        {%- else -%}
-          <search-form class="ap-search__form">
-        {%- endif -%}
-          <form action="{{ routes.search_url }}" method="get" role="search" class="ap-search__form-inner">
-            <div class="ap-search__field">
-              <svg class="ap-search__field-btn" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+          {%- if settings.predictive_search_enabled -%}
+            <predictive-search class="ap-search__form" data-loading-text="{{ 'accessibility.loading' | t }}">
+          {%- else -%}
+            <search-form class="ap-search__form">
+          {%- endif -%}
+            <form action="{{ routes.search_url }}" method="get" role="search" class="ap-search__form-inner">
+              <svg class="ap-search__form-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
                 <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.75"/>
                 <path d="m14 14 4 4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
               </svg>
@@ -68,7 +60,7 @@
                 type="search"
                 name="q"
                 value="{{ search.terms | escape }}"
-                placeholder="{{ 'general.search.search' | t }}"
+                placeholder="{{ 'general.search.search_the_catalog' | t }}"
                 {%- if settings.predictive_search_enabled -%}
                   role="combobox"
                   aria-expanded="false"
@@ -86,33 +78,64 @@
               <input type="hidden" name="options[prefix]" value="last">
               <button
                 type="reset"
-                class="ap-search__field-btn reset__button{% if search.terms == blank %} hidden{% endif %}"
+                class="ap-search__reset reset__button{% if search.terms == blank %} hidden{% endif %}"
                 aria-label="{{ 'general.search.reset' | t }}"
               >
                 <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
                   <path d="M5 5 15 15M15 5 5 15" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
                 </svg>
               </button>
-              <button type="submit" class="ap-search__field-btn search__button" aria-label="{{ 'general.search.search' | t }}">
-                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
-                  <path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </button>
-            </div>
+            </form>
 
-            {%- if settings.predictive_search_enabled -%}
-              <div class="predictive-search" tabindex="-1" data-predictive-search>
-                {%- render 'loading-spinner', class: 'predictive-search__loading-state' -%}
-              </div>
-              <span class="predictive-search-status" role="status" aria-hidden="true"></span>
-            {%- endif -%}
-          </form>
-        {%- if settings.predictive_search_enabled -%}
-          </predictive-search>
-        {%- else -%}
-          </search-form>
-        {%- endif -%}
+            <div class="ap-search__panel" tabindex="-1">
+              {%- assign terms = popular_searches | default: '' | split: ',' -%}
+              {%- if terms.size > 0 -%}
+                <div class="ap-search__popular" data-search-popular>
+                  <p class="ap-search__popular-label">{{ 'sections.header.popular_searches' | t }}</p>
+                  <ul class="ap-search__chips" role="list">
+                    {%- for term in terms -%}
+                      {%- assign t = term | strip -%}
+                      {%- if t != blank -%}
+                        <li>
+                          <a class="ap-search__chip" href="{{ routes.search_url }}?q={{ t | url_encode }}">{{ t }}</a>
+                        </li>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </ul>
+                </div>
+              {%- endif -%}
+
+              {%- if settings.predictive_search_enabled -%}
+                <div class="predictive-search" tabindex="-1" data-predictive-search>
+                  {%- render 'loading-spinner', class: 'predictive-search__loading-state' -%}
+                </div>
+                <span class="predictive-search-status" role="status" aria-hidden="true"></span>
+              {%- endif -%}
+            </div>
+          {%- if settings.predictive_search_enabled -%}
+            </predictive-search>
+          {%- else -%}
+            </search-form>
+          {%- endif -%}
+
+          <button type="button" class="ap-search__close" aria-label="{{ 'accessibility.close' | t }}">
+            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+              <path d="M5 5 15 15M15 5 5 15" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
   </details>
+
+  <script>
+    (() => {
+      const el = document.currentScript.closest('details-modal');
+      const input = el.querySelector('input[type="search"]');
+      if (!input) return;
+      input.addEventListener('input', () => {
+        el.dataset.hasQuery = input.value.trim().length > 0 ? 'true' : 'false';
+      });
+    })();
+  </script>
 </details-modal>

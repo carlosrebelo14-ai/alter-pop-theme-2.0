@@ -1,21 +1,23 @@
 {% comment %}
-  Alterpop — Mobile Drawer (header)
-  ================================
-  Structure + behaviour stay Dawn's: <header-drawer> is bound by global.js
-  (HeaderDrawer extends MenuDrawer) for focus trap, Escape, body scroll lock,
-  submenu open/close. We only replace the *content* and (via assets/header.css)
-  the visuals. We do NOT render section.settings.menu — the admin menu is the
-  old structure and is shared with the live theme.
+  Alterpop — Mobile Drawer (header). Source of truth:
+  Wireframe_Alterpop_3_3.pdf 5a / 6c.
 
-  Nav: Universes (expands to the franchise list) / New Arrivals /
-       Limited Editions & Exclusives / Gifts Under €25 / Outlet
+  Structure + behaviour stay Dawn's <header-drawer> (global.js: focus trap,
+  Escape, body scroll lock, open on --motion-transactional). We replace the
+  content and (via assets/header.css) the visuals. section.settings.menu is
+  NOT rendered — the admin menu is the old structure, shared with live.
 
-  Accepts:
-  - show_country_selector, show_language_selector, show_social_links {Boolean}
+  6c: "Universes is the first section in the hamburger drawer — a plain
+  vertical list (NOT accordion), fully visible on open, scroll if needed."
+  Each row = small square thumbnail + franchise name; then "View All
+  Universes ->". Below: New Arrivals / Limited Editions & Exclusives /
+  Gifts Under €25 / Outlet.
 
-  BLOQUEADO: aguarda app — a lista de franquias dentro de "Universes" é o mesmo
-  campo Franchise/Universe da app (ver snippets/universes-panel.liquid). Aqui
-  usa-se o mesmo placeholder de desenvolvimento. Não inferir de tags/coleções.
+  BLOQUEADO: aguarda app — the franchise list. Same slot as the header
+  (shop.metafields.alterpop.universes.value). Empty -> dev placeholder.
+  No inference from tags / collections / custom.parent_collection.
+
+  Accepts: show_country_selector, show_language_selector, show_social_links.
 {% endcomment %}
 
 {%- liquid
@@ -25,7 +27,7 @@
   assign ap_universes_is_placeholder = false
   if ap_universes == blank
     assign ap_universes_is_placeholder = true
-    assign ph_titles = 'One Piece,Harry Potter,Naruto,Marvel,Star Wars,Dragon Ball,Demon Slayer,The Witcher' | split: ','
+    assign ph_titles = 'Star Wars,Demon Slayer,One Piece,Stranger Things,The Mandalorian,Attack on Titan' | split: ','
   endif
 -%}
 
@@ -46,76 +48,54 @@
     <div id="menu-drawer" class="menu-drawer motion-reduce">
       <div class="menu-drawer__inner-container">
         <div class="menu-drawer__navigation-container">
-          <nav class="menu-drawer__navigation">
-            <ul class="menu-drawer__menu has-submenu list-menu" role="list">
-              <li>
-                <details id="Details-menu-drawer-universes">
-                  <summary
-                    id="HeaderDrawer-universes"
-                    class="menu-drawer__menu-item list-menu__item link"
-                  >
-                    {{ 'sections.header.universes' | t }}
-                    <span class="svg-wrapper" aria-hidden="true">
-                      <svg viewBox="0 0 20 20" fill="none"><path d="M7 4 13 10 7 16" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </span>
-                  </summary>
-                  <div id="link-universes" class="menu-drawer__submenu has-submenu motion-reduce" tabindex="-1">
-                    <div class="menu-drawer__inner-submenu">
-                      <button class="menu-drawer__close-button link" aria-expanded="true">
-                        <span class="svg-wrapper" aria-hidden="true">
-                          <svg viewBox="0 0 20 20" fill="none"><path d="M13 4 7 10 13 16" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        </span>
-                        {{ 'sections.header.universes' | t }}
-                      </button>
-                      <ul class="menu-drawer__menu list-menu" role="list" tabindex="-1">
-                        {%- if ap_universes_is_placeholder -%}
-                          {%- for title in ph_titles -%}
-                            <li>
-                              <a href="{{ routes.all_products_collection_url }}" class="menu-drawer__menu-item list-menu__item link">
-                                {{ title }}
-                              </a>
-                            </li>
-                          {%- endfor -%}
-                        {%- else -%}
-                          {%- for universe in ap_universes -%}
-                            <li>
-                              <a href="{{ universe.url }}" class="menu-drawer__menu-item list-menu__item link">
-                                {{ universe.title | escape }}
-                              </a>
-                            </li>
-                          {%- endfor -%}
-                        {%- endif -%}
-                      </ul>
-                    </div>
-                  </div>
-                </details>
-              </li>
 
-              <li>
-                <a href="{{ curation_base }}/new-arrivals" class="menu-drawer__menu-item list-menu__item link">
-                  {{ 'sections.header.new_arrivals' | t }}
-                </a>
-              </li>
-              <li>
-                <a href="{{ curation_base }}/limited-editions-exclusives" class="menu-drawer__menu-item list-menu__item link">
-                  {{ 'sections.header.limited_editions' | t }}
-                </a>
-              </li>
-              <li>
-                <a href="{{ curation_base }}/gifts-under-25" class="menu-drawer__menu-item list-menu__item link">
-                  {{ 'sections.header.gifts_under_25' | t }}
-                </a>
-              </li>
-              <li>
-                <a href="{{ curation_base }}/outlet" class="menu-drawer__menu-item list-menu__item link">
-                  {{ 'sections.header.outlet' | t }}
-                </a>
-              </li>
-              {%- comment -%}
-                TODO: confirmar os handles das coleções de curadoria
-                (new-arrivals / limited-editions-exclusives / gifts-under-25 /
-                outlet). Podem ainda não existir na loja.
-              {%- endcomment -%}
+          <a href="{{ routes.root_url }}" class="menu-drawer__brand" aria-label="{{ shop.name | escape }}">
+            {%- if settings.logo != blank -%}
+              {{ settings.logo | image_url: width: 360 | image_tag: class: 'menu-drawer__brand-img', width: settings.logo_width, alt: shop.name | escape }}
+            {%- else -%}
+              {{- 'lockup-horizontal-ink.svg' | inline_asset_content -}}
+            {%- endif -%}
+          </a>
+
+          <nav class="menu-drawer__navigation" aria-label="{{ 'sections.header.menu' | t }}">
+            <div class="menu-drawer__universes">
+              <p class="menu-drawer__section-label">{{ 'sections.header.universes' | t }}</p>
+              <ul class="menu-drawer__universes-list" role="list">
+                {%- if ap_universes_is_placeholder -%}
+                  {%- for title in ph_titles -%}
+                    <li>
+                      <a href="{{ routes.all_products_collection_url }}" class="menu-drawer__universe">
+                        <span class="menu-drawer__universe-thumb menu-drawer__universe-thumb--ph" aria-hidden="true">{{ title | slice: 0, 1 }}</span>
+                        <span class="menu-drawer__universe-name">{{ title }}</span>
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                {%- else -%}
+                  {%- for universe in ap_universes -%}
+                    <li>
+                      <a href="{{ universe.url }}" class="menu-drawer__universe">
+                        <span class="menu-drawer__universe-thumb">
+                          {%- if universe.image -%}
+                            {{ universe.image | image_url: width: 80 | image_tag: loading: 'lazy', alt: universe.title | escape }}
+                          {%- else -%}
+                            <span class="menu-drawer__universe-thumb--ph" aria-hidden="true">{{ universe.title | slice: 0, 1 }}</span>
+                          {%- endif -%}
+                        </span>
+                        <span class="menu-drawer__universe-name">{{ universe.title | escape }}</span>
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                {%- endif -%}
+              </ul>
+              <a href="{{ curation_base }}" class="menu-drawer__viewall">
+                {{- 'sections.header.view_all_universes' | t }} <span aria-hidden="true">&rarr;</span>
+              </a>
+            </div>
+
+            <ul class="menu-drawer__menu list-menu" role="list">
+              <li><a href="{{ curation_base }}/new-arrivals" class="menu-drawer__menu-item">{{ 'sections.header.new_arrivals' | t }}</a></li>
+              <li><a href="{{ curation_base }}/limited-editions-exclusives" class="menu-drawer__menu-item">{{ 'sections.header.limited_editions' | t }}</a></li>
+              <li><a href="{{ curation_base }}/gifts-under-25" class="menu-drawer__menu-item">{{ 'sections.header.gifts_outlet' | t }}</a></li>
             </ul>
           </nav>
 

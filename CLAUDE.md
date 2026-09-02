@@ -126,3 +126,20 @@ uploaded copy is stale until a restart + re-verify says otherwise.
 - **Asset cleanup** deferred: `component-card.css` + `quick-add*` /
   `quick-order-list*` loads (Phase 1A follow-up); `component-menu-drawer.css` /
   `component-list-menu.css` / `component-mega-menu.css` (Phase 1B follow-up).
+
+## Decisions taken in the absence of a wireframe page
+
+- **Predictive-search results = a compact list** (thumbnail + title + price
+  rows), NOT the full product card grid. The wireframe search pages (5c
+  no-results, 5d empty/popular) never show a results-with-products state, and
+  card spec 8a lists the card as used in "New Arrivals, Bestsellers, Universe
+  Room, Gifts Under €25" — not search. `sections/predictive-search.liquid`.
+- **Country / currency selector is kept in the header** even though it appears
+  on NO wireframe page (checked 6a header, 5a/6c drawer, 1a/1b footer).
+  Removing it risks breaking multi-currency; kept minimal in the header
+  actions cluster, flagged for the designer.
+- **Card status line height is reserved on every product card** (Available
+  included) so the grid stays flush; the "N In Stock" pill / "Sold Out"
+  label just fills the reserved slot. 8a shows the pill pushing the title
+  down per-card; reserving the slot is the "clear improvement" the user
+  approved for grid rhythm.

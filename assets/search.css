@@ -1,25 +1,19 @@
 /* ============================================================================
-   Alterpop — Search Overlay (Phase 1C). Wireframe 5c.
-   Self-contained: tokens.css only. Does NOT use Dawn's component-search.css.
-   Keeps Dawn's predictive-search.js / search-form.js / details-modal.js
-   contracts — structure + visuals only are ours. No Marigold here.
+   Alterpop — Search Overlay. Source of truth: Wireframe_Alterpop_3_3.pdf 5c / 5d.
+   The overlay is a FULL-WIDTH BAR at the header position (wordmark + input +
+   close), with a panel below: POPULAR SEARCHES chips / compact predictive
+   results / no-results state.
+   Self-contained: tokens.css only. No Marigold.
    ============================================================================ */
 
 .ap-search {
   display: inline-flex;
 }
 
-.ap-search details {
-  position: static;
-}
+.ap-search details { position: static; }
 
-.ap-search summary {
-  list-style: none;
-}
-
-.ap-search summary::-webkit-details-marker {
-  display: none;
-}
+.ap-search summary { list-style: none; cursor: pointer; }
+.ap-search summary::-webkit-details-marker { display: none; }
 
 .ap-search__toggle {
   display: inline-flex;
@@ -28,109 +22,101 @@
   width: 40px;
   height: 40px;
   color: var(--color-ink-900);
-  cursor: pointer;
 }
 
-.ap-search__toggle svg {
-  width: 22px;
-  height: 22px;
-}
+.ap-search__toggle svg { width: 22px; height: 22px; }
 
-.ap-search__toggle .ap-search__icon-close {
-  display: none;
-}
-
-.ap-search details[open] .ap-search__toggle .ap-search__icon-search {
-  display: none;
-}
-
-.ap-search details[open] .ap-search__toggle .ap-search__icon-close {
-  display: block;
-}
-
-/* --- Overlay ------------------------------------------------------------- */
+/* --- Dialog: full-width, anchored to .header-wrapper -------------------- */
 .ap-search__dialog {
-  position: fixed;
-  inset: 0;
-  z-index: 80;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 60;
   display: none;
 }
 
-.ap-search details[open] .ap-search__dialog {
-  display: block;
-}
+.ap-search details[open] .ap-search__dialog { display: block; }
 
 .ap-search__overlay {
-  position: absolute;
+  position: fixed;
   inset: 0;
-  background: rgba(18, 16, 20, 0.32);
+  z-index: -1;
+  background: rgba(18, 16, 20, 0.28);
 }
 
-.ap-search__panel {
-  position: absolute;
-  inset: 0 0 auto 0;
-  display: flex;
-  flex-direction: column;
-  max-height: 100vh;
-  padding: var(--space-lg) var(--space-lg) var(--space-xl);
+/* the bar sits where the header row was */
+.ap-search__bar {
   background: var(--color-canvas);
   border-bottom: 1px solid var(--color-border);
+  animation: ap-search-in var(--motion-editorial) both;
 }
+
+@keyframes ap-search-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.ap-search__bar-inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  min-height: 72px;
+  padding: var(--space-sm) var(--space-xl);
+}
+
+.ap-search__brand {
+  flex: 0 0 auto;
+  display: none;
+  color: var(--color-ink-900);
+}
+
+.ap-search__brand svg { display: block; height: 20px; width: auto; }
 
 @media (min-width: 750px) {
-  .ap-search__panel {
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
-    width: min(720px, calc(100vw - 3rem));
-    inset-block-start: var(--space-4xl);
-    max-height: min(78vh, 620px);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-sm);
-  }
+  .ap-search__brand { display: inline-flex; }
 }
 
-/* --- Field ------------------------------------------------------------------- */
-.ap-search__form {
-  display: block;
-}
+/* --- Form (fills the bar) ------------------------------------------------ */
+.ap-search__form { flex: 1 1 auto; min-width: 0; }
 
-.ap-search__field {
+.ap-search__form-inner {
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-  padding: var(--space-sm) var(--space-md);
-  border: 1px solid var(--color-ink-900);
-  border-radius: var(--radius-xs);
-  background: var(--color-surface);
 }
 
-.ap-search__field:focus-within {
-  outline: 2px solid var(--color-ink-900);
-  outline-offset: 2px;
+.ap-search__form-icon {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  color: var(--color-text-muted);
 }
 
 .ap-search__input {
   flex: 1 1 auto;
   min-width: 0;
+  height: 40px;
   border: 0;
   background: none;
   font-family: var(--font-body);
-  font-size: 1rem;
+  font-size: 1.0625rem;
   color: var(--color-ink-900);
-  line-height: 1.4;
 }
 
-.ap-search__input::placeholder {
-  color: var(--color-text-muted);
+.ap-search__input::placeholder { color: var(--color-text-muted); }
+.ap-search__input:focus { outline: none; }
+
+.ap-search__label {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 
-.ap-search__input:focus {
-  outline: none;
-}
-
-.ap-search__field-btn {
+.ap-search__reset {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -143,64 +129,84 @@
   cursor: pointer;
 }
 
-.ap-search__field-btn svg {
-  width: 16px;
-  height: 16px;
-}
-
-.ap-search__field-btn.hidden {
-  display: none;
-}
-
-.ap-search__label {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-}
+.ap-search__reset svg { width: 14px; height: 14px; }
+.ap-search__reset.hidden { display: none; }
 
 .ap-search__close {
-  align-self: flex-end;
-  margin-bottom: var(--space-sm);
+  flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: transparent;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  background: none;
   color: var(--color-ink-900);
   cursor: pointer;
 }
 
-.ap-search__close svg {
-  width: 14px;
-  height: 14px;
-}
+.ap-search__close svg { width: 18px; height: 18px; }
 
-/* --- Results -------------------------------------------------------------- */
-.predictive-search {
-  margin-top: var(--space-md);
+/* --- Panel (below the bar) -------------------------------------------------- */
+.ap-search__panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  max-height: calc(100vh - 72px);
   overflow-y: auto;
-  flex: 1 1 auto;
+  padding: var(--space-lg) var(--space-xl);
+  background: var(--color-canvas);
+  border-bottom: 1px solid var(--color-border);
 }
 
-.predictive-search__loading-state {
-  display: none;
+/* Popular searches — hidden once the user types (data-has-query on the modal) */
+.ap-search__popular-label {
+  margin: 0 0 var(--space-md);
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body-medium);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
 }
 
-.predictive-search[aria-hidden="true"] {
-  display: none;
+.ap-search__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
+
+.ap-search__chip {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 var(--space-md);
+  border: 1px solid var(--color-ink-900);
+  border-radius: var(--radius-xs);
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body-medium);
+  font-size: 0.875rem;
+  color: var(--color-ink-900);
+  text-decoration: none;
+}
+
+.ap-search[data-has-query="true"] [data-search-popular] { display: none; }
+
+/* --- Compact predictive results --------------------------------------------- */
+.predictive-search__loading-state { display: none; }
+.predictive-search[aria-hidden="true"] { display: none; }
 
 #predictive-search-results {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xl);
+  gap: var(--space-lg);
 }
+
+.predictive-search__group + .predictive-search__group { margin-top: var(--space-md); }
 
 .predictive-search__heading {
   margin: 0 0 var(--space-sm);
@@ -218,7 +224,6 @@
   padding: 0;
 }
 
-/* text suggestions (queries / collections / pages / articles) */
 .predictive-search__list-item .predictive-search__item {
   display: flex;
   align-items: center;
@@ -231,17 +236,13 @@
 }
 
 .predictive-search__list-item[aria-selected="true"] .predictive-search__item,
-.predictive-search__list-item .predictive-search__item:hover {
+.predictive-search__list-item[aria-selected="true"] .ap-psr,
+.predictive-search__list-item .predictive-search__item:hover,
+.ap-psr:hover {
   background: var(--color-surface);
 }
 
-.predictive-search__item-heading {
-  margin: 0;
-  font-weight: var(--font-weight-body-medium);
-}
-
-/* Shopify's query.styled_text wraps the matched term in <b>/<mark>. Keep it
-   on-brand: weight, not a highlight colour. */
+.predictive-search__item-heading { margin: 0; font-weight: var(--font-weight-body-medium); }
 .predictive-search__item-heading b,
 .predictive-search__item-heading mark {
   background: none;
@@ -249,31 +250,45 @@
   font-weight: var(--font-weight-body-strong);
 }
 
-/* product results — a compact grid of the ONE product card */
-.predictive-search__results-list--products {
+/* compact product row */
+.ap-psr {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 48px 1fr auto;
+  align-items: center;
   gap: var(--space-md);
+  padding: var(--space-xs);
+  border-radius: var(--radius-xs);
+  text-decoration: none;
+  color: var(--color-ink-900);
 }
 
-@media (min-width: 750px) {
-  .predictive-search__results-list--products {
-    grid-template-columns: repeat(3, 1fr);
-  }
+.ap-psr__media {
+  width: 48px;
+  height: 48px;
+  overflow: hidden;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
 }
 
-.predictive-search__results-list--products .predictive-search__list-item {
-  margin: 0;
+.ap-psr__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.ap-psr__title {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.predictive-search__results-list--products .predictive-search__list-item[aria-selected="true"] .ap-card {
-  outline: 2px solid var(--color-ink-900);
-  outline-offset: 2px;
+.ap-psr__price {
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body-strong);
+  font-size: 0.875rem;
+  white-space: nowrap;
 }
 
-.predictive-search__search-for-button {
-  margin-top: var(--space-md);
-}
+/* "search for X ->" term button */
+.predictive-search__search-for-button { margin-top: var(--space-md); }
 
 .predictive-search__item--term {
   display: inline-flex;
@@ -292,31 +307,65 @@
   cursor: pointer;
 }
 
-.predictive-search__item--term svg {
-  width: 14px;
-  height: 14px;
+.predictive-search__item--term svg { width: 14px; height: 14px; }
+.predictive-search__item--term[aria-selected="true"],
+.predictive-search__item--term:hover { background: var(--color-surface); }
+
+/* --- No-results state (wireframe 5c) -------------------------------------- */
+.ap-search__noresults {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-sm);
+  padding: var(--space-3xl) var(--space-lg);
 }
 
-.predictive-search__item--term[aria-selected="true"],
-.predictive-search__item--term:hover {
-  background: var(--color-surface);
+.ap-search__noresults-mark svg {
+  width: 40px;
+  height: 40px;
+  color: var(--color-border);
+}
+
+.ap-search__noresults-heading {
+  margin: var(--space-sm) 0 0;
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-display);
+  font-size: 1.125rem;
+  color: var(--color-ink-900);
+}
+
+.ap-search__noresults-hint {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.ap-search__noresults-cta {
+  margin-top: var(--space-md);
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 var(--space-lg);
+  border: 1px solid var(--color-ink-900);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body-strong);
+  font-size: 0.875rem;
+  color: var(--color-ink-900);
+  text-decoration: none;
 }
 
 .predictive-search-status {
   position: absolute;
-  width: 1px;
-  height: 1px;
+  width: 1px; height: 1px;
   overflow: hidden;
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
 
-.hidden {
-  display: none !important;
-}
+.hidden { display: none !important; }
 
 @media (prefers-reduced-motion: reduce) {
-  .ap-search__panel {
-    transition: none;
-  }
+  .ap-search__bar { animation: none; }
 }

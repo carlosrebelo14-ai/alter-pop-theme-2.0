@@ -1,0 +1,78 @@
+{{ 'homepage.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  Alterpop — Trust badges (Phase 2). Wireframe 1a.
+  Fixed set: Ships Across Europe / Real, Synced Stock / 14-Day Returns.
+  Icon above, muted caption below, centered. No border/fill per badge.
+  Neutral (ink) — never Marigold.
+{%- endcomment -%}
+
+{%- if section.blocks.size > 0 -%}
+  <section class="ap-trust" aria-label="{{ 'sections.trust.label' | t }}">
+    <ul class="ap-trust__list" role="list">
+      {%- for block in section.blocks -%}
+        <li class="ap-trust__item" {{ block.shopify_attributes }}>
+          {%- case block.settings.icon -%}
+            {%- when 'ship' -%}
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+                <path d="M2 15h13V6H4a2 2 0 0 0-2 2v7Zm13-6h4l3 4v2h-7V9ZM6 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm12 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" stroke="currentColor" stroke-linejoin="round"/>
+              </svg>
+            {%- when 'sync' -%}
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+                <path d="M4 12a8 8 0 0 1 13.5-5.8L20 8M20 4v4h-4M20 12a8 8 0 0 1-13.5 5.8L4 16M4 20v-4h4" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            {%- when 'returns' -%}
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+                <path d="M9 5 4 10l5 5M4 10h11a5 5 0 0 1 0 10H8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            {%- else -%}
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+                <path d="m5 13 4 4 10-10" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+          {%- endcase -%}
+          <span>{{ block.settings.text | escape }}</span>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Trust badges",
+  "tag": "section",
+  "class": "section-trust",
+  "max_blocks": 4,
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Badge",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "ship", "label": "Shipping" },
+            { "value": "sync", "label": "Sync / stock" },
+            { "value": "returns", "label": "Returns" },
+            { "value": "check", "label": "Check" }
+          ],
+          "default": "check"
+        },
+        { "type": "text", "id": "text", "label": "Text", "default": "Trust badge" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust badges",
+      "blocks": [
+        { "type": "badge", "settings": { "icon": "ship", "text": "Ships Across Europe" } },
+        { "type": "badge", "settings": { "icon": "sync", "text": "Real, Synced Stock" } },
+        { "type": "badge", "settings": { "icon": "returns", "text": "14-Day Returns" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

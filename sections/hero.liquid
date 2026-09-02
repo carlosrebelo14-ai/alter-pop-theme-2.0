@@ -1,0 +1,109 @@
+{{ 'homepage.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  Alterpop — Hero (Phase 2). Wireframe 1a.
+  Single fixed franchise, full-bleed, NO carousel / NO dots.
+  Entrance: --motion-editorial (fade + scale 1.02 -> 1.00).
+
+  BLOQUEADO: aguarda app — a franquia em destaque.
+  Quando existir o campo Franchise/Universe limpo, o heading e o link do CTA
+  devem vir dele (p.ex. metaobject alterpop.featured_universe -> { title, url }).
+  Enquanto não existe: o merchant preenche `heading` / `cta_link` à mão no
+  editor, com o default marcado como placeholder. NÃO inferir de tags/coleções.
+
+  CTA "Shop the Universe" = navegação, NÃO compra -> neutro, nunca Marigold.
+{%- endcomment -%}
+
+{%- liquid
+  assign featured = shop.metafields.alterpop.featured_universe.value
+  assign hero_heading = section.settings.heading
+  assign hero_link = section.settings.cta_link
+  if featured != blank
+    assign hero_heading = featured.title
+    assign hero_link = featured.url
+  endif
+-%}
+
+<section class="ap-hero" aria-label="{{ section.settings.eyebrow | default: 'Featured' | escape }}">
+  {%- if section.settings.image != blank -%}
+    <div class="ap-hero__media">
+      {{
+        section.settings.image
+        | image_url: width: 2400
+        | image_tag:
+          loading: 'eager',
+          fetchpriority: 'high',
+          sizes: '100vw',
+          widths: '640, 960, 1280, 1600, 2000, 2400',
+          alt: section.settings.image.alt | default: hero_heading | escape
+      }}
+    </div>
+  {%- else -%}
+    <div class="ap-hero__media ap-hero__media--placeholder" role="presentation"></div>
+  {%- endif -%}
+
+  <div class="ap-hero__scrim" aria-hidden="true"></div>
+
+  <div class="ap-hero__inner">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="ap-hero__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    {%- endif -%}
+
+    <h1 class="ap-hero__heading">{{ hero_heading | escape }}</h1>
+
+    {%- if section.settings.subheading != blank -%}
+      <p class="ap-hero__sub">{{ section.settings.subheading | escape }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.cta_label != blank -%}
+      <a class="ap-hero__cta" href="{{ hero_link | default: routes.all_products_collection_url }}">
+        {{- section.settings.cta_label | escape -}}
+      </a>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero",
+  "tag": "section",
+  "class": "section-hero",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Featured Universe"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading (franchise name)",
+      "info": "Placeholder until the Franchise/Universe field exists in the sync app.",
+      "default": "[ Franquia em destaque — aguarda campo Franchise da app ]"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "CTA label",
+      "default": "Shop the Universe"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "CTA link"
+    }
+  ],
+  "presets": [{ "name": "Hero" }]
+}
+{% endschema %}

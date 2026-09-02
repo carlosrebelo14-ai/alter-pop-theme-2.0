@@ -277,6 +277,15 @@
     }
   },
   "sections": {
+    "trust": {
+      "label": "Why shop with us"
+    },
+    "explore_universes": {
+      "placeholder_note": "Placeholder list — awaiting the Franchise/Universe field from the sync app."
+    },
+    "product_rail": {
+      "empty": "No products to show yet."
+    },
     "announcements": {
       "previous_announcement": "Previous announcement",
       "next_announcement": "Next announcement",

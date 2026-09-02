@@ -1,0 +1,87 @@
+{{ 'homepage.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  Alterpop — Explore Universes (Phase 2). Wireframe 1b.
+  Grid of doorways: 1:1 image + name. NOT brand logos. NOT product cards.
+  Entrance: --motion-editorial.
+
+  BLOQUEADO: aguarda app — a lista de Universes/Franchises.
+  Mesmo slot da Fase 1B (snippets/universes-panel.liquid):
+  `shop.metafields.alterpop.universes.value`, cada item { title, url, image }.
+  Enquanto vazio -> placeholder de desenvolvimento (mesma lista da 1B).
+  NÃO inferir de tags / coleções / custom.parent_collection.
+
+  NOTA card-collection.liquid: este componente NÃO o substitui. Os doorways
+  são a lista de franquias da app; card-collection renderiza coleções Shopify
+  arbitrárias em /collections (main-list-collections), na secção collage e no
+  cart drawer — superfícies fora do âmbito da homepage. Por isso card-collection
+  fica; a substituição dessas 4 instâncias é trabalho da Universe Room (F3) /
+  de um collection-card genérico à parte.
+{%- endcomment -%}
+
+{%- liquid
+  assign ap_universes = shop.metafields.alterpop.universes.value
+  assign ap_universes_is_placeholder = false
+  if ap_universes == blank
+    assign ap_universes_is_placeholder = true
+    assign ph_titles = 'One Piece,Harry Potter,Naruto,Marvel,Star Wars,Dragon Ball,Demon Slayer,The Witcher' | split: ','
+  endif
+-%}
+
+<section class="ap-universes-grid">
+  <div class="ap-universes-grid__head">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="ap-universes-grid__heading">{{ section.settings.heading | escape }}</h2>
+    {%- endif -%}
+    {%- if ap_universes_is_placeholder -%}
+      <p class="ap-universes-grid__note">{{ 'sections.explore_universes.placeholder_note' | t }}</p>
+    {%- endif -%}
+  </div>
+
+  <ul class="ap-universes-grid__list" role="list">
+    {%- if ap_universes_is_placeholder -%}
+      {%- for title in ph_titles -%}
+        <li class="ap-universes-grid__item">
+          <a href="{{ routes.all_products_collection_url }}">
+            <span class="ap-universes-grid__doorway ap-universes-grid__doorway--placeholder" aria-hidden="true">
+              {{- title | slice: 0, 1 -}}
+            </span>
+            <span class="ap-universes-grid__name">{{ title }}</span>
+          </a>
+        </li>
+      {%- endfor -%}
+    {%- else -%}
+      {%- for universe in ap_universes -%}
+        <li class="ap-universes-grid__item">
+          <a href="{{ universe.url }}">
+            <span class="ap-universes-grid__doorway">
+              {%- if universe.image -%}
+                {{ universe.image | image_url: width: 600 | image_tag: loading: 'lazy', sizes: '(min-width: 750px) 25vw, 50vw', widths: '300, 450, 600', alt: universe.title | escape }}
+              {%- else -%}
+                <span class="ap-universes-grid__doorway--placeholder" aria-hidden="true">{{ universe.title | slice: 0, 1 }}</span>
+              {%- endif -%}
+            </span>
+            <span class="ap-universes-grid__name">{{ universe.title | escape }}</span>
+          </a>
+        </li>
+      {%- endfor -%}
+    {%- endif -%}
+  </ul>
+</section>
+
+{% schema %}
+{
+  "name": "Explore Universes",
+  "tag": "section",
+  "class": "section-explore-universes",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Explore Universes"
+    }
+  ],
+  "presets": [{ "name": "Explore Universes" }]
+}
+{% endschema %}

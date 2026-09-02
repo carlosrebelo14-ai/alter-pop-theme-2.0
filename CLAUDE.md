@@ -66,6 +66,14 @@ uploaded copy is stale until a restart + re-verify says otherwise.
   `gifts-under-25`, `outlet` (used in `sections/header.liquid` +
   `snippets/mobile-drawer.liquid`). Confirm the real handles later; they do
   not come from the admin menu (shared with the live theme).
+- **Footer link handles** (Phase 1D) not yet verified: `/pages/cookie-policy`
+  and `/pages/contact` in `sections/footer.liquid` (no native Shopify policy
+  for cookies; contact page handle assumed). Terms/Privacy use the standard
+  `/policies/*` URLs (exist only if filled in admin).
+- **Footer legal fine print** (Phase 1D) is placeholder — legal company name,
+  NIF and fiscal address were not provided; rendered as clearly-marked
+  `[ … — a confirmar ]` boxes in `sections/footer.liquid`. Full legal copy is
+  a marked placeholder pending lawyer review. Replace, do not invent.
 - **Franchise/Universe field** from the sync app does not exist yet — blocks
   the Product Card metadata line, the Universes Panel list, Universe Room,
   PDP Identity Block, Character/Line pages. Only raw

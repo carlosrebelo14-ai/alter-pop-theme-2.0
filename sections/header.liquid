@@ -11,7 +11,7 @@
 {% endcomment %}
 
 {{ 'header.css' | asset_url | stylesheet_tag }}
-<link rel="stylesheet" href="{{ 'component-search.css' | asset_url }}" media="print" onload="this.media='all'">
+{{ 'search.css' | asset_url | stylesheet_tag }}
 <link rel="stylesheet" href="{{ 'component-cart-notification.css' | asset_url }}" media="print" onload="this.media='all'">
 {%- if settings.predictive_search_enabled -%}
   <link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}" media="print" onload="this.media='all'">

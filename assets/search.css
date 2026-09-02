@@ -1,0 +1,322 @@
+/* ============================================================================
+   Alterpop — Search Overlay (Phase 1C). Wireframe 5c.
+   Self-contained: tokens.css only. Does NOT use Dawn's component-search.css.
+   Keeps Dawn's predictive-search.js / search-form.js / details-modal.js
+   contracts — structure + visuals only are ours. No Marigold here.
+   ============================================================================ */
+
+.ap-search {
+  display: inline-flex;
+}
+
+.ap-search details {
+  position: static;
+}
+
+.ap-search summary {
+  list-style: none;
+}
+
+.ap-search summary::-webkit-details-marker {
+  display: none;
+}
+
+.ap-search__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: var(--color-ink-900);
+  cursor: pointer;
+}
+
+.ap-search__toggle svg {
+  width: 22px;
+  height: 22px;
+}
+
+.ap-search__toggle .ap-search__icon-close {
+  display: none;
+}
+
+.ap-search details[open] .ap-search__toggle .ap-search__icon-search {
+  display: none;
+}
+
+.ap-search details[open] .ap-search__toggle .ap-search__icon-close {
+  display: block;
+}
+
+/* --- Overlay ------------------------------------------------------------- */
+.ap-search__dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: none;
+}
+
+.ap-search details[open] .ap-search__dialog {
+  display: block;
+}
+
+.ap-search__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(18, 16, 20, 0.32);
+}
+
+.ap-search__panel {
+  position: absolute;
+  inset: 0 0 auto 0;
+  display: flex;
+  flex-direction: column;
+  max-height: 100vh;
+  padding: var(--space-lg) var(--space-lg) var(--space-xl);
+  background: var(--color-canvas);
+  border-bottom: 1px solid var(--color-border);
+}
+
+@media (min-width: 750px) {
+  .ap-search__panel {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    width: min(720px, calc(100vw - 3rem));
+    inset-block-start: var(--space-4xl);
+    max-height: min(78vh, 620px);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+  }
+}
+
+/* --- Field ------------------------------------------------------------------- */
+.ap-search__form {
+  display: block;
+}
+
+.ap-search__field {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-ink-900);
+  border-radius: var(--radius-xs);
+  background: var(--color-surface);
+}
+
+.ap-search__field:focus-within {
+  outline: 2px solid var(--color-ink-900);
+  outline-offset: 2px;
+}
+
+.ap-search__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 0;
+  background: none;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--color-ink-900);
+  line-height: 1.4;
+}
+
+.ap-search__input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.ap-search__input:focus {
+  outline: none;
+}
+
+.ap-search__field-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  border: 0;
+  background: none;
+  color: var(--color-ink-900);
+  cursor: pointer;
+}
+
+.ap-search__field-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.ap-search__field-btn.hidden {
+  display: none;
+}
+
+.ap-search__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.ap-search__close {
+  align-self: flex-end;
+  margin-bottom: var(--space-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-ink-900);
+  cursor: pointer;
+}
+
+.ap-search__close svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* --- Results -------------------------------------------------------------- */
+.predictive-search {
+  margin-top: var(--space-md);
+  overflow-y: auto;
+  flex: 1 1 auto;
+}
+
+.predictive-search__loading-state {
+  display: none;
+}
+
+.predictive-search[aria-hidden="true"] {
+  display: none;
+}
+
+#predictive-search-results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.predictive-search__heading {
+  margin: 0 0 var(--space-sm);
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body-medium);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.predictive-search__results-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* text suggestions (queries / collections / pages / articles) */
+.predictive-search__list-item .predictive-search__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-xs);
+  border-radius: var(--radius-xs);
+  text-decoration: none;
+  color: var(--color-ink-900);
+  font-size: 0.9375rem;
+}
+
+.predictive-search__list-item[aria-selected="true"] .predictive-search__item,
+.predictive-search__list-item .predictive-search__item:hover {
+  background: var(--color-surface);
+}
+
+.predictive-search__item-heading {
+  margin: 0;
+  font-weight: var(--font-weight-body-medium);
+}
+
+/* Shopify's query.styled_text wraps the matched term in <b>/<mark>. Keep it
+   on-brand: weight, not a highlight colour. */
+.predictive-search__item-heading b,
+.predictive-search__item-heading mark {
+  background: none;
+  color: var(--color-ink-900);
+  font-weight: var(--font-weight-body-strong);
+}
+
+/* product results — a compact grid of the ONE product card */
+.predictive-search__results-list--products {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-md);
+}
+
+@media (min-width: 750px) {
+  .predictive-search__results-list--products {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.predictive-search__results-list--products .predictive-search__list-item {
+  margin: 0;
+}
+
+.predictive-search__results-list--products .predictive-search__list-item[aria-selected="true"] .ap-card {
+  outline: 2px solid var(--color-ink-900);
+  outline-offset: 2px;
+}
+
+.predictive-search__search-for-button {
+  margin-top: var(--space-md);
+}
+
+.predictive-search__item--term {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  width: 100%;
+  padding: var(--space-md) var(--space-xs);
+  border: 0;
+  border-top: 1px solid var(--color-border);
+  background: none;
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body-strong);
+  font-size: 0.9375rem;
+  color: var(--color-ink-900);
+  text-align: left;
+  cursor: pointer;
+}
+
+.predictive-search__item--term svg {
+  width: 14px;
+  height: 14px;
+}
+
+.predictive-search__item--term[aria-selected="true"],
+.predictive-search__item--term:hover {
+  background: var(--color-surface);
+}
+
+.predictive-search-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.hidden {
+  display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ap-search__panel {
+    transition: none;
+  }
+}

@@ -23,13 +23,23 @@ Therefore:
    A plain `git add` / `git commit` on the current branch is safe and does not
    need this.
 
-## Wireframe is the pixel source of truth
+## Source-of-truth precedence (hard rule)
 
-`Wireframe_Alterpop_3_3.pdf` is in the repo root (ignored from the theme
-upload). **Before building or reworking any section, render its wireframe
-page(s) and follow them pixel-by-pixel** — proportions, type hierarchy,
-spacing, element order. The phase prompts are summaries; the wireframe is
-the source. Render with PyMuPDF (installed at `~/Library/Python/3.9`):
+1. **Wireframe** (`Wireframe_Alterpop_3_3.pdf`) — the site mockup; default source.
+2. **Design system / designer handoff** — for tokens, motion, colour rules.
+3. **The user's prompts** — if a prompt contradicts 1 or 2, flag it; the
+   source wins (as with the hero Marigold CTA).
+
+Exception: if you spot a real error in the wireframe (internal
+inconsistency, technically impossible, an a11y problem) or a clear
+improvement, you may propose it — but **report first**, with the deviation
+named and justified. Never decide against the wireframe alone. Obvious
+zero-design-impact fixes (typos, a wrong icon) you may just make, mentioning
+them in the report.
+
+**Before building or reworking any section, render its wireframe page(s) and
+follow them pixel-by-pixel** — proportions, type hierarchy, spacing, element
+order. Render with PyMuPDF (installed at `~/Library/Python/3.9`):
 
 ```
 python3 - <<'EOF'

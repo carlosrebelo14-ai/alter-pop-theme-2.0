@@ -11,11 +11,14 @@
   to   { opacity: 1; transform: scale(1); }
 }
 
-/* ---- Hero ---------------------------------------------------------------- */
+/* ---- Hero (wireframe 1a / 1b / 2a) ------------------------------------------
+   Single fixed franchise, full-bleed, no carousel. Mobile: portrait image,
+   gradient top->bottom, content bottom-left. Desktop: wide, image bleeds
+   right, gradient left->right, content left. Entrance = --motion-editorial. */
 .ap-hero {
   position: relative;
   width: 100%;
-  min-height: 68vh;
+  min-height: 78vh;
   display: flex;
   align-items: flex-end;
   overflow: hidden;
@@ -36,22 +39,22 @@
 .ap-hero__media--placeholder {
   z-index: -2;
   background:
-    radial-gradient(120% 80% at 20% 0%, rgba(224, 155, 36, 0.18), transparent 60%),
-    linear-gradient(180deg, #1c1a20, var(--color-ink-900));
+    radial-gradient(120% 80% at 18% 10%, rgba(224, 155, 36, 0.16), transparent 55%),
+    linear-gradient(180deg, #24222a, var(--color-ink-900));
 }
 
 .ap-hero__scrim {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(180deg, rgba(18, 16, 20, 0) 30%, rgba(18, 16, 20, 0.7) 100%);
+  background: linear-gradient(180deg, rgba(18, 16, 20, 0) 28%, rgba(18, 16, 20, 0.78) 100%);
 }
 
 .ap-hero__inner {
   width: 100%;
   max-width: var(--page-width, 1400px);
   margin: 0 auto;
-  padding: var(--space-5xl) var(--space-xl) var(--space-3xl);
+  padding: var(--space-5xl) var(--space-xl) var(--space-2xl);
   color: var(--color-canvas);
   animation: ap-hp-editorial-in var(--motion-editorial) both;
 }
@@ -59,50 +62,71 @@
 .ap-hero__eyebrow {
   margin: 0 0 var(--space-sm);
   font-family: var(--font-body);
-  font-weight: var(--font-weight-body-medium);
+  font-weight: var(--font-weight-body-strong);
   font-size: 0.6875rem;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  opacity: 0.85;
+  color: var(--color-marigold);
 }
 
 .ap-hero__heading {
   margin: 0;
   font-family: var(--font-display);
   font-weight: var(--font-weight-display-max);
-  font-size: clamp(2.5rem, 7vw, 4.5rem);
-  line-height: 1.02;
+  font-size: clamp(2.5rem, 8vw, 4.25rem);
+  line-height: 1.0;
   letter-spacing: -0.02em;
 }
 
 .ap-hero__sub {
   margin: var(--space-md) 0 0;
-  max-width: 44ch;
+  max-width: 42ch;
   font-size: 1rem;
   line-height: 1.5;
   opacity: 0.9;
 }
 
+/* "Shop the Universe" is a primary purchase CTA (DS groups it with Add to
+   Cart / Checkout): solid Marigold, ink label, asymmetric brand corner. */
 .ap-hero__cta {
   display: inline-flex;
   align-items: center;
   gap: var(--space-sm);
   margin-top: var(--space-xl);
   padding: var(--space-md) var(--space-xl);
-  border: 1px solid var(--color-canvas);
-  border-radius: var(--radius-sm);
-  background: var(--color-canvas);
+  border: 0;
+  border-radius: 0 var(--radius-md) var(--radius-md) var(--radius-md);
+  background: var(--color-marigold);
   color: var(--color-ink-900);
   font-family: var(--font-body);
   font-weight: var(--font-weight-body-strong);
   font-size: 0.9375rem;
   text-decoration: none;
-  transition: background var(--motion-transactional), color var(--motion-transactional);
+  transition: filter var(--motion-transactional), transform var(--motion-transactional);
 }
 
 .ap-hero__cta:hover {
-  background: transparent;
-  color: var(--color-canvas);
+  filter: brightness(0.94);
+}
+
+.ap-hero__cta:active {
+  transform: scale(0.96);
+}
+
+@media (min-width: 750px) {
+  .ap-hero {
+    min-height: 46vh;
+    align-items: center;
+  }
+  .ap-hero__scrim {
+    background: linear-gradient(90deg, rgba(18, 16, 20, 0.82) 0%, rgba(18, 16, 20, 0.35) 42%, rgba(18, 16, 20, 0) 68%);
+  }
+  .ap-hero__inner {
+    padding-block: var(--space-4xl);
+  }
+  .ap-hero__body {
+    max-width: 46%;
+  }
 }
 
 /* ---- Trust badges ------------------------------------------------------------ */

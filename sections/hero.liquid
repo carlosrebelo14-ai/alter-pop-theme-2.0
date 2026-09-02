@@ -45,21 +45,23 @@
   <div class="ap-hero__scrim" aria-hidden="true"></div>
 
   <div class="ap-hero__inner">
-    {%- if section.settings.eyebrow != blank -%}
-      <p class="ap-hero__eyebrow">{{ section.settings.eyebrow | escape }}</p>
-    {%- endif -%}
+    <div class="ap-hero__body">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="ap-hero__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
 
-    <h1 class="ap-hero__heading">{{ hero_heading | escape }}</h1>
+      <h1 class="ap-hero__heading">{{ hero_heading | escape }}</h1>
 
-    {%- if section.settings.subheading != blank -%}
-      <p class="ap-hero__sub">{{ section.settings.subheading | escape }}</p>
-    {%- endif -%}
+      {%- if section.settings.subheading != blank -%}
+        <p class="ap-hero__sub">{{ section.settings.subheading | escape }}</p>
+      {%- endif -%}
 
-    {%- if section.settings.cta_label != blank -%}
-      <a class="ap-hero__cta" href="{{ hero_link | default: routes.all_products_collection_url }}">
-        {{- section.settings.cta_label | escape -}}
-      </a>
-    {%- endif -%}
+      {%- if section.settings.cta_label != blank -%}
+        <a class="ap-hero__cta" href="{{ hero_link | default: routes.all_products_collection_url }}">
+          {{- section.settings.cta_label | escape -}}
+        </a>
+      {%- endif -%}
+    </div>
   </div>
 </section>
 

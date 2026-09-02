@@ -1,0 +1,262 @@
+/* ============================================================================
+   Alterpop — Product Card (the ONE product card).
+   Self-contained: uses ONLY tokens from tokens.css. Does NOT inherit from
+   Dawn's component-card.css or its .card / .card__* classes.
+   Wireframe: 8a / 8b.  Rarity + motion values: handoff design system.
+   ============================================================================ */
+
+.ap-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  /* static in-flow surface: reads via border, never shadow (DS shadow scale) */
+}
+
+/* --- Media -------------------------------------------------------------------
+   Pure square, radius-none (DS: product images/thumbnails).
+   --ap-card-media-inset is the standard inner padding; the Limited state
+   trims it by 8% for a slightly larger image (DS rarity-limited). */
+.ap-card__media-link {
+  --ap-card-media-inset: var(--space-md);
+  display: block;
+  padding: var(--ap-card-media-inset);
+  background: var(--color-surface);
+}
+
+.ap-card__media {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: var(--radius-none);
+  background: var(--color-canvas);
+}
+
+.ap-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform var(--motion-transactional);
+}
+
+.ap-card__img--placeholder {
+  object-fit: contain;
+  opacity: 0.55;
+}
+
+/* Microinteraction 1: hover = image scale 1.00 -> 1.03, transactional.
+   Nothing else on the card animates. */
+.ap-card:hover .ap-card__img,
+.ap-card:focus-within .ap-card__img {
+  transform: scale(1.03);
+}
+
+/* --- Body ------------------------------------------------------------------- */
+.ap-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg) var(--space-lg);
+  flex: 1 1 auto;
+}
+
+.ap-card__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-display);
+  font-size: 1rem;
+  line-height: 1.25;
+  letter-spacing: 0;
+  color: var(--color-ink-900);
+}
+
+.ap-card__title-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.ap-card__title-link::after {
+  /* make the whole card clickable via the title link */
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.ap-card {
+  position: relative;
+}
+
+/* --- Metadata line: Franchise/Universe > Line > Height/Dimension ----------- */
+.ap-card__meta {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--color-text-muted);
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.4em;
+  min-height: 1.4em; /* reserve space so cards stay aligned while Franchise/Line are blocked */
+}
+
+/* Franchise never truncates; if space runs out the Line drops first.
+   (Both segments are currently BLOCKED pending app data — see the snippet.) */
+.ap-card__meta-franchise {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.ap-card__meta-line {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ap-card__meta-dim {
+  flex: 0 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ap-card__meta-sep {
+  flex: 0 0 auto;
+  color: var(--color-border);
+}
+
+/* --- Price --------------------------------------------------------------- */
+.ap-card__price {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body-strong);
+  font-size: 0.9375rem;
+  line-height: 1.2;
+  color: var(--color-ink-900);
+  margin-top: auto; /* pin price + CTA to the bottom of the body */
+}
+
+.ap-card__price-compare {
+  font-weight: var(--font-weight-body);
+  color: var(--color-text-muted);
+  text-decoration: line-through;
+}
+
+.ap-card__price-from {
+  font-weight: var(--font-weight-body);
+  color: var(--color-text-muted);
+}
+
+/* --- Stock note (Limited state only) ----------------------------------------
+   Neutral status pill. No countdown, no "only X left", no urgency (DS). */
+.ap-card__stock {
+  display: none;
+  align-self: flex-start;
+  align-items: center;
+  height: 26px;
+  padding: 0 10px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-weight: var(--rarity-limited-label-weight);
+  font-size: 0.8125rem;
+  line-height: 1;
+  color: var(--rarity-limited-label-color);
+}
+
+/* --- CTA ------------------------------------------------------------------
+   The card CTA is navigation to the PDP, not a purchase action, so it is
+   NEUTRAL (ink) — never Marigold. Marigold is reserved for real purchase
+   CTAs (Add to Cart / Checkout), which live on the PDP. */
+.ap-card__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 var(--space-lg);
+  border: 1px solid var(--color-ink-900);
+  border-radius: var(--radius-sm);
+  background: var(--color-ink-900);
+  color: var(--color-canvas);
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body-strong);
+  font-size: 0.875rem;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  position: relative;
+  z-index: 2; /* sits above the title-link overlay so it is separately clickable */
+  transition: background var(--motion-transactional), color var(--motion-transactional);
+}
+
+.ap-card__cta:hover {
+  background: transparent;
+  color: var(--color-ink-900);
+}
+
+.ap-card__cta:active {
+  transform: scale(0.96);
+}
+
+/* ============================================================================
+   Rarity states — presentation derived from a stock number already provided
+   by the sync app (allowed client-side calculation).
+   ============================================================================ */
+
+/* Limited (1-10): +8% image area, visible stock count. */
+.ap-card--limited .ap-card__media-link {
+  --ap-card-media-inset: calc(var(--space-md) - (var(--space-md) * 0.08));
+}
+
+.ap-card--limited .ap-card__stock {
+  display: inline-flex;
+}
+
+/* Sold Out (0): 70% image opacity, outline "Notify Me" CTA. */
+.ap-card--soldout .ap-card__img {
+  opacity: var(--rarity-soldout-image-opacity);
+}
+
+.ap-card--soldout .ap-card__cta {
+  background: transparent;
+  border-color: var(--color-ink-900);
+  color: var(--color-ink-900);
+  font-weight: var(--rarity-soldout-label-weight);
+}
+
+.ap-card--soldout .ap-card__cta:hover {
+  background: var(--color-ink-900);
+  color: var(--color-canvas);
+}
+
+.ap-card__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ap-card__img,
+  .ap-card__cta {
+    transition: none;
+  }
+  .ap-card:hover .ap-card__img,
+  .ap-card:focus-within .ap-card__img {
+    transform: none;
+  }
+}

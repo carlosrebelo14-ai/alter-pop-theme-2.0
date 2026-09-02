@@ -1,0 +1,175 @@
+{% comment %}
+  Alterpop — Product Card
+  =======================
+  The ONE product card for the whole theme. Replaces Dawn's `card-product`.
+  Wireframe: sections 8a / 8b.  Design system: assets/tokens.css +
+  assets/product-card.css (self-contained — does not use component-card.css).
+
+  Accepts:
+  - card_product:  {Object}  Product. If blank, a placeholder card is rendered.
+  - section_id:    {String}  Owning section id (for unique element ids). Optional.
+  - lazy_load:     {Boolean} Lazy-load the image. Default: true.
+  - skip_styles:   {Boolean} Don't emit <link> to product-card.css (set true for
+                             every card after the first in a loop). Default: false.
+  - placeholder_image: {String} placeholder_svg name when there is no product.
+  - hide_franchise:{Boolean} Force-hide the Franchise segment (Universe Room,
+                             where it is redundant). Default: false.
+  - product_view_context: {String} 'collection' | 'search' | 'recommendation' |
+                             'universe-room'. 'universe-room' also hides Franchise.
+
+  Presentation state is derived from a stock NUMBER already provided by the sync
+  app (allowed client-side calculation). The sync runs every ~45 min, so the
+  number can be stale — copy here never promises real-time accuracy; the real
+  check happens at add-to-cart on the PDP, which Dawn already handles.
+
+  Estados:
+    Available (>10) ....... standard
+    Limited   (1-10) ...... +8% image area, visible stock count
+    Sold Out  (0) ......... 70% image opacity, outline "Notify Me" CTA
+{% endcomment %}
+
+{%- unless skip_styles -%}
+  {{ 'product-card.css' | asset_url | stylesheet_tag }}
+{%- endunless -%}
+
+{%- liquid
+  assign uid = section_id | default: 'ap'
+  assign img_loading = 'lazy'
+  if lazy_load == false
+    assign img_loading = 'eager'
+  endif
+-%}
+
+{%- if card_product == blank -%}
+  {%- comment -%} No product bound (e.g. onboarding / empty collage slot). {%- endcomment -%}
+  <div class="ap-card ap-card--available" aria-hidden="true">
+    <div class="ap-card__media-link">
+      <div class="ap-card__media">
+        {{ placeholder_image | default: 'product-1' | placeholder_svg_tag: 'ap-card__img ap-card__img--placeholder' }}
+      </div>
+    </div>
+    <div class="ap-card__body">
+      <h3 class="ap-card__title"><span class="ap-card__title-link">{{ 'onboarding.product_title' | t }}</span></h3>
+      <p class="ap-card__meta"></p>
+      <div class="ap-card__price">{{ 1999 | money }}</div>
+    </div>
+  </div>
+{%- else -%}
+  {%- liquid
+    assign variant = card_product.selected_or_first_available_variant
+    assign is_tracked = false
+    if variant.inventory_management != blank
+      assign is_tracked = true
+    endif
+    assign qty = variant.inventory_quantity
+
+    assign state = 'available'
+    if card_product.available == false
+      assign state = 'soldout'
+    elsif is_tracked and qty > 0 and qty <= 10
+      assign state = 'limited'
+    endif
+
+    # Metadata line — Height/Dimension. Comes from the sync app (ociostock).
+    assign dimension = card_product.metafields.ociostock.dimensions.value
+
+    assign title_id = 'ap-card-title-' | append: uid | append: '-' | append: card_product.id
+  -%}
+
+  <div class="ap-card ap-card--{{ state }}">
+    <div class="ap-card__media-link">
+      <div class="ap-card__media">
+        {%- if card_product.featured_media -%}
+          {{
+            card_product.featured_media
+            | image_url: width: 800
+            | image_tag:
+              loading: img_loading,
+              class: 'ap-card__img',
+              widths: '165, 220, 280, 360, 480, 600, 800',
+              sizes: '(min-width: 990px) 280px, (min-width: 750px) 33vw, 50vw',
+              alt: card_product.featured_media.alt | default: card_product.title | escape
+          }}
+        {%- else -%}
+          {{ placeholder_image | default: 'product-1' | placeholder_svg_tag: 'ap-card__img ap-card__img--placeholder' }}
+        {%- endif -%}
+      </div>
+    </div>
+
+    <div class="ap-card__body">
+      <h3 class="ap-card__title" id="{{ title_id }}">
+        <a href="{{ card_product.url }}" class="ap-card__title-link">{{ card_product.title | escape }}</a>
+      </h3>
+
+      {%- comment -%}
+        Metadata line: Franchise/Universe > Line (se aplicável) > Height/Dimension
+
+        BLOQUEADO: aguarda app — Franchise/Universe.
+          Não existe campo de franquia limpo vindo da app de sincronização.
+          `metafields.ociostock.licence` é o nome de licença em bruto e
+          multi-idioma ("El Señor De Los Anillos"); usar tags = inferência
+          proibida; `custom.parent_collection` = estrutura antiga proibida.
+          Quando a app fornecer o campo:
+            <span class="ap-card__meta-franchise">{{ franchise }}</span>
+            <span class="ap-card__meta-sep" aria-hidden="true">&rsaquo;</span>
+          Regra: Franchise nunca trunca; se faltar espaço cai a Line, não a
+          Franchise. Omitir dentro da Universe Room — quando desbloquear,
+          reactivar no {%- liquid -%} do topo:
+            assign hide_fr = false
+            if hide_franchise or product_view_context == 'universe-room'
+              assign hide_fr = true
+            endif
+          e envolver o <span> da franquia em {%- unless hide_fr -%} … {%- endunless -%}.
+
+        BLOQUEADO: aguarda app — Line (entidade Line + regra 3+ peças).
+          Quando existir, entra a seguir à Franchise:
+            <span class="ap-card__meta-line">{{ line }}</span>
+            <span class="ap-card__meta-sep" aria-hidden="true">&rsaquo;</span>
+      {%- endcomment -%}
+      <p class="ap-card__meta">
+        {%- if dimension != blank -%}
+          <span class="ap-card__meta-dim">{{ dimension | escape }}</span>
+        {%- endif -%}
+      </p>
+
+      {%- comment -%}
+        BLOQUEADO: aguarda app — badge "Premium Piece".
+        Depende da flag Impulse/Premium vinda da app. Quando existir:
+          {%- if card_product.metafields.<ns>.<tier>.value == 'premium' -%}
+            <span class="ap-card__badge">{{ 'products.card.premium_piece' | t }}</span>
+          {%- endif -%}
+      {%- endcomment -%}
+
+      {%- if state == 'limited' -%}
+        <span class="ap-card__stock">
+          {{- 'products.card.in_stock_count' | t: count: qty -}}
+        </span>
+      {%- endif -%}
+
+      <div class="ap-card__price">
+        {%- if card_product.price_varies -%}
+          <span class="ap-card__price-from">{{ 'products.card.price_from' | t }}</span>
+        {%- endif -%}
+        <span class="ap-card__price-current">{{ card_product.price | money }}</span>
+        {%- if card_product.compare_at_price > card_product.price -%}
+          <span class="ap-card__price-compare">{{ card_product.compare_at_price | money }}</span>
+          <span class="ap-card__sr">{{ 'products.card.on_sale' | t }}</span>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%}
+        Card CTA = navigation to the PDP, NOT a purchase action. Neutral (ink),
+        never Marigold. The real add-to-cart lives on the PDP (Dawn handles it).
+      {%- endcomment -%}
+      {%- if state == 'soldout' -%}
+        <a href="{{ card_product.url }}" class="ap-card__cta" aria-describedby="{{ title_id }}">
+          {{- 'products.card.notify_me' | t -}}
+        </a>
+      {%- else -%}
+        <a href="{{ card_product.url }}" class="ap-card__cta" aria-describedby="{{ title_id }}">
+          {{- 'products.card.view_piece' | t -}}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endif -%}

@@ -105,6 +105,16 @@
     "collection_title": "Your collection's name"
   },
   "products": {
+    "card": {
+      "view_piece": "View piece",
+      "notify_me": "Notify me",
+      "price_from": "From",
+      "on_sale": "On sale",
+      "in_stock_count": {
+        "one": "{{ count }} in stock",
+        "other": "{{ count }} in stock"
+      }
+    },
     "product": {
       "add_to_cart": "Add to cart",
       "choose_options": "Choose options",

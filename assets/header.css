@@ -18,7 +18,7 @@
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  column-gap: var(--space-lg);
+  column-gap: var(--space-xl);
   min-height: 72px; /* wireframe 6a */
   padding: var(--space-sm) var(--space-xl);
   background: var(--color-canvas);
@@ -37,7 +37,7 @@
 .ap-header__logo {
   display: inline-flex;
   align-items: center;
-  white-space: nowrap;
+  min-width: 0; /* let the grid cell shrink instead of overlapping the actions */
   text-decoration: none;
   color: var(--color-ink-900);
 }
@@ -45,13 +45,17 @@
 .ap-header__logo img {
   display: block;
   height: auto;
+  max-width: 100%;
 }
 
-/* inline brand lockup (fallback when settings.logo is unset) */
+/* inline brand lockup (fallback when settings.logo is unset). Width-sized so
+   it scales down on a narrow header instead of colliding with the actions;
+   ~22px tall at full size (lockup aspect ~8:1). */
 .ap-header__logo svg {
   display: block;
-  height: 22px;
-  width: auto;
+  width: 176px;
+  height: auto;
+  max-width: 100%;
 }
 
 /* --- Desktop nav --------------------------------------------------------- */
@@ -61,10 +65,13 @@
 
 @media (min-width: 990px) {
   .ap-nav {
+    /* wireframe 6a: nav is left-aligned right after the logo, NOT centred.
+       The 1fr middle column absorbs the slack between nav and the actions. */
     display: flex;
     align-items: center;
+    flex-wrap: nowrap;
     gap: var(--space-xl);
-    justify-self: center;
+    justify-self: start;
   }
 }
 
@@ -78,6 +85,8 @@
   line-height: var(--leading-flat);
   color: var(--color-ink-900);
   text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
   background: none;
   border: 0;
   cursor: pointer;
@@ -123,31 +132,8 @@
   justify-self: end;
 }
 
-/* Country / currency selector — NOT shown on any wireframe page; kept
-   (removing it risks multi-currency), flagged for the designer. Dawn's
-   component-localization-form.css drives the compact dropdown. */
-.ap-header__localization {
-  display: none;
-}
-
-@media (min-width: 990px) {
-  .ap-header__localization {
-    display: flex;
-    align-items: center;
-    height: 44px;
-  }
-}
-
-.ap-header__localization > form,
-.ap-header__localization > form > div {
-  display: flex;
-  align-items: center;
-}
-
-.ap-header__localization .localization-form__select {
-  font-size: 12px;
-  padding-block: 8px;
-}
+/* Country / currency selector is intentionally absent from the header bar
+   (wireframe 6a / 1b show none). It lives only in the mobile drawer. */
 
 .ap-header__icon {
   display: inline-flex;

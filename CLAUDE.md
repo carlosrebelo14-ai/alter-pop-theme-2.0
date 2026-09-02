@@ -152,10 +152,13 @@ uploaded copy is stale until a restart + re-verify says otherwise.
   no-results, 5d empty/popular) never show a results-with-products state, and
   card spec 8a lists the card as used in "New Arrivals, Bestsellers, Universe
   Room, Gifts Under €25" — not search. `sections/predictive-search.liquid`.
-- **Country / currency selector is kept in the header** even though it appears
-  on NO wireframe page (checked 6a header, 5a/6c drawer, 1a/1b footer).
-  Removing it risks breaking multi-currency; kept minimal in the header
-  actions cluster, flagged for the designer.
+- **Country / currency selector is NOT in the header.** Wireframe 6a ("nav
+  restructure — universes-first, desktop") and 1b show the header actions as
+  exactly: search icon · Account · Cart. No selector at any width. It was
+  briefly kept in the desktop actions cluster, then removed to conform to 6a
+  (the fixed-width control was also pushing the nav to wrap). It still lives
+  in the mobile drawer. If desktop country switching is needed, the footer is
+  the place — flagged for the designer.
 - **Card status line height is reserved on every product card** (Available
   included) so the grid stays flush; the "N In Stock" pill / "Sold Out"
   label just fills the reserved slot. 8a shows the pill pushing the title

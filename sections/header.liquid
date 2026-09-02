@@ -119,26 +119,12 @@
     </nav>
 
     <div class="ap-header__actions">
-      {%- if country_selector -%}
-        <localization-form class="ap-header__localization" data-prevent-hide>
-          {%- form 'localization', id: 'HeaderCountryForm', class: 'localization-form' -%}
-            <div>
-              <h2 class="visually-hidden" id="HeaderCountryLabel">{{ 'localization.country_label' | t }}</h2>
-              {%- render 'country-localization', localPosition: 'HeaderCountry' -%}
-            </div>
-          {%- endform -%}
-        </localization-form>
-      {%- endif -%}
-      {%- if language_selector -%}
-        <localization-form class="ap-header__localization" data-prevent-hide>
-          {%- form 'localization', id: 'HeaderLanguageForm', class: 'localization-form' -%}
-            <div>
-              <h2 class="visually-hidden" id="HeaderLanguageLabel">{{ 'localization.language_label' | t }}</h2>
-              {%- render 'language-localization', localPosition: 'HeaderLanguage' -%}
-            </div>
-          {%- endform -%}
-        </localization-form>
-      {%- endif -%}
+      {%- comment -%}
+        Country / language selector is intentionally NOT in the header bar —
+        wireframe 6a / 1b show no selector at any width. It stays in the
+        mobile drawer (see mobile-drawer.liquid). country_selector /
+        language_selector are still computed above for the drawer.
+      {%- endcomment -%}
 
       {% render 'header-search',
         input_id: 'Search-In-Modal',

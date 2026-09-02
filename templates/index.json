@@ -8,8 +8,8 @@
       "type": "hero",
       "settings": {
         "eyebrow": "Featured Universe",
-        "heading": "[ Franquia em destaque — aguarda campo Franchise da app ]",
-        "subheading": "[ Uma linha editorial curta sobre a franquia em destaque ]",
+        "heading": "[ Franchise name ]",
+        "subheading": "[ one editorial line about the featured franchise ]",
         "cta_label": "Shop the Universe",
         "cta_link": ""
       }

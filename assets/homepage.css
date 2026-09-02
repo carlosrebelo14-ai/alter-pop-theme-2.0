@@ -71,6 +71,10 @@
   padding: var(--space-5xl) var(--space-xl) var(--space-2xl);
 }
 
+.ap-hero__body {
+  max-width: 540px; /* measure cap on every breakpoint; ->46% when an image is bound (>=750) */
+}
+
 .ap-hero__eyebrow {
   margin: 0 0 var(--space-sm);
   font-family: var(--font-body);
@@ -84,6 +88,7 @@
 
 .ap-hero__heading {
   margin: 0;
+  max-width: 14ch; /* keep the display heading a tidy 1-2 line stack, whatever the franchise name */
   font-family: var(--font-display);
   font-weight: var(--font-weight-display);
   font-size: var(--text-display);
@@ -125,7 +130,7 @@
   }
   /* no image: let the text breathe across a sensible measure, not a strip */
   .ap-hero:not(.ap-hero--has-image) .ap-hero__body {
-    max-width: 40rem;
+    max-width: 540px;
   }
 }
 

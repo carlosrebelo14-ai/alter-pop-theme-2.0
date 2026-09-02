@@ -131,7 +131,11 @@
         popular_searches: section.settings.popular_searches
       %}
 
-      {%- comment -%} Account — text label, not an icon (wireframe 6a). {%- endcomment -%}
+      {%- comment -%}
+        Account — desktop only (wireframe 6a: text label in the actions
+        cluster). On mobile it moves into the hamburger drawer (1a header is
+        hamburger · logo · search · cart), see mobile-drawer.liquid.
+      {%- endcomment -%}
       {%- if shop.customer_accounts_enabled -%}
         <shopify-account
           menu="{{ settings.customer_account_menu | default: 'customer-account-main-menu' }}"
@@ -147,9 +151,18 @@
         {%- if block.type == '@app' -%}{% render block %}{%- endif -%}
       {%- endfor -%}
 
-      {%- comment -%} Cart — "Cart" text + count in a dark circle, bordered box (6a). {%- endcomment -%}
+      {%- comment -%}
+        Cart — boxed "Cart" text + count on desktop (6a); a plain cart icon
+        with a count badge on mobile (1a). Both live in one element; CSS
+        swaps the label/icon at the 990px breakpoint.
+      {%- endcomment -%}
       <a href="{{ routes.cart_url }}" class="ap-header__cart" id="cart-icon-bubble">
-        <span>{{ 'templates.cart.cart' | t }}</span>
+        <svg class="ap-header__cart-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+          <path d="M2.5 3.5h2l1.7 9.3a1.2 1.2 0 0 0 1.18.95h6.94a1.2 1.2 0 0 0 1.17-.92L18 6.5H5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="8.2" cy="16.6" r="1.15" fill="currentColor"/>
+          <circle cx="14.4" cy="16.6" r="1.15" fill="currentColor"/>
+        </svg>
+        <span class="ap-header__cart-label">{{ 'templates.cart.cart' | t }}</span>
         {%- if cart != empty -%}
           <span class="ap-header__cart-count" aria-hidden="true">{{ cart.item_count }}</span>
           <span class="visually-hidden">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>

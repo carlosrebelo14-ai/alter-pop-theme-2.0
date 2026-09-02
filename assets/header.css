@@ -37,7 +37,7 @@
 .ap-header__logo {
   display: inline-flex;
   align-items: center;
-  min-width: 0; /* let the grid cell shrink instead of overlapping the actions */
+  white-space: nowrap;
   text-decoration: none;
   color: var(--color-ink-900);
 }
@@ -48,14 +48,11 @@
   max-width: 100%;
 }
 
-/* inline brand lockup (fallback when settings.logo is unset). Width-sized so
-   it scales down on a narrow header instead of colliding with the actions;
-   ~22px tall at full size (lockup aspect ~8:1). */
+/* inline brand lockup (fallback when settings.logo is unset) */
 .ap-header__logo svg {
   display: block;
-  width: 176px;
-  height: auto;
-  max-width: 100%;
+  height: 22px;
+  width: auto;
 }
 
 /* --- Desktop nav --------------------------------------------------------- */
@@ -151,15 +148,22 @@
   height: 22px;
 }
 
-/* Account — text label, not an icon (6a) */
+/* Account — text label, not an icon (6a). Desktop only; on mobile it lives
+   in the hamburger drawer (1a header = hamburger · logo · search · cart). */
 .ap-header__account {
-  display: inline-flex;
+  display: none;
   align-items: center;
   font-family: var(--font-body);
   font-size: 14px;
   font-weight: var(--font-weight-body-medium);
   color: var(--color-ink-900);
   text-decoration: none;
+}
+
+@media (min-width: 990px) {
+  .ap-header__account {
+    display: inline-flex;
+  }
 }
 
 .ap-header__account:hover {
@@ -167,34 +171,67 @@
   text-underline-offset: 2px;
 }
 
-/* Cart — "Cart" text + count in a dark circle, inside a bordered box (6a) */
+/* Cart — mobile (1a): a plain cart icon with a count badge, no box.
+   Desktop (6a): boxed "Cart" text + count in a dark circle. */
 .ap-header__cart {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: var(--space-sm);
-  padding: 6px 10px;
-  border: 1px solid var(--color-ink-900);
-  border-radius: var(--radius-sm);
+  color: var(--color-ink-900);
+  text-decoration: none;
   font-family: var(--font-body);
   font-size: 14px;
   font-weight: var(--font-weight-body-medium);
-  color: var(--color-ink-900);
-  text-decoration: none;
 }
 
+.ap-header__cart-icon {
+  display: block;
+  width: 22px;
+  height: 22px;
+}
+
+.ap-header__cart-label {
+  display: none;
+}
+
+/* mobile: count as a small badge on the icon's top-right corner */
 .ap-header__cart-count {
+  position: absolute;
+  top: -4px;
+  left: 14px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 20px;
-  height: 20px;
-  padding: 0 5px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
   border-radius: var(--radius-full);
   background: var(--color-ink-900);
   color: var(--color-canvas);
   font-size: 11px;
   font-weight: var(--font-weight-body-strong);
   line-height: 1;
+}
+
+@media (min-width: 990px) {
+  .ap-header__cart {
+    padding: 6px 10px;
+    border: 1px solid var(--color-ink-900);
+    border-radius: var(--radius-sm);
+  }
+  .ap-header__cart-icon {
+    display: none;
+  }
+  .ap-header__cart-label {
+    display: inline;
+  }
+  .ap-header__cart-count {
+    position: static;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+  }
 }
 
 /* ============================================================================
@@ -560,6 +597,25 @@ details[open] > .menu-drawer {
   margin-top: auto;
   padding: var(--space-lg) var(--space-xl) var(--space-2xl);
   border-top: 1px solid var(--color-border);
+}
+
+/* Account row — mobile only (header bar drops Account per 1a) */
+.menu-drawer__account {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: var(--font-weight-body-medium);
+  color: var(--color-ink-900);
+  text-decoration: none;
+}
+
+.menu-drawer__account:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.menu-drawer__account + .menu-drawer__localization {
+  margin-top: var(--space-lg);
 }
 
 .menu-drawer .list-social {

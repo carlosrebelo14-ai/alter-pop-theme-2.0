@@ -100,6 +100,15 @@
           </nav>
 
           <div class="menu-drawer__utility-links">
+            {%- comment -%}
+              Account lives here on mobile (the header bar drops it per 1a).
+              No wireframe page specifies the drawer's account placement —
+              put in the utility zone, above localization / social.
+            {%- endcomment -%}
+            <a href="{{ routes.account_url }}" class="menu-drawer__account">
+              {{- 'sections.header.account' | t -}}
+            </a>
+
             {%- if show_country_selector or show_language_selector -%}
               <div class="menu-drawer__localization header-localization">
                 {%- if show_country_selector -%}

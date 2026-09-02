@@ -288,6 +288,14 @@
     "header": {
       "announcement": "Announcement",
       "menu": "Menu",
+      "universes": "Universes",
+      "universes_panel_title": "Explore Universes",
+      "universes_placeholder_note": "Placeholder list — awaiting the Franchise/Universe field from the sync app.",
+      "close": "Close",
+      "new_arrivals": "New Arrivals",
+      "limited_editions": "Limited Editions & Exclusives",
+      "gifts_under_25": "Gifts Under €25",
+      "outlet": "Outlet",
       "cart_count": {
         "one": "{{ count }} item",
         "other": "{{ count }} items"

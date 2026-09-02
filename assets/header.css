@@ -1,0 +1,483 @@
+/* ============================================================================
+   Alterpop — Header / Universes Panel / Mobile Drawer
+   Self-contained: tokens.css only. Does NOT use Dawn's component-list-menu.css /
+   component-menu-drawer.css / component-mega-menu.css.
+   Keeps Dawn's a11y JS contracts:
+     <sticky-header>, <header-drawer> (global.js MenuDrawer/HeaderDrawer),
+     <details-modal> (details-modal.js). Structure + visuals only are ours.
+   Marigold never appears in navigation.
+   ============================================================================ */
+
+.ap-header {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  column-gap: var(--space-lg);
+  padding: var(--space-md) var(--space-xl);
+  background: var(--color-canvas);
+  border-bottom: 1px solid var(--color-border);
+  font-family: var(--font-body);
+}
+
+.ap-header__logo-heading {
+  margin: 0;
+  display: flex;
+  min-width: 0;
+}
+
+.ap-header__logo {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  text-decoration: none;
+  color: var(--color-ink-900);
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-display);
+  font-size: 1.35rem;
+  letter-spacing: -0.01em;
+}
+
+.ap-header__logo img {
+  display: block;
+  height: auto;
+}
+
+.ap-header__logo-fallback {
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-display-max);
+}
+
+/* --- Desktop nav --------------------------------------------------------- */
+.ap-nav {
+  display: none;
+}
+
+@media (min-width: 990px) {
+  .ap-nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xl);
+    justify-self: center;
+  }
+}
+
+.ap-nav__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) 0;
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-body-medium);
+  line-height: 1;
+  color: var(--color-ink-900);
+  text-decoration: none;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  position: relative;
+}
+
+/* animated underline: width, not opacity (DS microinteraction 2) */
+.ap-nav__link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  height: 1px;
+  width: 0;
+  background: currentColor;
+  transition: width var(--motion-transactional);
+}
+
+.ap-nav__link:hover::after,
+.ap-nav__link[aria-expanded="true"]::after {
+  width: 100%;
+}
+
+.ap-nav__link[aria-current="page"] {
+  font-weight: var(--font-weight-body-strong);
+}
+
+.ap-nav__caret {
+  width: 10px;
+  height: 10px;
+  transition: transform var(--motion-transactional);
+}
+
+.ap-nav__link[aria-expanded="true"] .ap-nav__caret {
+  transform: rotate(180deg);
+}
+
+/* --- Header right cluster --------------------------------------------------- */
+.ap-header__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-md);
+  justify-self: end;
+}
+
+/* Localization selectors are desktop-only in the header; mobile uses the drawer. */
+.ap-header__localization {
+  display: none;
+}
+
+@media (min-width: 990px) {
+  .ap-header__localization {
+    display: inline-flex;
+  }
+}
+
+.ap-header__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: var(--color-ink-900);
+  text-decoration: none;
+  position: relative;
+}
+
+.ap-header__icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.ap-header__cart-count {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: var(--radius-full);
+  background: var(--color-ink-900);
+  color: var(--color-canvas);
+  font-size: 0.625rem;
+  font-weight: var(--font-weight-body-strong);
+  line-height: 16px;
+  text-align: center;
+}
+
+/* ============================================================================
+   Universes Panel — a TRIGGER + overlay panel. NOT a mega-menu.
+   Wraps <details-modal>: focus trap, Escape, click-outside from details-modal.js.
+   ============================================================================ */
+.ap-universes {
+  position: relative;
+  display: none;
+}
+
+@media (min-width: 990px) {
+  .ap-universes {
+    display: inline-flex;
+  }
+}
+
+.ap-universes details {
+  position: static;
+}
+
+.ap-universes summary {
+  list-style: none;
+}
+
+.ap-universes summary::-webkit-details-marker {
+  display: none;
+}
+
+.ap-universes__panel {
+  position: absolute;
+  z-index: 40;
+  top: calc(100% + var(--space-md));
+  left: 0;
+  width: min(680px, calc(100vw - 3rem));
+  max-height: min(70vh, 560px);
+  overflow-y: auto;
+  padding: var(--space-xl);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.ap-universes details:not([open]) .ap-universes__panel {
+  display: none;
+}
+
+.ap-universes__panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--space-lg);
+}
+
+.ap-universes__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-display);
+  font-size: 1.05rem;
+  color: var(--color-ink-900);
+}
+
+.ap-universes__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-ink-900);
+  cursor: pointer;
+}
+
+.ap-universes__close svg {
+  width: 14px;
+  height: 14px;
+}
+
+.ap-universes__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-lg);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (max-width: 749px) {
+  .ap-universes__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.ap-universes__item a {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  text-decoration: none;
+  color: var(--color-ink-900);
+}
+
+.ap-universes__thumb {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-none);
+  border: 1px solid var(--color-border);
+  background: var(--color-canvas);
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-display);
+  font-size: 1.1rem;
+  color: var(--color-text-muted);
+  overflow: hidden;
+}
+
+.ap-universes__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ap-universes__name {
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-body-medium);
+}
+
+.ap-universes__placeholder-note {
+  grid-column: 1 / -1;
+  margin: 0 0 var(--space-xs);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+/* ============================================================================
+   Mobile drawer — content restyle only. Structure/behaviour stay Dawn's
+   (<header-drawer> + global.js). We style Dawn's class names directly.
+   ============================================================================ */
+header-drawer {
+  display: inline-flex;
+}
+
+@media (min-width: 990px) {
+  header-drawer {
+    display: none;
+  }
+}
+
+.menu-drawer-container {
+  display: flex;
+  position: relative;
+  z-index: 70; /* keep the hamburger/X toggle above the open drawer */
+}
+
+.header__icon--menu {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: var(--color-ink-900);
+  cursor: pointer;
+  list-style: none;
+}
+
+.header__icon--menu::-webkit-details-marker {
+  display: none;
+}
+
+.header__icon--menu svg {
+  width: 22px;
+  height: 22px;
+}
+
+.header__icon--menu .icon-close {
+  display: none;
+}
+
+details[open] > .header__icon--menu .icon-hamburger {
+  display: none;
+}
+
+details[open] > .header__icon--menu .icon-close {
+  display: block;
+}
+
+.menu-drawer {
+  position: fixed;
+  z-index: 60;
+  inset: 0 auto 0 0;
+  width: min(88vw, 380px);
+  transform: translateX(-100%);
+  visibility: hidden;
+  background: var(--color-canvas);
+  border-right: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--motion-transactional), visibility var(--motion-transactional);
+  overflow-y: auto;
+}
+
+.menu-drawer-container[open] .menu-drawer,
+details[open] > .menu-drawer {
+  transform: translateX(0);
+  visibility: visible;
+}
+
+.menu-drawer__inner-container {
+  min-height: 100%;
+}
+
+.menu-drawer__navigation-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.menu-drawer__navigation {
+  padding: var(--space-5xl) var(--space-xl) var(--space-lg);
+}
+
+.menu-drawer__menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu-drawer__menu > li + li {
+  border-top: 1px solid var(--color-border);
+}
+
+.menu-drawer__menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  width: 100%;
+  padding: var(--space-md) 0;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: var(--font-weight-body-medium);
+  color: var(--color-ink-900);
+  text-decoration: none;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  list-style: none;
+}
+
+.menu-drawer__menu-item--active {
+  font-weight: var(--font-weight-body-strong);
+}
+
+.menu-drawer__menu-item .svg-wrapper svg {
+  width: 12px;
+  height: 12px;
+}
+
+.menu-drawer summary.menu-drawer__menu-item::-webkit-details-marker {
+  display: none;
+}
+
+.menu-drawer__submenu {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 var(--space-md) var(--space-md);
+}
+
+.menu-drawer__submenu .menu-drawer__menu-item {
+  font-weight: var(--font-weight-body);
+  padding: var(--space-sm) 0;
+}
+
+.menu-drawer details:not([open]) > .menu-drawer__submenu {
+  display: none;
+}
+
+.menu-drawer__utility-links {
+  margin-top: auto;
+  padding: var(--space-lg) var(--space-xl) var(--space-2xl);
+  border-top: 1px solid var(--color-border);
+}
+
+.menu-drawer .list-social {
+  display: flex;
+  gap: var(--space-md);
+  list-style: none;
+  margin: var(--space-md) 0 0;
+  padding: 0;
+}
+
+.menu-drawer .list-social__link svg {
+  width: 18px;
+  height: 18px;
+  color: var(--color-ink-900);
+}
+
+body.overflow-hidden-tablet,
+body.overflow-hidden-mobile,
+body.overflow-hidden {
+  overflow: hidden;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-drawer,
+  .ap-nav__link::after,
+  .ap-nav__caret {
+    transition: none;
+  }
+}

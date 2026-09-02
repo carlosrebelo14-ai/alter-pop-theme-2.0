@@ -67,6 +67,24 @@ Known wireframe facts that override earlier prompt summaries:
 - Product card in the rails shows NO CTA button — image, title, franchise,
   dimension, price. Franchise is a visible line (placeholder under v3).
 
+## Shared primitives (hard rule)
+
+**No section defines its own button or its own font-size. Always use the
+primitive and the scale.**
+
+- **Buttons** → `.ap-btn` + a variant (`--primary` / `--secondary` / `--ghost`
+  / `--chip`) in `assets/buttons.css`. Height, weight (600 / `letter-spacing:
+  var(--tracking-button)`), `:active { transform: scale(.96) }` and hover all
+  come from the primitive. `--primary` carries the Marigold + asymmetric brand
+  corner so Add to Cart (F4) and Checkout (F6) inherit it. `.ap-nav__link`
+  (header nav) is deliberately not a button.
+- **Type** → a `.type-*` class or a `--text-*` / `--tracking-*` / `--leading-*`
+  token from `assets/tokens.css`. The DS scale is the only set of sizes:
+  11 12 13 14 15 16 18 19 20 22 26 34 64 px. Four roles (`--text-display`,
+  `--text-h2`, `--text-h3`, `--text-product-title`) step up at `min-width:
+  750px`; the rest are fixed. Every uppercase label/eyebrow/metadata uses
+  `--tracking-label` (0.04em). No `clamp()` fluid headings.
+
 ## Verification (also a hard rule)
 
 **Render verification is always against the served HTML from the dev server,

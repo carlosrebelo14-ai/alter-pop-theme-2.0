@@ -52,6 +52,42 @@
   --font-weight-display: 800;
   --font-weight-display-max: 900;
 
+  /* --- Type scale ---------------------------------------------------------
+     The DS scale — the ONLY sizes the theme uses:
+       11 12 13 14 15 16 18 19 20 22 26 34 64 (px).
+     No section defines its own font-size; it references a token below or
+     applies a `.type-*` class. Four roles step up at >=750px (see the
+     media block further down); the rest are fixed. Each size is paired with
+     one weight + one letter-spacing + one line-height — use them together
+     via the matching `.type-*` class, don't recombine.
+     mobile-first — desktop steps in the @media block near the end. */
+  --text-display: 2.125rem;        /* 34 -> 64 */
+  --text-h2: 1.25rem;              /* 20 -> 26 */
+  --text-h3: 1rem;                 /* 16 -> 19 */
+  --text-product-title: 1.125rem;  /* 18 -> 22 */
+  --text-price-pdp: 1.25rem;       /* 20  (fixed) */
+  --text-price-card: 0.9375rem;    /* 15  (fixed) */
+  --text-metadata: 0.75rem;        /* 12  (fixed) — FRANCHISE · LINE line */
+  --text-label: 0.75rem;           /* 12  (fixed) — eyebrows / uppercase labels */
+  --text-nav: 0.875rem;            /* 14  (fixed) */
+  --text-button: 0.875rem;         /* 14  (fixed) */
+  --text-body: 0.9375rem;          /* 15  (fixed) */
+  --text-caption: 0.8125rem;       /* 13  (fixed) — muted secondary / dimension line */
+  --text-microcopy: 0.6875rem;     /* 11  (fixed) */
+
+  /* letter-spacing — ONE value per role. Labels are 0.04em everywhere. */
+  --tracking-label: 0.04em;        /* every uppercase label / eyebrow / metadata */
+  --tracking-button: 0.01em;       /* .ap-btn and .type-button */
+  --tracking-display: -0.01em;     /* -> -0.02em at >=750px */
+  --tracking-heading: 0em;         /* h2 / h3 / product title */
+
+  /* line-height — flat for UI chrome, generous for reading copy. */
+  --leading-display: 1.05;
+  --leading-heading: 1.2;
+  --leading-body: 1.55;
+  --leading-snug: 1.4;             /* caption / metadata / microcopy */
+  --leading-flat: 1;               /* nav / button / price */
+
   /* --- Spacing --------------------------------------------------------------- */
   --space-xs: 4px;
   --space-sm: 8px;
@@ -121,6 +157,121 @@
   --font-heading-family: var(--font-display);
   --font-heading-style: normal;
   --font-heading-weight: var(--font-weight-display);
+}
+
+/* ============================================================================
+   Type scale — desktop steps + `.type-*` utility classes.
+   The four responsive roles jump to their larger step at >=750px; every
+   other size token is viewport-independent.
+   ============================================================================ */
+@media (min-width: 750px) {
+  :root {
+    --text-display: 4rem;            /* 64 */
+    --text-h2: 1.625rem;            /* 26 */
+    --text-h3: 1.1875rem;           /* 19 */
+    --text-product-title: 1.375rem; /* 22 */
+    --tracking-display: -0.02em;
+  }
+}
+
+.type-display {
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-display);
+  font-size: var(--text-display);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+}
+
+.type-h2 {
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-display);
+  font-size: var(--text-h2);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-heading);
+}
+
+.type-h3 {
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-display);
+  font-size: var(--text-h3);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-heading);
+}
+
+.type-product-title {
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-display);
+  font-size: var(--text-product-title);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-heading);
+}
+
+.type-price-pdp {
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body-strong);
+  font-size: var(--text-price-pdp);
+  line-height: var(--leading-flat);
+}
+
+.type-price-card {
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body-strong);
+  font-size: var(--text-price-card);
+  line-height: var(--leading-flat);
+}
+
+.type-metadata {
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body-medium);
+  font-size: var(--text-metadata);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.type-label {
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body-medium);
+  font-size: var(--text-label);
+  line-height: var(--leading-flat);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.type-nav {
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body-medium);
+  font-size: var(--text-nav);
+  line-height: var(--leading-flat);
+}
+
+.type-button {
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body-strong);
+  font-size: var(--text-button);
+  line-height: var(--leading-flat);
+  letter-spacing: var(--tracking-button);
+}
+
+.type-body {
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+}
+
+.type-caption {
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body);
+  font-size: var(--text-caption);
+  line-height: var(--leading-body);
+}
+
+.type-microcopy {
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body);
+  font-size: var(--text-microcopy);
+  line-height: var(--leading-snug);
 }
 
 /* ============================================================================

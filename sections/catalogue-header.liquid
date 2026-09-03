@@ -1,0 +1,108 @@
+{{ 'catalogue.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  Alterpop — Catalogue header (Character Page 9a / Line Page 9b).
+  Light band: breadcrumb, display name, a sub-line, a meta line, and — Line
+  only — a 2-3 sentence editorial context paragraph (the page body; never
+  marketing copy). Enters with --motion-editorial (400ms).
+
+  name           -> page.title  (the page represents the entity — honest)
+  character universe / line manufacturer + years
+                 -> page.metafields.alterpop.*  — BLOCKED, marked placeholder
+  "N figures/pieces in catalog"
+                 -> count of the linked products (computable)
+  height range / year range
+                 -> BLOCKED (no clean single-axis height, no year field)
+
+  `mode`: 'character' | 'line'.
+{%- endcomment -%}
+
+{%- liquid
+  assign mode = section.settings.mode | default: 'character'
+
+  assign cat_products = page.metafields.alterpop.products.value
+  if cat_products == blank and section.settings.collection != blank
+    assign cat_products = section.settings.collection.products
+  endif
+  assign cat_count = 0
+  if cat_products != blank
+    assign cat_count = cat_products.size
+  endif
+
+  assign universe = page.metafields.alterpop.universe.value
+  assign line_manufacturer = page.metafields.alterpop.manufacturer.value
+  assign year_range = page.metafields.alterpop.year_range.value
+-%}
+
+<section class="ap-cathead ap-cathead--{{ mode }}" aria-label="{{ page.title | escape }}">
+  <div class="ap-cathead__inner page-width">
+    <nav class="ap-cathead__crumbs type-caption" aria-label="Breadcrumb">
+      {%- if mode == 'line' -%}
+        <a href="{{ routes.all_products_collection_url }}">{{ 'sections.catalogue.lines' | t }}</a>
+      {%- elsif universe != blank -%}
+        <span>{{ universe | escape }}</span>
+      {%- else -%}
+        <span class="ap-ph">{{ 'sections.catalogue.universe_placeholder' | t }}</span>
+      {%- endif -%}
+      <span aria-hidden="true">&rsaquo;</span>
+      <span aria-current="page">{{ page.title | escape }}</span>
+    </nav>
+
+    <h1 class="ap-cathead__name type-display">{{ page.title | escape | upcase }}</h1>
+
+    <p class="ap-cathead__sub type-body">
+      {%- if mode == 'line' -%}
+        {%- if line_manufacturer != blank -%}{{ line_manufacturer | escape }}{%- else -%}<span class="ap-ph">{{ 'sections.catalogue.manufacturer_placeholder' | t }}</span>{%- endif -%}
+        {%- if year_range != blank -%}&nbsp;&middot;&nbsp;{{ year_range | escape }}{%- else -%}&nbsp;&middot;&nbsp;<span class="ap-ph">{{ 'sections.catalogue.years_placeholder' | t }}</span>{%- endif -%}
+      {%- else -%}
+        {%- if universe != blank -%}{{ universe | escape }}{%- else -%}<span class="ap-ph">{{ 'sections.catalogue.universe_placeholder' | t }}</span>{%- endif -%}
+      {%- endif -%}
+    </p>
+
+    {%- if mode == 'line' and page.content != blank -%}
+      <div class="ap-cathead__context type-body rte">{{ page.content }}</div>
+    {%- endif -%}
+
+    <p class="ap-cathead__meta type-caption">
+      {%- if cat_count > 0 -%}
+        {%- if mode == 'line' -%}
+          {{ 'sections.catalogue.count_pieces' | t: count: cat_count }}
+        {%- else -%}
+          {{ 'sections.catalogue.count_figures' | t: count: cat_count }}
+        {%- endif -%}
+      {%- else -%}
+        <span class="ap-ph">{{ 'sections.catalogue.count_placeholder' | t }}</span>
+      {%- endif -%}
+      {%- if mode == 'character' -%}
+        &nbsp;&middot;&nbsp;<span class="ap-ph">{{ 'sections.catalogue.range_placeholder' | t }}</span>
+      {%- endif -%}
+    </p>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Catalogue header",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "mode",
+      "label": "Mode",
+      "options": [
+        { "value": "character", "label": "Character page" },
+        { "value": "line", "label": "Line page" }
+      ],
+      "default": "character"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Products (dev fallback)",
+      "info": "Match the Catalogue grid's setting so the count is right."
+    }
+  ],
+  "enabled_on": { "templates": ["page"] }
+}
+{% endschema %}

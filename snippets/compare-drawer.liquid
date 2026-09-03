@@ -1,0 +1,63 @@
+{%- comment -%}
+  Alterpop — Compare Drawer. Entry point EXCLUSIVE to the Character / Line
+  pages (the `compare` toggle only renders there). Max 2 products, no
+  persistence between sessions (in-memory only — no storage). One table:
+  Manufacturer, Weight, Dimensions, Official Seal, Price, Availability.
+  Rendered once per page by catalogue-grid.liquid; compare-drawer.js drives it.
+{%- endcomment -%}
+
+<compare-drawer class="ap-compare" data-max="2" hidden>
+  <div class="ap-compare__bar">
+    <p class="ap-compare__title type-label">{{ 'sections.catalogue.compare_title' | t }}</p>
+    <ul class="ap-compare__slots" data-compare-slots role="list"></ul>
+    <div class="ap-compare__actions">
+      <button type="button" class="ap-btn ap-btn--secondary" data-compare-open disabled>
+        {{ 'sections.catalogue.compare_open' | t }}
+      </button>
+      <button type="button" class="ap-btn ap-btn--ghost" data-compare-clear>
+        {{ 'sections.catalogue.compare_clear' | t }}
+      </button>
+    </div>
+  </div>
+
+  <div class="ap-compare__panel" data-compare-panel role="dialog" aria-modal="false" aria-label="{{ 'sections.catalogue.compare_title' | t }}" hidden>
+    <button type="button" class="ap-compare__close" data-compare-close aria-label="{{ 'accessibility.close' | t }}">
+      <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+        <path d="M5 5 15 15M15 5 5 15" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <table class="ap-compare__table">
+      <thead>
+        <tr data-compare-row="head"><th scope="col"><span class="visually-hidden">{{ 'sections.catalogue.compare_spec' | t }}</span></th></tr>
+      </thead>
+      <tbody>
+        <tr data-compare-row="manufacturer"><th scope="row" class="type-caption">{{ 'sections.pdp.spec_brand' | t }}</th></tr>
+        <tr data-compare-row="weight"><th scope="row" class="type-caption">{{ 'sections.pdp.spec_weight' | t }}</th></tr>
+        <tr data-compare-row="dimensions"><th scope="row" class="type-caption">{{ 'sections.pdp.spec_dimensions' | t }}</th></tr>
+        <tr data-compare-row="license"><th scope="row" class="type-caption">{{ 'sections.catalogue.compare_seal' | t }}</th></tr>
+        <tr data-compare-row="price"><th scope="row" class="type-caption">{{ 'sections.catalogue.compare_price' | t }}</th></tr>
+        <tr data-compare-row="available"><th scope="row" class="type-caption">{{ 'sections.catalogue.compare_availability' | t }}</th></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <template data-compare-slot-template>
+    <li class="ap-compare__slot">
+      <img class="ap-compare__slot-img" alt="" width="40" height="40">
+      <span class="ap-compare__slot-title type-caption"></span>
+      <button type="button" class="ap-compare__slot-remove" aria-label="{{ 'sections.catalogue.compare_remove' | t }}">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+          <path d="M5 5 15 15M15 5 5 15" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </li>
+  </template>
+
+  <script>
+    window.AP_COMPARE_I18N = {
+      in_stock: {{ 'sections.pdp.in_stock_generic' | t | json }},
+      sold_out: {{ 'products.product.sold_out' | t | json }}
+    };
+  </script>
+  <script src="{{ 'compare-drawer.js' | asset_url }}" defer="defer"></script>
+</compare-drawer>

@@ -1,0 +1,60 @@
+{{ 'catalogue.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  Alterpop — "EXPLORE BY" cuts (Character Page 9a only).
+  Line / Height / Year toggles. Only ONE expands at a time; the others
+  collapse. A cut REORGANISES the grid (bucket members lead), it never gates
+  it — the full set stays. Cuts + re-sort use --motion-transactional (120ms).
+
+  BLOCKED: Line and Year fields do not exist; Height has no clean single-axis
+  value (ociostock.dimensions is "L x H x D cm"). So every cut renders its
+  toggle and, when expanded, a marked empty state instead of buckets. The
+  reorder logic (character-cuts.js) ships wired to the `data-line` /
+  `data-height` / `data-year` attributes on the grid items — inert until the
+  fields exist. NO inference.
+{%- endcomment -%}
+
+<section class="ap-explore" aria-label="{{ 'sections.catalogue.explore_by' | t }}">
+  <div class="ap-explore__inner page-width">
+    <span class="ap-explore__label type-label">{{ 'sections.catalogue.explore_by' | t }}</span>
+
+    <div class="ap-explore__toggles" role="group" aria-label="{{ 'sections.catalogue.explore_by' | t }}">
+      {%- assign cuts = 'line,height,year' | split: ',' -%}
+      {%- for cut in cuts -%}
+        <button
+          type="button"
+          class="ap-explore__toggle type-nav"
+          data-cut="{{ cut }}"
+          aria-expanded="false"
+        >
+          {%- case cut -%}
+            {%- when 'line' -%}{{ 'sections.catalogue.cut_line' | t }}
+            {%- when 'height' -%}{{ 'sections.catalogue.cut_height' | t }}
+            {%- when 'year' -%}{{ 'sections.catalogue.cut_year' | t }}
+          {%- endcase -%}
+        </button>
+      {%- endfor -%}
+    </div>
+
+    {%- for cut in cuts -%}
+      <div class="ap-explore__panel" data-cut-panel="{{ cut }}" hidden>
+        {%- comment -%} BLOCKED: aguarda app — Line / Height / Year. Buckets fill here. {%- endcomment -%}
+        <p class="ap-explore__empty type-caption">
+          {{ 'sections.catalogue.cut_empty' | t: field: cut }}
+        </p>
+      </div>
+    {%- endfor -%}
+  </div>
+
+  <script src="{{ 'character-cuts.js' | asset_url }}" defer="defer"></script>
+</section>
+
+{% schema %}
+{
+  "name": "Explore by (cuts)",
+  "tag": "section",
+  "class": "section",
+  "settings": [],
+  "enabled_on": { "templates": ["page"] }
+}
+{% endschema %}

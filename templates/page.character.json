@@ -1,0 +1,21 @@
+{
+  "sections": {
+    "header": {
+      "type": "catalogue-header",
+      "settings": { "mode": "character", "collection": "all" }
+    },
+    "explore": {
+      "type": "character-explore",
+      "settings": {}
+    },
+    "grid": {
+      "type": "catalogue-grid",
+      "settings": { "mode": "character", "collection": "all" }
+    },
+    "relnav": {
+      "type": "character-relational-nav",
+      "settings": {}
+    }
+  },
+  "order": ["header", "explore", "grid", "relnav"]
+}

@@ -297,6 +297,42 @@
       "remaining": "{{ amount }} more to free shipping (over {{ threshold }})",
       "empty": "Free shipping on orders over {{ threshold }}"
     },
+    "catalogue": {
+      "lines": "Lines",
+      "explore_by": "Explore by",
+      "cut_line": "Line",
+      "cut_height": "Height",
+      "cut_year": "Year",
+      "cut_empty": "The {{ field }} cut needs the {{ field }} field from the sync app — buckets appear here once it exists.",
+      "count_figures": {
+        "one": "{{ count }} figure in catalog",
+        "other": "{{ count }} figures in catalog"
+      },
+      "count_pieces": {
+        "one": "{{ count }} piece in catalog",
+        "other": "{{ count }} pieces in catalog"
+      },
+      "count_placeholder": "[ count — awaiting linked products ]",
+      "range_placeholder": "[ height range · years — awaiting fields ]",
+      "universe_placeholder": "[ universe ]",
+      "manufacturer_placeholder": "[ manufacturer ]",
+      "years_placeholder": "[ years ]",
+      "source_placeholder": "Placeholder — products shown from a collection until the Character/Line field links them.",
+      "empty_character": "No products linked to this character yet — awaiting the Character field from the sync app.",
+      "empty_line": "No products linked to this line yet — awaiting the Line field from the sync app.",
+      "relnav": "Other characters",
+      "relnav_empty": "Character-to-character navigation appears here once the Character field exists.",
+      "compare": "Compare",
+      "compare_title": "Compare",
+      "compare_open": "Compare",
+      "compare_clear": "Clear",
+      "compare_close": "Close comparison",
+      "compare_remove": "Remove from comparison",
+      "compare_spec": "Spec",
+      "compare_seal": "Official Seal",
+      "compare_price": "Price",
+      "compare_availability": "Availability"
+    },
     "pdp": {
       "premium_piece": "Premium Piece",
       "character_placeholder": "[ character ]",

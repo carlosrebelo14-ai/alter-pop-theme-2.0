@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "header": {
+      "type": "catalogue-header",
+      "settings": { "mode": "line", "collection": "all" }
+    },
+    "grid": {
+      "type": "catalogue-grid",
+      "settings": { "mode": "line", "collection": "all" }
+    }
+  },
+  "order": ["header", "grid"]
+}

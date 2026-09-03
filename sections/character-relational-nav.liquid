@@ -1,0 +1,42 @@
+{{ 'catalogue.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  Alterpop — Relational Navigation between Character Pages (addendum).
+  prev / next character, --motion-transactional, tier-agnostic on both sides.
+
+  BLOCKED: aguarda app — the Character metaobject and its siblings. Reads
+  page.metafields.alterpop.relational (a list of { title, url }); shows a
+  marked empty state until it exists. NO inference.
+{%- endcomment -%}
+
+{%- liquid
+  assign rel = page.metafields.alterpop.relational.value
+-%}
+
+<nav class="ap-relnav" aria-label="{{ 'sections.catalogue.relnav' | t }}">
+  <div class="ap-relnav__inner page-width">
+    {%- if rel != blank and rel.size > 0 -%}
+      <ul class="ap-relnav__list" role="list">
+        {%- for item in rel -%}
+          <li>
+            <a class="ap-btn ap-btn--ghost ap-relnav__link type-nav" href="{{ item.url }}">
+              {{- item.title | escape -}}
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- else -%}
+      <p class="ap-relnav__empty type-caption">{{ 'sections.catalogue.relnav_empty' | t }}</p>
+    {%- endif -%}
+  </div>
+</nav>
+
+{% schema %}
+{
+  "name": "Relational navigation",
+  "tag": "section",
+  "class": "section",
+  "settings": [],
+  "enabled_on": { "templates": ["page"] }
+}
+{% endschema %}

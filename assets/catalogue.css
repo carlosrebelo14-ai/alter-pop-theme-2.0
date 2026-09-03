@@ -1,0 +1,377 @@
+/* ============================================================================
+   Alterpop — Catalogue Experience pages (Character 9a / Line 9b)
+   Self-contained: tokens.css + buttons.css. Header enters --motion-editorial;
+   cuts / re-sort / compare use --motion-transactional.
+   ============================================================================ */
+
+/* marked placeholder for a BLOCKED field */
+.ap-ph {
+  color: var(--color-text-muted);
+  border-bottom: 1px dotted var(--color-border);
+}
+
+/* --- header band --------------------------------------------------------- */
+.ap-cathead {
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+  animation: ap-cathead-in var(--motion-editorial) both;
+}
+
+@keyframes ap-cathead-in {
+  from { opacity: 0; transform: scale(1.02); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.ap-cathead__inner {
+  padding: var(--space-2xl) var(--space-xl);
+}
+
+.ap-cathead__crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-md);
+  color: var(--color-text-muted);
+}
+
+.ap-cathead__crumbs a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.ap-cathead__crumbs a:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.ap-cathead__crumbs [aria-current="page"] {
+  color: var(--color-ink-900);
+}
+
+.ap-cathead__name {
+  margin: 0 0 var(--space-xs);
+  color: var(--color-ink-900);
+}
+
+.ap-cathead__sub {
+  margin: 0 0 var(--space-md);
+  color: var(--color-text-muted);
+}
+
+.ap-cathead__context {
+  max-width: 60ch;
+  margin: 0 0 var(--space-md);
+  color: var(--color-ink-900);
+}
+
+.ap-cathead__context > * { margin: 0 0 var(--space-sm); }
+.ap-cathead__context > *:last-child { margin-bottom: 0; }
+
+.ap-cathead__meta {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ap-cathead { animation-duration: 0.01ms; }
+}
+
+/* --- EXPLORE BY (cuts) ------------------------------------------------- */
+.ap-explore {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.ap-explore__inner {
+  padding: var(--space-lg) var(--space-xl);
+}
+
+.ap-explore__label {
+  display: inline-block;
+  margin-right: var(--space-md);
+  color: var(--color-text-muted);
+}
+
+.ap-explore__toggles {
+  display: inline-flex;
+  gap: var(--space-lg);
+}
+
+.ap-explore__toggle {
+  padding: var(--space-xs) 0;
+  border: 0;
+  background: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  position: relative;
+}
+
+.ap-explore__toggle[aria-expanded="true"] {
+  color: var(--color-ink-900);
+  font-weight: var(--font-weight-body-strong);
+}
+
+.ap-explore__toggle[aria-expanded="true"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 2px;
+  background: var(--color-ink-900);
+}
+
+.ap-explore__panel {
+  margin-top: var(--space-md);
+}
+
+.ap-explore__panel[hidden] { display: none; }
+
+.ap-explore__bucket-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.ap-explore__bucket {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 var(--space-md);
+  border: 1px solid var(--color-ink-900);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: var(--text-button);
+  font-weight: var(--font-weight-body-strong);
+  letter-spacing: var(--tracking-button);
+  color: var(--color-ink-900);
+  cursor: pointer;
+  transition: background var(--motion-transactional), color var(--motion-transactional);
+}
+
+.ap-explore__bucket[aria-pressed="true"] {
+  background: var(--color-ink-900);
+  color: var(--color-canvas);
+}
+
+.ap-explore__empty {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+/* --- grid ----------------------------------------------------------------- */
+.ap-catalogue__inner {
+  padding: var(--space-xl);
+}
+
+.ap-catalogue__ph-note {
+  margin: 0 0 var(--space-lg);
+  color: var(--color-text-muted);
+}
+
+.ap-catalogue__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-xl) var(--space-lg);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 750px) {
+  .ap-catalogue__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (min-width: 990px) {
+  .ap-catalogue__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+.ap-catalogue__item {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  transition: transform var(--motion-transactional);
+}
+
+.ap-catalogue__empty {
+  padding: var(--space-4xl) var(--space-xl);
+  text-align: center;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.ap-catalogue__empty-note {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+/* card compare toggle sits above the whole-card click overlay */
+.ap-card__compare {
+  margin-top: var(--space-sm);
+  position: relative;
+  z-index: 2;
+  color: var(--color-text-muted);
+}
+
+.ap-card__compare[aria-pressed="true"] {
+  color: var(--color-ink-900);
+  font-weight: var(--font-weight-body-strong);
+}
+
+/* --- relational navigation --------------------------------------------- */
+.ap-relnav {
+  border-top: 1px solid var(--color-border);
+}
+
+.ap-relnav__inner {
+  padding: var(--space-xl);
+}
+
+.ap-relnav__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xl);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ap-relnav__empty {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+/* ============================================================================
+   Compare Drawer — fixed bar + expandable table. Max 2, no persistence.
+   ============================================================================ */
+.ap-compare {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  background: var(--color-canvas);
+  border-top: 1px solid var(--color-border);
+  box-shadow: var(--shadow-md);
+}
+
+.ap-compare[hidden] { display: none; }
+
+.ap-compare__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+  max-width: var(--page-width, 1400px);
+  margin: 0 auto;
+  padding: var(--space-md) var(--space-xl);
+}
+
+.ap-compare__title {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.ap-compare__slots {
+  display: flex;
+  gap: var(--space-md);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  flex: 1 1 auto;
+}
+
+.ap-compare__slot {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.ap-compare__slot-img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: var(--radius-none);
+  background: var(--color-surface);
+}
+
+.ap-compare__slot-title {
+  max-width: 18ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ap-compare__slot-remove {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-ink-900);
+  cursor: pointer;
+}
+
+.ap-compare__slot-remove svg { width: 12px; height: 12px; }
+
+.ap-compare__actions {
+  display: inline-flex;
+  gap: var(--space-md);
+}
+
+.ap-compare__panel {
+  max-width: var(--page-width, 1400px);
+  margin: 0 auto;
+  padding: 0 var(--space-xl) var(--space-lg);
+  position: relative;
+}
+
+.ap-compare__panel[hidden] { display: none; }
+
+.ap-compare__close {
+  position: absolute;
+  top: 0;
+  right: var(--space-xl);
+  width: 32px;
+  height: 32px;
+  border: 0;
+  background: none;
+  color: var(--color-ink-900);
+  cursor: pointer;
+}
+
+.ap-compare__close svg { width: 16px; height: 16px; }
+
+.ap-compare__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ap-compare__table th,
+.ap-compare__table td {
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.ap-compare__table thead th,
+.ap-compare__cell-head {
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-display);
+  color: var(--color-ink-900);
+}
+
+.ap-compare__table tbody th {
+  font-weight: var(--font-weight-body-strong);
+  color: var(--color-ink-900);
+  width: 30%;
+}
+
+.ap-compare__cell {
+  color: var(--color-ink-900);
+}

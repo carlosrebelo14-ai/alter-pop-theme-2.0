@@ -1,0 +1,108 @@
+{{ 'catalogue.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  Alterpop — Catalogue grid (Character Page 9a / Line Page 9b).
+  The full grid is ALWAYS visible — no "choose a filter first". The card is
+  the ONE product-card component; on the Character Page the franchise half of
+  its meta line is dropped (one character, one franchise), on the Line Page
+  it stays (a Line crosses franchises).
+
+  Product source, in order:
+    1. page.metafields.alterpop.products  (expected — a list of products)
+    2. the section's `collection` setting  (dev fallback, marked)
+    3. explicit empty state
+  Character / Line entities are metaobjects the app does not expose yet, so
+  1. is BLOCKED. NO inference from tags / titles.
+
+  `mode`: 'character' | 'line'.
+{%- endcomment -%}
+
+{%- liquid
+  assign mode = section.settings.mode | default: 'character'
+
+  assign cat_products = page.metafields.alterpop.products.value
+  assign cat_is_placeholder = false
+  if cat_products == blank and section.settings.collection != blank
+    assign cat_products = section.settings.collection.products
+    assign cat_is_placeholder = true
+  endif
+
+  # Character page: one character, one franchise -> drop the franchise half
+  # of the card meta line. Line page: keep it (a Line crosses franchises).
+  if mode == 'character'
+    assign hide_fr = true
+  else
+    assign hide_fr = false
+  endif
+-%}
+
+<section class="ap-catalogue" data-catalogue-mode="{{ mode }}">
+  <div class="ap-catalogue__inner page-width" data-ap-grid>
+    {%- if cat_products != blank and cat_products.size > 0 -%}
+      {%- if cat_is_placeholder -%}
+        <p class="ap-catalogue__ph-note type-caption">{{ 'sections.catalogue.source_placeholder' | t }}</p>
+      {%- endif -%}
+
+      <ul class="ap-catalogue__grid grid" id="Catalogue-Grid-{{ section.id }}" role="list">
+        {%- assign cg_skip = false -%}
+        {%- for p in cat_products -%}
+          <li
+            class="ap-catalogue__item grid__item"
+            data-height="{{ p.metafields.ociostock.dimensions.value | escape }}"
+            data-line="{{ p.metafields.alterpop.line.value | escape }}"
+            data-year="{{ p.metafields.alterpop.year.value | escape }}"
+          >
+            {% render 'product-card',
+              card_product: p,
+              section_id: section.id,
+              lazy_load: forloop.index0 > 3,
+              skip_styles: cg_skip,
+              hide_franchise: hide_fr,
+              compare: true
+            %}
+          </li>
+          {%- assign cg_skip = true -%}
+        {%- endfor -%}
+      </ul>
+    {%- else -%}
+      <div class="ap-catalogue__empty" role="note">
+        <p class="ap-catalogue__empty-note type-body">
+          {%- if mode == 'line' -%}
+            {{ 'sections.catalogue.empty_line' | t }}
+          {%- else -%}
+            {{ 'sections.catalogue.empty_character' | t }}
+          {%- endif -%}
+        </p>
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- render 'compare-drawer' -%}
+</section>
+
+{% schema %}
+{
+  "name": "Catalogue grid",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "mode",
+      "label": "Mode",
+      "options": [
+        { "value": "character", "label": "Character page" },
+        { "value": "line", "label": "Line page" }
+      ],
+      "default": "character"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Products (dev fallback)",
+      "info": "Used only until page.metafields.alterpop.products exists. Marked as placeholder when active."
+    }
+  ],
+  "enabled_on": { "templates": ["page"] }
+}
+{% endschema %}

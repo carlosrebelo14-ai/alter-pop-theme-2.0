@@ -34,6 +34,10 @@
                              wireframe 7a shows "Character · wave", not the
                              franchise). Line still renders on its own.
                              Default: false.
+  - compare:       {Boolean} Render the "Compare" toggle (wireframe 9a/9b
+                             Compare Drawer). Entry point EXCLUSIVE to the
+                             Character / Line pages — never passed elsewhere.
+                             Default: false.
 
   Presentation state is derived from a stock NUMBER already provided by the sync
   app (allowed client-side calc). Sync runs ~45 min so the number can be stale;
@@ -170,6 +174,43 @@
         <a href="{{ card_product.url }}" class="ap-btn ap-btn--secondary ap-card__cta" aria-describedby="{{ title_id }}">
           {{- 'products.card.notify_me' | t -}}
         </a>
+      {%- endif -%}
+
+      {%- comment -%}
+        Compare toggle — Character / Line pages only (wireframe 9a/9b).
+        Carries everything the drawer table needs so it never has to fetch.
+        Manufacturer / License are BLOCKED -> empty attr -> "[ pending ]" cell.
+      {%- endcomment -%}
+      {%- if compare -%}
+        {%- liquid
+          assign cmp_weight = ''
+          if variant.weight > 0
+            assign cmp_weight = variant.weight | weight_with_unit: variant.weight_unit
+          endif
+          assign cmp_license = card_product.metafields.alterpop.license.value | default: card_product.metafields.ociostock.licence.value
+          assign cmp_img = ''
+          if card_product.featured_media
+            assign cmp_img = card_product.featured_media | image_url: width: 160
+          endif
+        -%}
+        <button
+          type="button"
+          class="ap-btn ap-btn--ghost ap-card__compare"
+          data-compare-toggle
+          data-compare-id="{{ card_product.id }}"
+          data-compare-title="{{ card_product.title | escape }}"
+          data-compare-url="{{ card_product.url }}"
+          data-compare-image="{{ cmp_img | escape }}"
+          data-compare-price="{{ card_product.price | money | strip_html | escape }}"
+          data-compare-available="{{ card_product.available }}"
+          data-compare-manufacturer="{{ card_product.metafields.alterpop.manufacturer.value | escape }}"
+          data-compare-weight="{{ cmp_weight | escape }}"
+          data-compare-dimensions="{{ dimension | escape }}"
+          data-compare-license="{{ cmp_license | escape }}"
+          aria-pressed="false"
+        >
+          {{- 'sections.catalogue.compare' | t -}}
+        </button>
       {%- endif -%}
     </div>
   </div>

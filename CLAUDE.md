@@ -232,6 +232,33 @@ uploaded copy is stale until a restart + re-verify says otherwise.
   microinteraction reserved EXCLUSIVELY to this button. The premium spec
   sheet's row-by-row +40ms stagger (`pdp-spec-stagger.js` + pdp.css) is the
   system's ONLY stagger.
+- **Character / Line pages** (Phase 5, wireframe 9a/9b). `templates/page.character.json`
+  + `page.line.json`; sections `catalogue-header`, `character-explore`
+  (character only), `catalogue-grid`, `character-relational-nav` (character
+  only). Not wired to real data — a Shopify `page` has no products. The grid
+  reads `page.metafields.alterpop.products` (BLOCKED); the `collection`
+  section setting is a **marked** dev fallback (currently `all`). Assign a
+  real product source per page in admin. Header name = `page.title` (honest
+  — the page IS the entity); universe / manufacturer / year-range / height-
+  range = `page.metafields.alterpop.*`, BLOCKED, marked. Line editorial
+  paragraph = `page.content`. The grid uses `data-ap-grid` (Dawn `.grid`
+  reset). Card gets `hide_franchise` on the character page, `compare: true`
+  on both.
+- **EXPLORE BY cuts** (`character-explore` + `character-cuts.js`): Line /
+  Height / Year toggles, one panel open at a time, a bucket click
+  REORGANISES the grid (bucket members lead), never gates it. All three
+  cuts are BLOCKED (no Line/Year field, no clean single-axis Height) — the
+  toggles render, the panels show a marked empty state, and `reorder()` is
+  wired to `data-line` / `data-height` / `data-year` on the grid items but
+  inert until `[data-cut-bucket]` elements exist. NO tier filter, ever
+  (addendum) — Impulse + Premium always appear together.
+- **Compare Drawer** (`snippets/compare-drawer.liquid` + `compare-drawer.js`):
+  entry point is the card `compare` toggle, rendered ONLY on Character/Line
+  pages. Max 2, in-memory only (no storage, no cross-session persistence).
+  One table: Manufacturer (BLOCKED -> `[ pending ]`), Weight (live variant),
+  Dimensions (live `ociostock.dimensions`), Official Seal (raw
+  `ociostock.licence`), Price, Availability. All values come off the card's
+  `data-compare-*` attributes — never a fetch.
 
 ## Decisions taken in the absence of a wireframe page
 

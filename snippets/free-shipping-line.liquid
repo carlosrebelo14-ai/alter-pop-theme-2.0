@@ -1,0 +1,32 @@
+{%- comment -%}
+  The single free-shipping progress line, shared by the homepage shipping
+  bar and the PDP cross-sell so the empty-cart / reached cases stay in one
+  place. Server-rendered from the cart; callers that need it live re-render
+  the text on Dawn's cartUpdate pub/sub.
+
+  Accepts:
+  - threshold_amount: {Number} in store currency (e.g. 50 = €50). Default 50.
+  - reached_text:     {String} shown once the threshold is met. Optional.
+{%- endcomment -%}
+{%- liquid
+  assign fsl_threshold = threshold_amount | default: 50 | times: 100
+  assign fsl_remaining = fsl_threshold | minus: cart.total_price
+  if fsl_remaining < 0
+    assign fsl_remaining = 0
+  endif
+  assign fsl_remaining_money = fsl_remaining | money
+  assign fsl_threshold_money = fsl_threshold | money
+  assign fsl_empty = false
+  if cart == empty or cart.item_count == 0
+    assign fsl_empty = true
+  endif
+-%}
+{%- if fsl_empty -%}
+  {{- 'sections.shipping_bar.empty' | t: threshold: fsl_threshold_money -}}
+{%- elsif fsl_remaining > 0 -%}
+  {{- 'sections.shipping_bar.remaining' | t: amount: fsl_remaining_money, threshold: fsl_threshold_money -}}
+{%- elsif reached_text != blank -%}
+  {{- reached_text | escape -}}
+{%- else -%}
+  {{- 'sections.pdp.xsell_unlocked' | t -}}
+{%- endif -%}

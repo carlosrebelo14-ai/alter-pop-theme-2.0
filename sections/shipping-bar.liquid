@@ -10,12 +10,10 @@
 {%- endcomment -%}
 
 {%- liquid
+  # The text line comes from the shared free-shipping-line snippet; here we
+  # only need the numbers for the fill bar + data attributes.
   assign threshold = section.settings.threshold_amount | times: 100
   assign current = cart.total_price
-  assign remaining = threshold | minus: current
-  if remaining < 0
-    assign remaining = 0
-  endif
   assign pct = 0
   if threshold > 0
     assign pct = current | times: 100 | divided_by: threshold
@@ -23,13 +21,8 @@
       assign pct = 100
     endif
   endif
-  assign remaining_money = remaining | money
   assign threshold_money = threshold | money
   assign pct_now = pct | round
-  assign is_empty = false
-  if cart == empty or cart.item_count == 0
-    assign is_empty = true
-  endif
 -%}
 
 <free-shipping-bar
@@ -40,13 +33,10 @@
 >
   <div class="ap-shipbar__inner page-width">
     <p class="ap-shipbar__text" data-shipbar-text>
-      {%- if is_empty -%}
-        {{ 'sections.shipping_bar.empty' | t: threshold: threshold_money }}
-      {%- elsif remaining > 0 -%}
-        {{ 'sections.shipping_bar.remaining' | t: amount: remaining_money, threshold: threshold_money }}
-      {%- else -%}
-        {{ section.settings.reached_text | escape }}
-      {%- endif -%}
+      {%- render 'free-shipping-line',
+        threshold_amount: section.settings.threshold_amount,
+        reached_text: section.settings.reached_text
+      -%}
     </p>
     <div class="ap-shipbar__track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ pct_now }}">
       <span class="ap-shipbar__fill" data-shipbar-fill style="width: {{ pct_now }}%;"></span>

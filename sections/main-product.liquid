@@ -178,7 +178,11 @@
               price_class: 'ap-pdp__price'
             %}
 
-            {%- comment -%} ---- Stock + dispatch line ---- {%- endcomment -%}
+            {%- comment -%}
+              Stock line. Wireframe 3a (impulse): the stock pill only — the
+              dispatch line lives once, below Add to Cart. 3b (premium):
+              stock + dispatch on one line, and again below Add to Cart.
+            {%- endcomment -%}
             <p class="ap-pdp__availability type-caption">
               <span id="Inventory-{{ section.id }}" class="ap-pdp__stock" role="status">
                 {%- if v.available == false -%}
@@ -189,7 +193,9 @@
                   {{ 'sections.pdp.in_stock_generic' | t }}
                 {%- endif -%}
               </span>
-              <span class="ap-pdp__dispatch">{{ 'sections.pdp.dispatch' | t }}</span>
+              {%- if is_premium -%}
+                <span class="ap-pdp__dispatch">{{ 'sections.pdp.dispatch' | t }}</span>
+              {%- endif -%}
             </p>
 
             {%- comment -%} ---- Fragile notice (premium, or explicit fragile flag) ---- {%- endcomment -%}
@@ -226,12 +232,41 @@
               </variant-selects>
             {%- endunless -%}
 
-            {%- comment -%} ---- Quantity ---- {%- endcomment -%}
+            {%- comment -%}
+              Quantity — inline (not the shared quantity-input snippet, which
+              is the CART version: name="updates[...]" and value 0). On the
+              PDP the field is name="quantity", starts at 1, and posts with
+              the add-to-cart form. QuantityInput (global.js) wires the +/-.
+            {%- endcomment -%}
+            {%- assign qrule_min = v.quantity_rule.min | default: 1 -%}
+            {%- assign qrule_step = v.quantity_rule.increment | default: 1 -%}
             <div class="ap-pdp__qty">
-              <label class="form__label type-label" for="Quantity-{{ v.id }}">
+              <label class="form__label type-label" for="Quantity-{{ section.id }}">
                 {{ 'products.product.quantity.label' | t }}
               </label>
-              {% render 'quantity-input', variant: v, variant_id: v.id, min: v.quantity_rule.min %}
+              <quantity-input class="quantity">
+                <button class="quantity__button" name="minus" type="button">
+                  <span class="visually-hidden">{{ 'products.product.quantity.decrease' | t: product: product.title | escape }}</span>
+                  <span class="svg-wrapper">{{ 'icon-minus.svg' | inline_asset_content }}</span>
+                </button>
+                <input
+                  class="quantity__input"
+                  type="number"
+                  name="quantity"
+                  id="Quantity-{{ section.id }}"
+                  value="1"
+                  min="{{ qrule_min }}"
+                  {% if v.quantity_rule.max != null %}max="{{ v.quantity_rule.max }}"{% endif %}
+                  step="{{ qrule_step }}"
+                  data-min="{{ qrule_min }}"
+                  form="{{ product_form_id }}"
+                  aria-label="{{ 'products.product.quantity.input_label' | t: product: product.title | escape }}"
+                >
+                <button class="quantity__button" name="plus" type="button">
+                  <span class="visually-hidden">{{ 'products.product.quantity.increase' | t: product: product.title | escape }}</span>
+                  <span class="svg-wrapper">{{ 'icon-plus.svg' | inline_asset_content }}</span>
+                </button>
+              </quantity-input>
             </div>
 
             {%- comment -%} ---- Add to Cart (Dawn <product-form>; styled as .ap-btn--primary; overshoot) ---- {%- endcomment -%}

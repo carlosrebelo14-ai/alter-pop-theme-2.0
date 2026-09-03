@@ -523,11 +523,16 @@
   }
 }
 
-/* No editorial image bound: single-column text block, sensible measure —
-   the 50/50 split cannot carry an empty half. */
+/* No editorial image bound: a single left-aligned text block on a real
+   editorial measure — the 50/50 split cannot carry an empty half, and a
+   narrow centred column reads as broken on a wide screen. */
+.ap-archive--no-image .ap-archive__inner {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .ap-archive--no-image .ap-archive__body {
-  max-width: 46rem;
-  margin: 0 auto;
+  max-width: 640px;
+  margin: 0;
   padding-block: var(--space-4xl);
 }
 

@@ -89,6 +89,17 @@
   .ap-pdp__media .product__media-item:not(.is-active) {
     display: none;
   }
+
+  /* keep the featured shot from towering over the (lean, on impulse) info
+     column — sticky handles the rest of the scroll */
+  .ap-pdp__media .product-media-container {
+    max-height: 600px;
+  }
+
+  .ap-pdp__media .product-media-container img {
+    height: 100%;
+    object-fit: contain;
+  }
 }
 
 .ap-pdp__media .product-media-container,
@@ -574,8 +585,13 @@
 }
 
 .ap-xsell__threshold {
-  margin: 0 0 var(--space-lg);
+  margin: 0 0 var(--space-sm);
   color: var(--color-ink-900);
+}
+
+.ap-xsell__ph-note {
+  margin: 0 0 var(--space-lg);
+  color: var(--color-text-muted);
 }
 
 .ap-xsell__row {

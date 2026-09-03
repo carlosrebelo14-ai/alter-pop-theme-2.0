@@ -13,10 +13,6 @@
 {%- liquid
   assign source = product.collections | first
   assign universe = product.metafields.alterpop.universe.value
-  assign threshold = section.settings.threshold_amount | times: 100
-  assign remaining = threshold | minus: cart.total_price
-  assign remaining_money = remaining | money
-  assign threshold_money = threshold | money
 -%}
 
 {%- if source != blank and source.products.size > 1 -%}
@@ -29,20 +25,32 @@
       {%- endif -%}
     </p>
 
-    {%- if remaining > 0 -%}
-      <p class="ap-xsell__threshold type-caption">
-        {{ 'sections.shipping_bar.remaining' | t: amount: remaining_money, threshold: threshold_money }}
-      </p>
-    {%- else -%}
-      <p class="ap-xsell__threshold type-caption">{{ 'sections.pdp.xsell_unlocked' | t }}</p>
+    <p class="ap-xsell__threshold type-caption">
+      {%- render 'free-shipping-line', threshold_amount: section.settings.threshold_amount -%}
+    </p>
+
+    {%- comment -%}
+      BLOQUEADO: aguarda app — Franchise/Universe. With the field the row is
+      the same-universe pieces; without it we show the product's collection
+      and mark it so it doesn't read as a real recommendation.
+    {%- endcomment -%}
+    {%- if universe == blank -%}
+      <p class="ap-xsell__ph-note type-caption">{{ 'sections.pdp.xsell_placeholder' | t }}</p>
     {%- endif -%}
 
     <ul class="ap-xsell__row" role="list">
       {%- assign shown = 0 -%}
       {%- for item in source.products -%}
         {%- if item.id != product.id and shown < 4 -%}
+          {%- assign xsell_skip_styles = true -%}
+          {%- if shown == 0 -%}{%- assign xsell_skip_styles = false -%}{%- endif -%}
           <li class="ap-xsell__item">
-            {% render 'product-card', card_product: item, compact: true, lazy_load: true, skip_styles: true %}
+            {% render 'product-card',
+              card_product: item,
+              compact: true,
+              lazy_load: true,
+              skip_styles: xsell_skip_styles
+            %}
           </li>
           {%- assign shown = shown | plus: 1 -%}
         {%- endif -%}

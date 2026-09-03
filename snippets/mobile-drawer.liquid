@@ -65,7 +65,9 @@
                   {%- for title in ph_titles -%}
                     <li>
                       <a href="{{ routes.all_products_collection_url }}" class="menu-drawer__universe">
-                        <span class="menu-drawer__universe-thumb menu-drawer__universe-thumb--ph" aria-hidden="true">{{ title | slice: 0, 1 }}</span>
+                        <span class="menu-drawer__universe-thumb">
+                          <span class="menu-drawer__universe-thumb--ph" aria-hidden="true">{{ title | slice: 0, 1 }}</span>
+                        </span>
                         <span class="menu-drawer__universe-name">{{ title }}</span>
                       </a>
                     </li>

@@ -318,6 +318,7 @@
       "seal_sources": "Sourced from authorized licensors: Banpresto, Funko, Good Smile, Tamashii Nations, Noble Collection, Iron Studios.",
       "xsell_heading": "Complete the {{ name }} collection",
       "xsell_heading_generic": "Complete the collection",
+      "xsell_placeholder": "Placeholder — related pieces need the Franchise/Universe field; showing this product's collection for now.",
       "xsell_unlocked": "You've unlocked free shipping",
       "reviews": "Reviews",
       "reviews_count": {

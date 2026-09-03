@@ -1,23 +1,43 @@
-<style type="text/css">
-  .template-404 .title + * {
-    margin-top: 1rem;
-  }
+{%- comment -%}
+  Alterpop — 404. No wireframe page; kept minimal, on tokens (global) + the
+  button primitive. Same "explicit empty / way-out" family as the search
+  no-results state (5c).
+{%- endcomment -%}
 
-  @media screen and (min-width: 750px) {
-    .template-404 .title + * {
-      margin-top: 2rem;
-    }
-  }
-</style>
+<section class="ap-404">
+  <div class="ap-404__inner page-width">
+    <span class="ap-404__mark" aria-hidden="true">
+      {{- 'symbol-ink.svg' | inline_asset_content -}}
+    </span>
+    <h1 class="ap-404__title type-h2">{{ 'templates.404.title' | t }}</h1>
+    <p class="ap-404__text type-body">{{ 'templates.404.subtext' | t }}</p>
+    <a href="{{ routes.all_products_collection_url }}" class="ap-btn ap-btn--secondary">
+      {{- 'general.continue_shopping' | t -}}
+    </a>
+  </div>
+</section>
 
-<div class="template-404 page-width page-margin center">
-  <p>
-    {{ 'templates.404.subtext' | t }}
-  </p>
-  <h1 class="title">
-    {{ 'templates.404.title' | t }}
-  </h1>
-  <a href="{{ routes.all_products_collection_url }}" class="button">
-    {{ 'general.continue_shopping' | t }}
-  </a>
-</div>
+{%- style -%}
+  .ap-404__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-5xl) var(--space-xl);
+    text-align: center;
+  }
+  .ap-404__mark svg {
+    width: 44px;
+    height: 44px;
+    color: var(--color-border);
+  }
+  .ap-404__title { margin: 0; color: var(--color-ink-900); }
+  .ap-404__text { margin: 0 0 var(--space-sm); max-width: 42ch; color: var(--color-text-muted); }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "404 page",
+  "settings": []
+}
+{% endschema %}

@@ -571,6 +571,12 @@
   color: var(--color-text-muted);
 }
 
+/* pending: not a real licensing claim yet — mute it, no emerald */
+.ap-pdp__seal--pending .ap-pdp__seal-line {
+  font-weight: var(--font-weight-body);
+  color: var(--color-text-muted);
+}
+
 /* ============================================================================
    Cross-sell
    ============================================================================ */

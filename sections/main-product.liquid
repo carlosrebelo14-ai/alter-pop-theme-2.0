@@ -284,7 +284,10 @@
               assign spec_sku = v.sku
               assign spec_brand = product.metafields.alterpop.manufacturer.value
               assign spec_category = product.metafields.alterpop.collectible_type.value
-              assign spec_license = product.metafields.alterpop.license.value | default: product.metafields.ociostock.licence.value
+              # License / Universe — the clean Franchise/Universe field, BLOCKED.
+              # Do NOT fall back to raw ociostock.licence (multi-language,
+              # unnormalised — e.g. "El Señor De Los Anillos" on an EU store).
+              assign spec_license = product.metafields.alterpop.license.value
               assign spec_ean = v.barcode
               assign spec_weight = v.weight
               assign spec_weight_unit = v.weight_unit
@@ -326,20 +329,28 @@
               {%- endif -%}
             </div>
 
-            {%- comment -%} ---- Official licensing seal (premium) ---- {%- endcomment -%}
+            {%- comment -%}
+              Official licensing seal (premium). BLOCKED: aguarda app — the
+              per-SKU license supplier. Without it we can't name THIS
+              product's licensor, so the seal is a marked placeholder — not a
+              generic "Officially Licensed" claim or a list of every possible
+              licensor.
+            {%- endcomment -%}
             {%- if is_premium -%}
-              <div class="ap-pdp__seal" role="note">
-                <p class="ap-pdp__seal-line">
-                  <span class="ap-pdp__seal-icon" aria-hidden="true">
-                    {{- 'icon-checkmark.svg' | inline_asset_content -}}
-                  </span>
-                  {%- if spec_brand != blank -%}
-                    {{ 'sections.pdp.seal_by' | t: brand: spec_brand }}
-                  {%- else -%}
-                    {{ 'sections.pdp.seal_generic' | t }}
-                  {%- endif -%}
-                </p>
-                <p class="ap-pdp__seal-note type-caption">{{ 'sections.pdp.seal_sources' | t }}</p>
+              {%- assign seal_supplier = product.metafields.alterpop.license_supplier.value -%}
+              <div class="ap-pdp__seal{% if seal_supplier == blank %} ap-pdp__seal--pending{% endif %}" role="note">
+                {%- if seal_supplier != blank -%}
+                  <p class="ap-pdp__seal-line">
+                    <span class="ap-pdp__seal-icon" aria-hidden="true">
+                      {{- 'icon-checkmark.svg' | inline_asset_content -}}
+                    </span>
+                    {{ 'sections.pdp.seal_by' | t: brand: seal_supplier }}
+                  </p>
+                {%- else -%}
+                  <p class="ap-pdp__seal-line">
+                    <span class="ap-pdp__ph">{{ 'sections.pdp.seal_placeholder' | t }}</span>
+                  </p>
+                {%- endif -%}
               </div>
             {%- endif -%}
 

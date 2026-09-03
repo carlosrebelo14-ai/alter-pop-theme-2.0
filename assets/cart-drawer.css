@@ -375,8 +375,13 @@ cart-drawer-items {
   cursor: not-allowed;
 }
 
-/* --- empty state (wireframe 1d) ------------------------------------- */
-cart-drawer.is-empty .drawer__header + .drawer__header,
+/* --- empty state (wireframe 1d) -------------------------------------
+   Dawn hides every .drawer__header when empty; re-show the one that lives
+   inside .drawer__inner-empty so the empty state keeps its heading + ×. */
+cart-drawer.is-empty .drawer__inner-empty .drawer__header {
+  display: flex;
+}
+
 cart-drawer.is-empty .ap-cart__shipbar,
 cart-drawer.is-empty cart-drawer-items,
 cart-drawer.is-empty .drawer__footer {

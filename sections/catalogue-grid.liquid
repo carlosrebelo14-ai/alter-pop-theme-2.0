@@ -51,6 +51,8 @@
             data-height="{{ p.metafields.ociostock.dimensions.value | escape }}"
             data-line="{{ p.metafields.alterpop.line.value | escape }}"
             data-year="{{ p.metafields.alterpop.year.value | escape }}"
+            data-character="{{ p.metafields.alterpop.character.value | escape }}"
+            data-universe="{{ p.metafields.alterpop.universe.value | escape }}"
           >
             {% render 'product-card',
               card_product: p,

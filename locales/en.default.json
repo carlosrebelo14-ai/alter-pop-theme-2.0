@@ -304,6 +304,11 @@
       "cut_height": "Height",
       "cut_year": "Year",
       "cut_empty": "The {{ field }} cut needs the {{ field }} field from the sync app — buckets appear here once it exists.",
+      "group_by": "Group by",
+      "group_character": "By Character",
+      "group_universe": "By Universe",
+      "group_empty_character": "Grouping by character needs the Character field from the sync app.",
+      "group_empty_universe": "Grouping by universe needs the Franchise/Universe field from the sync app.",
       "count_figures": {
         "one": "{{ count }} figure in catalog",
         "other": "{{ count }} figures in catalog"

@@ -259,6 +259,23 @@ uploaded copy is stale until a restart + re-verify says otherwise.
   Dimensions (live `ociostock.dimensions`), Official Seal (raw
   `ociostock.licence`), Price, Availability. All values come off the card's
   `data-compare-*` attributes — never a fetch.
+- **Line "BY CHARACTER / BY UNIVERSE"** (`line-group-by` section +
+  `line-group-by.js`, wireframe 9b/p42): one toggle active at a time, the
+  grouping reorganises the grid (`data-character` / `data-universe` on the
+  items), never gates it. Both fields BLOCKED -> marked empty state; the
+  reorder is wired and inert until values exist.
+- **OPEN QUESTION for the app side — how is the Character (and Line) field
+  modelled?** A Shopify `page` has no product association, so the Character /
+  Line page's product source hangs on this choice: a list-of-products
+  metafield on the page? an auto-collection per character (then these become
+  `collection.*` templates, not `page.*`)? a metaobject with a product
+  reference list? The answer decides how much of Phase 5 wires up untouched:
+  `catalogue-grid` / `catalogue-header` already read
+  `page.metafields.alterpop.products` and fall back to a `collection`
+  setting, so a list metafield or a per-page collection setting is a
+  near-zero-change path; an auto-collection model means moving the templates
+  to `collection.character.json` / `collection.line.json` and swapping
+  `page.*` for `collection.*` in the two sections.
 
 ## Decisions taken in the absence of a wireframe page
 

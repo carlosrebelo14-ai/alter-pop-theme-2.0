@@ -1,0 +1,45 @@
+{{ 'catalogue.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  Alterpop — Line Page "BY CHARACTER / BY UNIVERSE" toggle (wireframe 9b / p42).
+  A Line crosses characters and franchises, so the grid can be grouped by
+  either. Same discipline as the Character Page cuts: the UI is built whole,
+  the grouping REORGANISES the grid (never gates it), and — because Character
+  and Universe are BLOCKED — clicking a toggle shows a marked empty state
+  instead of grouped sections. `line-group-by.js` wires the reorder to
+  `data-character` / `data-universe` on the grid items; inert until the
+  fields exist. NO inference.
+{%- endcomment -%}
+
+<section class="ap-groupby" aria-label="{{ 'sections.catalogue.group_by' | t }}">
+  <div class="ap-groupby__inner page-width">
+    <div class="ap-groupby__toggles" role="group" aria-label="{{ 'sections.catalogue.group_by' | t }}">
+      <button type="button" class="ap-groupby__toggle type-label" data-group="character" aria-pressed="false">
+        {{ 'sections.catalogue.group_character' | t }}
+      </button>
+      <button type="button" class="ap-groupby__toggle type-label" data-group="universe" aria-pressed="false">
+        {{ 'sections.catalogue.group_universe' | t }}
+      </button>
+    </div>
+
+    {%- comment -%} BLOCKED: aguarda app — Character / Universe. Grouped sections fill here. {%- endcomment -%}
+    <div class="ap-groupby__panel" data-group-panel="character" hidden>
+      <p class="ap-groupby__empty type-caption">{{ 'sections.catalogue.group_empty_character' | t }}</p>
+    </div>
+    <div class="ap-groupby__panel" data-group-panel="universe" hidden>
+      <p class="ap-groupby__empty type-caption">{{ 'sections.catalogue.group_empty_universe' | t }}</p>
+    </div>
+  </div>
+
+  <script src="{{ 'line-group-by.js' | asset_url }}" defer="defer"></script>
+</section>
+
+{% schema %}
+{
+  "name": "Line — group by",
+  "tag": "section",
+  "class": "section",
+  "settings": [],
+  "enabled_on": { "templates": ["page"] }
+}
+{% endschema %}

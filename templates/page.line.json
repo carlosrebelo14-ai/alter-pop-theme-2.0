@@ -4,10 +4,14 @@
       "type": "catalogue-header",
       "settings": { "mode": "line", "collection": "all" }
     },
+    "group-by": {
+      "type": "line-group-by",
+      "settings": {}
+    },
     "grid": {
       "type": "catalogue-grid",
       "settings": { "mode": "line", "collection": "all" }
     }
   },
-  "order": ["header", "grid"]
+  "order": ["header", "group-by", "grid"]
 }

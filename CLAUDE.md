@@ -85,6 +85,37 @@ primitive and the scale.**
   750px`; the rest are fixed. Every uppercase label/eyebrow/metadata uses
   `--tracking-label` (0.04em). No `clamp()` fluid headings.
 
+## Dawn `.grid` inside an Alterpop layout (hard rule — hit three times)
+
+Dawn's `.grid` is a **flexbox**. `.grid__item` carries
+`width: calc(N% - spacing)` + `max-width: calc(50% - spacing)` +
+`flex-grow: 1`, and `product-media-gallery`'s `.product__media-list` adds
+`grid grid--peek`. Those numbers assume a flex parent with `gap` and an item
+free to grow. Put that markup inside **your own CSS grid** (or any non-Dawn
+layout) and the `%` widths resolve against the wrong box — the grid track,
+a differently-sized flex container — and the item **collapses to a fraction
+of its cell**.
+
+Symptoms seen: Universe Room cards at 1/3 of their track; PDP gallery slide
+at 146px; PDP cross-sell nearly (that one was actually `skip_styles`).
+
+**Recipe:**
+1. Add `data-ap-grid` to the Alterpop wrapper that contains the reused Dawn
+   `.grid` / `.product__media-list` markup. `assets/ap-grid-reset.css`
+   (loaded globally, after `base.css`) then strips
+   `width` / `max-width` / `min-width` / `flex` off `.grid__item` and
+   `.product__media-list > .product__media-item` — but **only** under that
+   attribute, so Dawn's own pages (`/collections/all`, cart, search, blog,
+   `related-products`) are untouched.
+2. The section then owns sizing through its **own `grid-template-columns`**
+   (or `display:block` + one visible item, as the PDP gallery does).
+3. Verify the DOM item width on the served page — before and after — and
+   confirm `/collections/all` is byte-for-byte unchanged.
+
+Current users: `sections/main-collection-product-grid.liquid` (the
+`data-ap-grid` is gated on `template.suffix == 'universe-room'`) and
+`sections/main-product.liquid` (`.ap-pdp__media`).
+
 ## Verification (also a hard rule)
 
 **Render verification is always against the served HTML from the dev server,

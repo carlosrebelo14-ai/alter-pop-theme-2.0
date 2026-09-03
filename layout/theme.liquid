@@ -296,6 +296,8 @@
     {{ 'buttons.css' | asset_url | stylesheet_tag }}
 
     {{ 'base.css' | asset_url | stylesheet_tag }}
+    {%- comment -%} after base.css so it beats Dawn's `.grid--N-col-* .grid__item` width math (equal specificity). {%- endcomment -%}
+    {{ 'ap-grid-reset.css' | asset_url | stylesheet_tag }}
     <link rel="stylesheet" href="{{ 'component-cart-items.css' | asset_url }}" media="print" onload="this.media='all'">
 
     {%- if settings.cart_type == 'drawer' -%}

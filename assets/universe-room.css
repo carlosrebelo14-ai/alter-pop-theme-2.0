@@ -772,13 +772,10 @@
   }
 }
 
-/* Dawn sizes .grid__item for a flex row: `width: calc(33.33% - …)`. In our
-   CSS-grid container that % resolves against the 1fr TRACK, collapsing each
-   card to ~1/3 of its cell. Reset it so the card fills the track. */
+/* Dawn's flex `.grid__item` width math is neutralised by ap-grid-reset.css
+   (the wrapper carries data-ap-grid). Here we only clear the item's own
+   box so the CSS-grid cell isn't padded by Dawn's grid--peek. */
 [data-template-suffix="universe-room"] .product-grid .grid__item {
-  width: auto;
-  max-width: none;
-  min-width: 0;
   margin: 0;
   padding: 0;
 }

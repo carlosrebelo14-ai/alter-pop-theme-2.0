@@ -109,7 +109,7 @@
           (single active slide + thumbnail strip); pdp.css neutralises the
           `.product` grid so it doesn't fight our two-column layout.
         {%- endcomment -%}
-        <div class="ap-pdp__media product product--thumbnail product--large">
+        <div class="ap-pdp__media product product--thumbnail product--large" data-ap-grid>
           {%- assign variant_images = product.images | where: 'attached_to_variant?', true | map: 'src' -%}
           {% render 'product-media-gallery', variant_images: variant_images %}
         </div>

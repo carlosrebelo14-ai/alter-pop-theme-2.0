@@ -74,6 +74,8 @@
 /* Mobile keeps Dawn's swipe slider (component-slider.css). Desktop: a single
    active slide + the thumbnail strip does the switching. */
 @media (min-width: 750px) {
+  /* .grid__item width math is neutralised by ap-grid-reset.css (the wrapper
+     carries data-ap-grid). Here: stack the list, show only the active slide. */
   .ap-pdp__media .product__media-list {
     display: block;
     margin: 0;
@@ -81,8 +83,6 @@
   }
 
   .ap-pdp__media .product__media-item {
-    width: 100%;
-    max-width: 100%;
     padding: 0;
   }
 

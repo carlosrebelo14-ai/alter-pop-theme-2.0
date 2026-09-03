@@ -1,0 +1,33 @@
+/* ============================================================================
+   Alterpop — Dawn `.grid` reset (opt-in)
+   ============================================================================
+   Dawn's `.grid` is a flexbox: `.grid__item` carries
+   `width: calc(N% - spacing)` + `max-width: calc(50% - spacing)` +
+   `flex-grow: 1`, and `product-media-gallery` adds `grid grid--peek` to its
+   `.product__media-list`. Those numbers assume a flex parent with `gap` and
+   an item that is free to grow. When an Alterpop section places that markup
+   inside its own CSS grid — or any other layout — the percentage widths
+   resolve against the wrong box (the grid track, a differently-sized flex
+   container) and the item collapses to a fraction of its cell.
+
+   Seen three times: the Universe Room product grid, the PDP media gallery,
+   and (nearly) the PDP cross-sell. See CLAUDE.md "Dawn `.grid` inside an
+   Alterpop layout".
+
+   Fix: add `data-ap-grid` to the Alterpop wrapper. The reset drops the width
+   math; the section then owns sizing through its own `grid-template-columns`
+   (or `display:block` + a single visible item, as the PDP gallery does).
+
+   Scoped to the attribute on purpose — Dawn's own pages (`/collections/all`,
+   cart, search, blog, related-products) never carry it, so they are
+   untouched. Loaded globally in layout/theme.liquid; inert without the
+   attribute.
+   ============================================================================ */
+
+[data-ap-grid] .grid__item,
+[data-ap-grid] .product__media-list > .product__media-item {
+  width: auto;
+  max-width: none;
+  min-width: 0;
+  flex: 0 0 auto;
+}

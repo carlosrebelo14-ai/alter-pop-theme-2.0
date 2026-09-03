@@ -299,6 +299,7 @@
     },
     "pdp": {
       "premium_piece": "Premium Piece",
+      "character_placeholder": "[ character ]",
       "identity_placeholder": "[ line · manufacturer · year ]",
       "type_placeholder": "[ type ]",
       "in_stock_generic": "In stock",

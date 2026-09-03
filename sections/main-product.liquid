@@ -122,11 +122,21 @@
               <p class="ap-pdp__badge type-label">{{ 'sections.pdp.premium_piece' | t }}</p>
             {%- endif -%}
 
-            {%- comment -%} ---- Identity Block — fixed order ---- {%- endcomment -%}
+            {%- comment -%}
+              Identity Block — fixed order. The real product title stays as
+              the page <h1> (SEO / a11y need it) but visually hidden; the
+              Character slot is its own line and shows a marked placeholder
+              when the field is absent — never the raw supplier title.
+            {%- endcomment -%}
             <div class="ap-pdp__identity">
-              <h1 class="ap-pdp__name type-h2">
-                {{- ap_character | default: product.title | escape -}}
-              </h1>
+              <h1 class="visually-hidden">{{ product.title | escape }}</h1>
+              <p class="ap-pdp__name type-h2">
+                {%- if ap_character != blank -%}
+                  {{- ap_character | escape -}}
+                {%- else -%}
+                  <span class="ap-pdp__ph">{{ 'sections.pdp.character_placeholder' | t }}</span>
+                {%- endif -%}
+              </p>
 
               {%- liquid
                 assign id_mid = ''

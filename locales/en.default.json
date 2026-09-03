@@ -197,9 +197,9 @@
     },
     "facets": {
       "filter_and_operator_subtitle": "Match all",
-      "apply": "Apply",
+      "apply": "View Results",
       "clear": "Clear",
-      "clear_all": "Remove all",
+      "clear_all": "Clear Filters",
       "from": "From",
       "filter_and_sort": "Filter and sort",
       "filter_by_label": "Filter:",
@@ -296,6 +296,14 @@
     "shipping_bar": {
       "remaining": "{{ amount }} more to free shipping (over {{ threshold }})",
       "empty": "Free shipping on orders over {{ threshold }}"
+    },
+    "cart_drawer": {
+      "title": "Your Cart",
+      "empty_heading": "Your Cart Is Empty",
+      "back_to_catalog": "Back to the Catalog",
+      "subtotal": "Subtotal",
+      "checkout": "Checkout",
+      "cross_sell_heading": "Complete the {{ name }} collection"
     },
     "catalogue": {
       "lines": "Lines",

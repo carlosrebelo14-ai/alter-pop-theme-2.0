@@ -1,0 +1,179 @@
+/* ============================================================================
+   Alterpop — Mobile filter drawer (wireframe 5b). Shared by every collection
+   experience (the default collection template AND the Universe Room). Dawn's
+   facets.js + <menu-drawer> keep the open/close, focus trap and the
+   translateX slide (component-facets.css) — this only restyles the panel.
+   Loaded after component-facets.css.
+   ============================================================================ */
+
+/* --- the "Filter / Filter & Sort" trigger ---------------------------- */
+@media (max-width: 749px) {
+  .mobile-facets__open {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    width: 100%;
+    height: 44px;
+    border: 1px solid var(--color-ink-900);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    font-family: var(--font-body);
+    font-size: var(--text-button);
+    font-weight: var(--font-weight-body-strong);
+    letter-spacing: var(--tracking-button);
+    color: var(--color-ink-900);
+  }
+
+  .mobile-facets__open .svg-wrapper { width: 16px; height: 16px; }
+  .mobile-facets__open-wrapper { list-style: none; }
+  .mobile-facets__open-wrapper::-webkit-details-marker { display: none; }
+}
+
+/* --- panel ---------------------------------------------------------------- */
+.mobile-facets__inner {
+  background: var(--color-canvas);
+}
+
+.mobile-facets__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-lg) var(--space-xl);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.mobile-facets__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-display);
+  font-size: var(--text-h3);
+  color: var(--color-ink-900);
+}
+
+.mobile-facets__close {
+  width: 32px;
+  height: 32px;
+  border: 0;
+  background: none;
+  color: var(--color-ink-900);
+}
+
+.mobile-facets__close .svg-wrapper,
+.mobile-facets__close svg { width: 18px; height: 18px; }
+
+.mobile-facets__count {
+  margin: 0;
+  font-size: var(--text-caption);
+  color: var(--color-text-muted);
+}
+
+/* --- filter groups ---------------------------------------------------- */
+.mobile-facets__details {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.mobile-facets__summary {
+  display: flex;
+  padding: var(--space-md) var(--space-xl);
+  cursor: pointer;
+  list-style: none;
+}
+
+.mobile-facets__summary::-webkit-details-marker { display: none; }
+
+.mobile-facets__summary > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.mobile-facets__summary span:first-child {
+  font-family: var(--font-body);
+  font-size: var(--text-label);
+  font-weight: var(--font-weight-body-medium);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.mobile-facets__list {
+  margin: 0;
+  padding: 0 var(--space-xl) var(--space-md);
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.mobile-facets__label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  color: var(--color-ink-900);
+}
+
+/* checkbox — square, radius-xs, checkmark on check (matches the sidebar) */
+.mobile-facets__checkbox {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.mobile-facets__label .svg-wrapper,
+.mobile-facets__label > svg {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--color-ink-900);
+  border-radius: var(--radius-xs);
+}
+
+.mobile-facets__checkbox:checked ~ .svg-wrapper,
+.mobile-facets__checkbox:checked ~ svg {
+  background: var(--color-ink-900);
+  color: var(--color-canvas);
+}
+
+/* BRAND / TYPE chip rows inside the drawer (5b) */
+.mobile-facets__list.facets-layout-list--text.mobile-facets__list--brand,
+.mobile-facets__list--chips {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+/* --- footer: Clear Filters + View Results --------------------------- */
+.mobile-facets__footer {
+  display: flex;
+  gap: var(--space-md);
+  padding: var(--space-lg) var(--space-xl);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-canvas);
+}
+
+.mobile-facets__footer .button,
+.mobile-facets__footer .mobile-facets__clear {
+  flex: 1 1 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  border: 1px solid var(--color-ink-900);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: var(--text-button);
+  font-weight: var(--font-weight-body-strong);
+  letter-spacing: var(--tracking-button);
+  color: var(--color-ink-900);
+  text-decoration: none;
+}
+
+.mobile-facets__footer .button--primary {
+  background: var(--color-ink-900);
+  color: var(--color-canvas);
+}

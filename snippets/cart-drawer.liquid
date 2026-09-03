@@ -7,6 +7,8 @@
 
 {{ 'quantity-popover.css' | asset_url | stylesheet_tag }}
 {{ 'component-card.css' | asset_url | stylesheet_tag }}
+{%- comment -%} Alterpop restyle (wireframe 1d). Dawn's cart.js / cart-drawer.js keep the markup contract; cart-drawer.css (loaded after) restyles. {%- endcomment -%}
+{{ 'cart-drawer.css' | asset_url | stylesheet_tag }}
 
 <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'quantity-popover.js' | asset_url }}" defer="defer"></script>
@@ -27,42 +29,33 @@
       aria-label="{{ 'sections.cart.title' | t }}"
       tabindex="-1"
     >
+      {%- comment -%} Empty state — wireframe 1d: symbol, "Your Cart Is Empty", "Back to the Catalog". {%- endcomment -%}
       {%- if cart == empty -%}
         <div class="drawer__inner-empty">
-          <div class="cart-drawer__warnings center{% if settings.cart_drawer_collection != blank %} cart-drawer__warnings--has-collection{% endif %}">
-            <div class="cart-drawer__empty-content">
-              <h2 class="cart__empty-text">{{ 'sections.cart.empty' | t }}</h2>
-              <button
-                class="drawer__close"
-                type="button"
-                onclick="this.closest('cart-drawer').close()"
-                aria-label="{{ 'accessibility.close' | t }}"
-              >
-                <span class="svg-wrapper">
-                  {{- 'icon-close.svg' | inline_asset_content -}}
-                </span>
-              </button>
-              <a href="{{ routes.all_products_collection_url }}" class="button">
-                {{ 'general.continue_shopping' | t }}
-              </a>
-
-              {%- if shop.customer_accounts_enabled and customer == null -%}
-                <p class="cart__login-title h3">{{ 'sections.cart.login.title' | t }}</p>
-                <p class="cart__login-paragraph">
-                  {{ 'sections.cart.login.paragraph_html' | t: link: routes.account_login_url }}
-                </p>
-              {%- endif -%}
-            </div>
+          <div class="drawer__header">
+            <h2 class="drawer__heading">{{ 'sections.cart_drawer.title' | t }}</h2>
+            <button
+              class="drawer__close"
+              type="button"
+              onclick="this.closest('cart-drawer').close()"
+              aria-label="{{ 'accessibility.close' | t }}"
+            >
+              <span class="svg-wrapper">{{- 'icon-close.svg' | inline_asset_content -}}</span>
+            </button>
           </div>
-          {%- if settings.cart_drawer_collection != blank -%}
-            <div class="cart-drawer__collection">
-              {% render 'card-collection', card_collection: settings.cart_drawer_collection, columns: 1 %}
-            </div>
-          {%- endif -%}
+          <div class="ap-cart__empty">
+            <span class="ap-cart__empty-mark" aria-hidden="true">
+              {{- 'symbol-ink.svg' | inline_asset_content -}}
+            </span>
+            <p class="ap-cart__empty-heading type-h3">{{ 'sections.cart_drawer.empty_heading' | t }}</p>
+            <a href="{{ routes.all_products_collection_url }}" class="ap-btn ap-btn--secondary">
+              {{- 'sections.cart_drawer.back_to_catalog' | t -}}
+            </a>
+          </div>
         </div>
       {%- endif -%}
       <div class="drawer__header">
-        <h2 class="drawer__heading">{{ 'sections.cart.title' | t }}</h2>
+        <h2 class="drawer__heading">{{ 'sections.cart_drawer.title' | t }}</h2>
         <button
           class="drawer__close"
           type="button"
@@ -74,6 +67,22 @@
           </span>
         </button>
       </div>
+
+      {%- comment -%} Free-shipping progress — wireframe 1d. Reuses the shared line + a fill bar. {%- endcomment -%}
+      {%- if cart != empty -%}
+        {%- comment -%} €50 — same threshold as the homepage shipping bar. {%- endcomment -%}
+        {%- assign fs_threshold = 5000 -%}
+        {%- assign fs_pct = cart.total_price | times: 100 | divided_by: fs_threshold -%}
+        {%- if fs_pct > 100 -%}{%- assign fs_pct = 100 -%}{%- endif -%}
+        <div class="ap-cart__shipbar" role="status">
+          <p class="ap-cart__shipbar-text type-caption">
+            {%- render 'free-shipping-line', threshold_amount: 50 -%}
+          </p>
+          <div class="ap-cart__shipbar-track">
+            <span class="ap-cart__shipbar-fill" style="width: {{ fs_pct }}%;"></span>
+          </div>
+        </div>
+      {%- endif -%}
       <cart-drawer-items
         view-event-payload="{{ cart | standard_event_data: 'view', context: 'dialog' | escape }}"
         view-event-trigger="manual"
@@ -162,6 +171,17 @@
                               modal_id: cart_disclosure_modal_id
                             -%}
                           </div>
+
+                          {%- comment -%} Meta line: FRANCHISE (BLOCKED) · dimension (live). {%- endcomment -%}
+                          {%- assign ci_fr = item.product.metafields.alterpop.franchise.value -%}
+                          {%- assign ci_dim = item.product.metafields.ociostock.dimensions.value -%}
+                          {%- if ci_fr != blank or ci_dim != blank -%}
+                            <p class="ap-cart-item__meta type-caption">
+                              {%- if ci_fr != blank -%}{{ ci_fr | escape }}{%- endif -%}
+                              {%- if ci_fr != blank and ci_dim != blank -%} &middot; {% endif -%}
+                              {%- if ci_dim != blank -%}{{ ci_dim | escape }}{%- endif -%}
+                            </p>
+                          {%- endif -%}
 
                           {%- if item.original_price != item.final_price -%}
                             <div class="cart-item__discounted-prices">
@@ -478,6 +498,24 @@
                   </tbody>
                 </table>
               </div>
+
+              {%- comment -%} Cross-sell — wireframe 1d: "COMPLETE THE [X] COLLECTION". {%- endcomment -%}
+              {%- if settings.cart_drawer_collection != blank and settings.cart_drawer_collection.products.size > 0 -%}
+                <div class="ap-cart__xsell">
+                  <p class="ap-cart__xsell-label type-label">
+                    {{ 'sections.cart_drawer.cross_sell_heading' | t: name: settings.cart_drawer_collection.title }}
+                  </p>
+                  <ul class="ap-cart__xsell-row" role="list">
+                    {%- assign xs_skip = false -%}
+                    {%- for xp in settings.cart_drawer_collection.products limit: 2 -%}
+                      <li>
+                        {% render 'product-card', card_product: xp, compact: true, lazy_load: true, skip_styles: xs_skip %}
+                      </li>
+                      {%- assign xs_skip = true -%}
+                    {%- endfor -%}
+                  </ul>
+                </div>
+              {%- endif -%}
             {%- endif -%}
             <p id="CartDrawer-LiveRegionText" class="visually-hidden" role="status"></p>
             <p id="CartDrawer-LineItemStatus" class="visually-hidden" aria-hidden="true" role="status">
@@ -527,8 +565,8 @@
           </div>
 
           <div class="totals" role="status">
-            <h2 class="totals__total">{{ 'sections.cart.estimated_total' | t }}</h2>
-            <p class="totals__total-value">{{ cart.total_price | money_with_currency }}</p>
+            <h2 class="totals__total">{{ 'sections.cart_drawer.subtotal' | t }}</h2>
+            <p class="totals__total-value">{{ cart.total_price | money }}</p>
           </div>
 
           <small class="tax-note caption-large rte">
@@ -578,14 +616,14 @@
           <button
             type="submit"
             id="CartDrawer-Checkout"
-            class="cart__checkout-button button"
+            class="cart__checkout-button button ap-btn ap-btn--primary"
             name="checkout"
             form="CartDrawer-Form"
             {% if cart == empty %}
               disabled
             {% endif %}
           >
-            {{ 'sections.cart.checkout' | t }}
+            {{ 'sections.cart_drawer.checkout' | t }}
           </button>
         </div>
       </div>

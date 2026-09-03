@@ -103,6 +103,8 @@
         {%- if template.suffix == 'universe-room' %} data-ap-grid{% endif -%}
       >
         {{ 'component-facets.css' | asset_url | stylesheet_tag }}
+        {%- comment -%} Alterpop restyle of the mobile filter drawer (wireframe 5b); Dawn's facets.js untouched. {%- endcomment -%}
+        {{ 'facets-drawer.css' | asset_url | stylesheet_tag }}
         <script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
         {%- if section.settings.enable_filtering or section.settings.enable_sorting -%}
           <aside

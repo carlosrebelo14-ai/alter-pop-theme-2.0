@@ -264,6 +264,30 @@ uploaded copy is stale until a restart + re-verify says otherwise.
   grouping reorganises the grid (`data-character` / `data-universe` on the
   items), never gates it. Both fields BLOCKED -> marked empty state; the
   reorder is wired and inert until values exist.
+- **Cart Drawer** (Phase 6, wireframe 1d). `settings.cart_type` is now
+  `drawer`. `snippets/cart-drawer.liquid` keeps Dawn's whole markup contract
+  (`<cart-drawer class="drawer">`, `.active` toggle, `cart-drawer-items`,
+  `#CartDrawer-*`, `quantity-input`, `cart-remove-button`, `.totals`,
+  `#CartDrawer-Checkout`) — cart.js / cart-drawer.js untouched. Alterpop
+  additions: free-shipping line + fill bar (reuses `free-shipping-line`),
+  a FRANCHISE (BLOCKED) · dimension (live) meta line per item, the
+  "COMPLETE THE [X] COLLECTION" cross-sell (from `settings.cart_drawer_collection`,
+  `all` as a dev value), and the empty state (symbol + "Your Cart Is Empty"
+  + "Back to the Catalog"). `assets/cart-drawer.css` restyles on top
+  (loaded after `component-cart-drawer.css`); it must beat Dawn's
+  `.cart-drawer .cart-item { display:grid; grid-template: … repeat(4,1fr) }`
+  and the per-cell `grid-column: 2/4` / `2/5` — so the row grid + cell
+  placement are re-declared at `.cart-drawer .cart-item*` specificity, and
+  the table flatten must NOT include `tr` (that selector is `(0,2,1)` and
+  would beat `.cart-item { display:grid }`).
+- **Mobile filter drawer** (Phase 6, wireframe 5b). The `.mobile-facets__*`
+  restyle moved out of `universe-room.css` into shared
+  `assets/facets-drawer.css`, loaded from `main-collection-product-grid.liquid`
+  after `component-facets.css` — applies to the default collection template
+  AND the Universe Room. `products.facets.clear_all` / `.apply` locales are
+  now "Clear Filters" / "View Results" per 5b. Store has no Search &
+  Discovery filters (same C1 caveat as Phase 3) — the drawer shows only
+  Sort until they are configured in admin.
 - **OPEN QUESTION for the app side — how is the Character (and Line) field
   modelled?** A Shopify `page` has no product association, so the Character /
   Line page's product source hangs on this choice: a list-of-products

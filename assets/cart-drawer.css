@@ -1,0 +1,421 @@
+/* ============================================================================
+   Alterpop — Cart Drawer (wireframe 1d). Self-contained: tokens.css +
+   buttons.css. Dawn's cart.js / cart-drawer.js keep the markup contract
+   (<cart-drawer class="drawer">, .active toggle, #CartDrawer-*, cart-item
+   rows, quantity-input, cart-remove-button). Loaded after
+   component-cart-drawer.css so it wins on equal specificity.
+   ============================================================================ */
+
+.drawer {
+  position: fixed;
+  inset: 0 0 0 auto;
+  z-index: 80;
+  visibility: hidden;
+  transition: visibility var(--motion-transactional);
+}
+
+.drawer.active {
+  visibility: visible;
+}
+
+.cart-drawer__overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 16, 20, 0.28);
+  opacity: 0;
+  transition: opacity var(--motion-transactional);
+}
+
+.drawer.active .cart-drawer__overlay {
+  opacity: 1;
+}
+
+.drawer__inner {
+  position: fixed;
+  inset: 0 0 0 auto;
+  width: min(92vw, 420px);
+  display: flex;
+  flex-direction: column;
+  background: var(--color-canvas);
+  border-left: 1px solid var(--color-border);
+  box-shadow: var(--shadow-md);
+  transform: translateX(100%);
+  transition: transform var(--motion-transactional);
+  overflow: hidden;
+}
+
+.drawer.active .drawer__inner {
+  transform: translateX(0);
+}
+
+/* --- header --------------------------------------------------------------- */
+.drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-lg) var(--space-xl);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.drawer__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-display);
+  font-size: var(--text-h3);
+  color: var(--color-ink-900);
+}
+
+.drawer__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-ink-900);
+  cursor: pointer;
+}
+
+.drawer__close .svg-wrapper,
+.drawer__close svg { width: 18px; height: 18px; }
+
+/* --- free-shipping bar -------------------------------------------------- */
+.ap-cart__shipbar {
+  padding: var(--space-md) var(--space-xl);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.ap-cart__shipbar-text {
+  margin: 0 0 var(--space-sm);
+  color: var(--color-ink-900);
+}
+
+.ap-cart__shipbar-track {
+  height: 4px;
+  border-radius: var(--radius-full);
+  background: var(--color-border);
+  overflow: hidden;
+}
+
+.ap-cart__shipbar-fill {
+  display: block;
+  height: 100%;
+  background: var(--color-ink-900);
+  transition: width var(--motion-transactional);
+}
+
+/* --- scroll region ---------------------------------------------------- */
+cart-drawer-items {
+  display: block;
+  flex: 1 1 auto;
+  overflow-y: auto;
+}
+
+.drawer__contents,
+.cart-drawer__form {
+  display: block;
+}
+
+.drawer__cart-items-wrapper { padding: 0 var(--space-xl); }
+
+/* --- line items — flatten Dawn's table (but keep the row as a grid) --- */
+.cart-drawer .cart-items,
+.cart-drawer .cart-items > tbody,
+.cart-drawer .cart-items td {
+  display: block;
+  border: 0;
+  padding: 0;
+}
+
+.cart-drawer .cart-items > thead { display: none; }
+
+.cart-drawer .cart-item {
+  display: grid;
+  grid-template: none;
+  grid-template-columns: 64px 1fr auto;
+  column-gap: var(--space-md);
+  row-gap: var(--space-sm);
+  margin: 0;
+  padding: var(--space-lg) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.cart-drawer .cart-item > td + td { padding-left: 0; }
+
+.cart-drawer .cart-item__media {
+  grid-column: 1;
+  grid-row: 1 / 3;
+}
+
+.cart-drawer .cart-item__image {
+  width: 64px;
+  height: 64px;
+  max-width: none;
+  object-fit: cover;
+  border-radius: var(--radius-none);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+.cart-drawer .cart-item__details {
+  grid-column: 2;
+  grid-row: 1;
+  width: auto;
+  min-width: 0;
+}
+
+.cart-drawer .cart-item__name {
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-display);
+  font-size: var(--text-h3);
+  line-height: var(--leading-heading);
+  color: var(--color-ink-900);
+  text-decoration: none;
+}
+
+.cart-drawer .ap-cart-item__meta {
+  margin: 2px 0 0;
+  color: var(--color-text-muted);
+}
+
+/* Dawn also prints a bare unit price + option list under the title — mute it */
+.cart-drawer .cart-item__details > .product-option,
+.cart-drawer .cart-item__details dl {
+  margin: 2px 0 0;
+  font-size: var(--text-caption);
+  color: var(--color-text-muted);
+}
+
+.cart-drawer .cart-item__totals {
+  grid-column: 3;
+  grid-row: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.cart-drawer .cart-item__price-wrapper .price {
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body-strong);
+  font-size: var(--text-price-card);
+  color: var(--color-ink-900);
+}
+
+.cart-drawer .cart-items .cart-item__quantity {
+  grid-column: 2 / 4;
+  grid-row: 2;
+  padding: 0;
+}
+
+.cart-drawer .cart-item__quantity-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.cart-drawer .quantity {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  border: 1px solid var(--color-ink-900);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.cart-drawer .quantity__button {
+  width: 34px;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--color-ink-900);
+  cursor: pointer;
+}
+
+.cart-drawer .quantity__button svg { width: 12px; height: 12px; }
+
+.cart-drawer .quantity__input {
+  width: 36px;
+  height: 100%;
+  border: 0;
+  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+  background: transparent;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  color: var(--color-ink-900);
+  -moz-appearance: textfield;
+}
+
+.cart-drawer .quantity__input::-webkit-outer-spin-button,
+.cart-drawer .quantity__input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.cart-remove-button .button {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.cart-remove-button .button:hover { color: var(--color-ink-900); }
+.cart-remove-button svg { width: 14px; height: 14px; }
+
+.cart-drawer .cart-item__error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-top: var(--space-xs);
+  color: var(--color-fragile-ink);
+  font-size: var(--text-microcopy);
+}
+
+.cart-drawer .cart-item__error:has(.cart-item__error-text:empty) {
+  display: none;
+}
+
+/* --- cross-sell ------------------------------------------------------- */
+.ap-cart__xsell {
+  margin: var(--space-lg) 0 0;
+  padding: var(--space-lg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.ap-cart__xsell-label {
+  margin: 0 0 var(--space-md);
+  color: var(--color-text-muted);
+}
+
+.ap-cart__xsell-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-md);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* --- footer -------------------------------------------------------------- */
+.drawer__footer {
+  flex: 0 0 auto;
+  padding: var(--space-lg) var(--space-xl) var(--space-xl);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-canvas);
+}
+
+.cart-drawer__footer { padding: 0; }
+
+.totals {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--space-md);
+}
+
+.totals__total {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body);
+  font-size: var(--text-body);
+  color: var(--color-text-muted);
+}
+
+.totals__total-value {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body-strong);
+  font-size: var(--text-price-pdp);
+  color: var(--color-ink-900);
+}
+
+/* wireframe 1d has no tax / shipping note under the subtotal */
+.cart-drawer .tax-note { display: none; }
+
+.cart__ctas { margin: 0; }
+
+/* Checkout — .ap-btn--primary look. Dawn's `.button` (base.css, loaded before
+   this file) would otherwise win, so restate it at higher specificity. */
+.cart-drawer #CartDrawer-Checkout {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 48px;
+  padding: 0 var(--space-lg);
+  border: 1px solid transparent;
+  border-radius: 0 var(--radius-md) var(--radius-md) var(--radius-md);
+  background: var(--color-marigold);
+  color: var(--color-ink-900);
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body-strong);
+  font-size: var(--text-button);
+  letter-spacing: var(--tracking-button);
+  line-height: var(--leading-flat);
+  cursor: pointer;
+  transition: filter var(--motion-transactional);
+}
+
+.cart-drawer #CartDrawer-Checkout:hover {
+  filter: brightness(0.94);
+}
+
+.cart-drawer #CartDrawer-Checkout[disabled] {
+  background: var(--color-border);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+/* --- empty state (wireframe 1d) ------------------------------------- */
+cart-drawer.is-empty .drawer__header + .drawer__header,
+cart-drawer.is-empty .ap-cart__shipbar,
+cart-drawer.is-empty cart-drawer-items,
+cart-drawer.is-empty .drawer__footer {
+  display: none;
+}
+
+.drawer__inner-empty {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.ap-cart__empty {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  padding: var(--space-4xl) var(--space-xl);
+  text-align: center;
+}
+
+.ap-cart__empty-mark svg {
+  width: 40px;
+  height: 40px;
+  color: var(--color-border);
+}
+
+.ap-cart__empty-heading {
+  margin: 0;
+  color: var(--color-ink-900);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drawer,
+  .drawer__inner,
+  .cart-drawer__overlay,
+  .ap-cart__shipbar-fill {
+    transition-duration: 0.01ms;
+  }
+}

@@ -66,10 +66,16 @@
   outline-offset: 2px;
 }
 
-/* --- Primary — Marigold + asymmetric brand corner (0 / md / md / md) ------- */
+/* --- Primary — Marigold + asymmetric brand corner (0 / 0 / md / 0) --------
+   Verified against wireframe 2a (hero "Shop the Universe") and 3b (PDP
+   "Add to Cart") at high zoom: only the BOTTOM-RIGHT corner is rounded,
+   the other three are square. Written design-system doc said "0/md/md/md"
+   (top-left square) — that is a design-system/wireframe contradiction;
+   the wireframe wins per source-of-truth precedence. Flagged for the
+   designer to reconcile the written spec. */
 .ap-btn--primary {
   border-color: transparent;
-  border-radius: 0 var(--radius-md) var(--radius-md) var(--radius-md);
+  border-radius: 0 0 var(--radius-md) 0;
   background: var(--color-marigold);
   color: var(--color-ink-900);
 }

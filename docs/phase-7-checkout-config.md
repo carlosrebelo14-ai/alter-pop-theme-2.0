@@ -47,8 +47,8 @@ the closest neutral sans (body) and record the choice here.
   type mismatch vs. the rest of the site.
 - **D3 — Asymmetric brand corner on the Checkout button is impossible.** The
   editor exposes **one global corner radius**, applied uniformly to every
-  control. The `0 6px 6px 6px` corner (site primary-CTA family) cannot be
-  reproduced; checkout buttons get the plain 4 px radius.
+  control. The `0 0 6px 0` corner (bottom-right only — site primary-CTA family)
+  cannot be reproduced; checkout buttons get the plain 4 px radius.
 - **D4 — "Add Protective Shipping for the Fragile Item · €3.90" in-checkout
   checkbox is impossible.** A line-item add-on toggle inside checkout needs a
   Checkout UI Extension (Plus). Delivered instead as a conditional shipping

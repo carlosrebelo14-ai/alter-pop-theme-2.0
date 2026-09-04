@@ -310,7 +310,7 @@
   min-height: 48px;
   padding: 0 var(--space-lg);
   border: 1px solid transparent;
-  border-radius: 0 var(--radius-md) var(--radius-md) var(--radius-md);
+  border-radius: 0 0 var(--radius-md) 0;
   background: var(--color-marigold);
   color: var(--color-ink-900);
   font-family: var(--font-body);

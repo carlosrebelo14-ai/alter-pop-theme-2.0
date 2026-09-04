@@ -57,6 +57,18 @@ Known wireframe facts that override earlier prompt summaries:
 - Hero CTA "Shop the Universe" IS Marigold + the asymmetric brand corner —
   the DS groups it with Add to Cart / Checkout as the primary purchase-CTA
   family. The hero eyebrow is also Marigold in the wireframe.
+- **Asymmetric brand corner — only bottom-right is rounded.** Confirmed at
+  high zoom against wireframe 2a ("Shop the Universe") and 3b (PDP "Add to
+  Cart"): top-left, top-right and bottom-left are square; only bottom-right
+  is rounded (`--radius-md`). `.ap-btn--primary` in `assets/buttons.css` is
+  `border-radius: 0 0 var(--radius-md) 0`. The written design-system spec
+  said "0/md/md/md" (top-left square, other three rounded) — that is a
+  **design-system/wireframe contradiction**; the wireframe wins per
+  source-of-truth precedence, but flag it to the designer to reconcile the
+  written spec. Fixed in the primitive plus the three call sites that
+  restate the radius at higher specificity (`assets/cart-drawer.css`
+  `#CartDrawer-Checkout`, `assets/cart-page.css` `#checkout`,
+  `assets/pdp.css` `.ap-pdp .product-form__submit`).
 - Homepage 1a/1b is much larger than Phase 2 as first built: hero, trust,
   Explore Universes (name overlaid on the doorway, not below), New Arrivals
   rail, **Bestsellers = a ranked numbered list with "N sold this month"**

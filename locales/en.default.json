@@ -306,6 +306,18 @@
       "checkout": "Checkout",
       "cross_sell_heading": "Complete the {{ name }} collection"
     },
+    "order_confirmation": {
+      "confirmed_html": "Order {{ name }} Confirmed",
+      "sent_to_html": "we sent the details to {{ email }}.",
+      "cancelled_html": "Order {{ name }} was cancelled on {{ date }}.",
+      "estimated_delivery": "Estimated Delivery",
+      "delivery_window_html": "between {{ from }} and {{ to }}",
+      "keep_exploring": "Keep Exploring",
+      "keep_exploring_html": "Keep Exploring {{ franchise }}",
+      "keep_exploring_empty": "Franchise links appear here once the Universe field is connected.",
+      "franchise_placeholder": "[ franchise ]",
+      "join_club": "Create an Account & Join the Collectors Club"
+    },
     "catalogue": {
       "lines": "Lines",
       "explore_by": "Explore by",

@@ -313,19 +313,40 @@ uploaded copy is stale until a restart + re-verify says otherwise.
   Hanken/Inter fonts, in-checkout Protective-Shipping checkbox, authenticity
   seal — all impossible on Basic / native checkout), and the Protective
   Shipping delivery-customisation approach.
-- **Order confirmation page (4b) — BLOCKED on missing customer-account
-  infrastructure.** This theme has no `templates/customers/` at all (absent in
-  the Dawn baseline `a717245` and at HEAD) — no `order`, `account`, `login`,
-  `register`, `addresses`, `reset_password`, `activate_account`. So there is
-  nothing to restyle and no `/account` area to reach an order from. Building
-  4b means creating the whole customer-account template set first; deferred to
-  its own phase pending a decision (standalone order template reachable only
-  via the order-status "View order" + email links, vs. the full set).
+- **Order confirmation page (4b) — built as a STANDALONE order template.**
+  `templates/customers/order.liquid` (`{% section 'main-order' %}`) +
+  `sections/main-order.liquid` + `assets/customer-order.css`. Wireframe 4b:
+  emerald seal + "Order {name} Confirmed", "we sent the details to {email}",
+  line items (Character · Franchise · Height), Estimated Delivery window,
+  "Keep Exploring [franchise]", "Create an Account & Join the Collectors Club".
+  `order.name` / `.email` / `.created_at` and Height (`ociostock.dimensions`)
+  are live. Character (`alterpop.character`) BLOCKED -> product title
+  (honest, same rule as the PDP). Franchise (`alterpop.franchise`) BLOCKED ->
+  the meta slot is omitted and "Keep Exploring" shows a `[ franchise ]`
+  placeholder + marked empty state (no product grid — can't pick the set
+  without the field). Delivery window = `created_at + 8..13 calendar days`,
+  a calendar approximation of `general.delivery_estimate` (24-48h dispatch +
+  6-9 business days), with the canonical copy shown under it as the anchor.
+  Club CTA -> `routes.account_register_url` (forward link — see the account
+  pending item), hidden when `customer` is set. Reachable via the
+  order-status "View order details" link + the confirmation email `?key=`
+  token; no `/account` needed. Dawn's own `customers/*` were never vendored
+  into `a717245` (verified: no commit ever touched those paths — an
+  incomplete Dawn copy, not a Phase 0A removal).
 - **Native "Thank you" / Order status page is not theme-editable** on Basic
   (Plus-only structural control; only the deprecated Additional Scripts box).
-  The 4b content (estimated-delivery line, "Keep Exploring [franchise]",
-  "Join the Collectors Club" CTA) has no home until either the order template
-  above is built or the store moves to Plus.
+  The 4b page above is the order *detail* view (reached after the fact); the
+  immediate post-purchase "Thank you" screen keeps Shopify's default until the
+  store moves to Plus.
+- **No customer-account area — PENDING MAJOR, own phase, before any launch.**
+  The store has no `/account`: `templates/customers/` shipped only the
+  standalone `order.liquid` above. The header ("Account", `routes.account_url`)
+  and the footer "My Account" group (Log in, Create account, Orders) already
+  link to `/account` — **dead links in production**. Building the customer
+  template set (`login`, `register`, `account`, `addresses`,
+  `reset_password`, `activate_account` + their `main-*` sections; the
+  `customer.*` locale strings already exist in `en.default.json`) is a
+  separate phase to schedule before launch. Not part of Phase 7.
 - **Mobile filter drawer** (Phase 6, wireframe 5b). The `.mobile-facets__*`
   restyle moved out of `universe-room.css` into shared
   `assets/facets-drawer.css`, loaded from `main-collection-product-grid.liquid`

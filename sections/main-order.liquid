@@ -1,0 +1,199 @@
+{%- comment -%}
+  Alterpop — Order confirmation / order detail (wireframe 4b).
+
+  Standalone customer.order template. This theme has no customer-account area
+  yet (dead /account links in header + footer — see CLAUDE.md pending item),
+  so this page is reached only via the order-status "View order details" link
+  and the confirmation email. Dawn's own customers/* templates were never
+  vendored into a717245.
+
+  Data:
+  - order.name / order.email / order.created_at ....... live
+  - line item Height (ociostock.dimensions) .......... live
+  - line item Character (alterpop.character) ......... BLOCKED -> falls back to
+    the product title (honest, not inference), same rule as the PDP
+  - Franchise (alterpop.franchise) .................. BLOCKED -> slot omitted;
+    "Keep Exploring [franchise]" heading + grid render a marked empty state
+  - Estimated-delivery window is derived from order.created_at as a calendar
+    approximation of general.delivery_estimate (24-48h dispatch + 6-9 business
+    days), and the canonical copy is shown under it as the anchor.
+{%- endcomment -%}
+
+{{ 'customer-order.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign oc_cancelled = false
+  if order.cancelled
+    assign oc_cancelled = true
+  endif
+
+  assign oc_from = order.created_at | date: '%s' | plus: 691200 | date: '%b %-d'
+  assign oc_to = order.created_at | date: '%s' | plus: 1123200 | date: '%b %-d'
+
+  comment
+    First non-blank franchise across the order — BLOCKED, so normally stays blank.
+  endcomment
+  assign oc_franchise = ''
+  for li in order.line_items
+    assign li_fr = li.product.metafields.alterpop.franchise.value
+    if li_fr != blank
+      assign oc_franchise = li_fr
+      break
+    endif
+  endfor
+-%}
+
+<section class="ap-order section-{{ section.id }}-padding color-{{ section.settings.color_scheme }}">
+  <div class="ap-order__inner page-width">
+
+    {%- comment -%} 1 — confirmation header {%- endcomment -%}
+    <header class="ap-order__card ap-order__head">
+      <span class="ap-order__seal" aria-hidden="true">
+        {{- 'icon-checkmark.svg' | inline_asset_content -}}
+      </span>
+      {%- if oc_cancelled -%}
+        <h1 class="ap-order__title type-h2">
+          {%- assign oc_cancel_date = order.cancelled_at | date: '%b %-d, %Y' -%}
+          {{ 'sections.order_confirmation.cancelled_html' | t: name: order.name, date: oc_cancel_date }}
+        </h1>
+      {%- else -%}
+        <h1 class="ap-order__title type-h2">
+          {{ 'sections.order_confirmation.confirmed_html' | t: name: order.name }}
+        </h1>
+      {%- endif -%}
+      <p class="ap-order__sent type-body">
+        {{ 'sections.order_confirmation.sent_to_html' | t: email: order.email }}
+      </p>
+    </header>
+
+    {%- comment -%} 2 — line items {%- endcomment -%}
+    <ul class="ap-order__card ap-order__items" role="list">
+      {%- for li in order.line_items -%}
+        {%- liquid
+          assign li_char = li.product.metafields.alterpop.character.value
+          if li_char == blank
+            assign li_char = li.product.title
+          endif
+          if li_char == blank
+            assign li_char = li.title
+          endif
+          assign li_fr = li.product.metafields.alterpop.franchise.value
+          assign li_dim = li.product.metafields.ociostock.dimensions.value
+        -%}
+        <li class="ap-order__item">
+          {%- if li.image -%}
+            <img
+              class="ap-order__thumb"
+              src="{{ li.image | image_url: width: 160 }}"
+              alt="{{ li.image.alt | escape }}"
+              width="80"
+              height="80"
+              loading="lazy"
+            >
+          {%- else -%}
+            <span class="ap-order__thumb ap-order__thumb--blank" aria-hidden="true"></span>
+          {%- endif -%}
+          <div class="ap-order__item-body">
+            <p class="ap-order__item-meta">
+              <span class="ap-order__item-name">{{ li_char | escape }}</span>
+              {%- if li_fr != blank -%}<span class="ap-order__dot"> &middot; </span>{{ li_fr | escape }}{%- endif -%}
+              {%- if li_dim != blank -%}<span class="ap-order__dot"> &middot; </span>{{ li_dim | escape }}{%- endif -%}
+            </p>
+            {%- if li.quantity > 1 -%}
+              <p class="ap-order__qty type-caption">{{ 'customer.order.quantity' | t }}: {{ li.quantity }}</p>
+            {%- endif -%}
+          </div>
+          <span class="ap-order__item-price">{{ li.final_line_price | money }}</span>
+        </li>
+      {%- endfor -%}
+    </ul>
+
+    {%- comment -%} 3 — estimated delivery {%- endcomment -%}
+    {%- unless oc_cancelled -%}
+      <div class="ap-order__card ap-order__delivery">
+        <p class="ap-order__label type-label">{{ 'sections.order_confirmation.estimated_delivery' | t }}</p>
+        <p class="ap-order__delivery-window type-body">
+          {{ 'sections.order_confirmation.delivery_window_html' | t: from: oc_from, to: oc_to }}
+        </p>
+        <p class="ap-order__delivery-note type-caption">{{ 'general.delivery_estimate' | t }}</p>
+      </div>
+    {%- endunless -%}
+
+    {%- comment -%} 4 — keep exploring [franchise] — BLOCKED, marked empty state {%- endcomment -%}
+    <div class="ap-order__card ap-order__explore">
+      {%- if oc_franchise != blank -%}
+        <p class="ap-order__label type-label">
+          {{ 'sections.order_confirmation.keep_exploring_html' | t: franchise: oc_franchise }}
+        </p>
+      {%- else -%}
+        <p class="ap-order__label type-label">
+          {{ 'sections.order_confirmation.keep_exploring' | t }}
+          <span class="ap-order__ph">{{ 'sections.order_confirmation.franchise_placeholder' | t }}</span>
+        </p>
+        <p class="ap-order__explore-empty type-caption">
+          {{ 'sections.order_confirmation.keep_exploring_empty' | t }}
+        </p>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} 5 — Collectors Club CTA (hidden if already a customer) {%- endcomment -%}
+    {%- unless customer -%}
+      <a href="{{ routes.account_register_url }}" class="ap-order__club">
+        <span>{{ 'sections.order_confirmation.join_club' | t }}</span>
+        <span aria-hidden="true" class="ap-order__club-arrow">&rarr;</span>
+      </a>
+    {%- endunless -%}
+
+  </div>
+</section>
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Order confirmation",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 48
+    }
+  ]
+}
+{% endschema %}

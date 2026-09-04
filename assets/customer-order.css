@@ -1,0 +1,171 @@
+/* ============================================================================
+   Alterpop — Order confirmation / order detail (wireframe 4b).
+   Self-contained: tokens.css + buttons.css (global). Scoped to .ap-order.
+   Standalone customer.order template — no account-area chrome around it.
+   ============================================================================ */
+
+.ap-order__inner {
+  max-width: 560px;
+  margin-inline: auto;
+}
+
+.ap-order__card {
+  padding: var(--space-xl);
+  border: 1px solid var(--color-border);
+  border-bottom: 0;
+  background: var(--color-surface);
+}
+
+.ap-order__card:first-of-type {
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.ap-order__explore {
+  border-bottom: 1px solid var(--color-border);
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+
+/* --- 1 · confirmation header --------------------------------------------- */
+.ap-order__seal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  background: var(--color-emerald-600);
+  color: #fff;
+}
+
+.ap-order__seal svg {
+  width: 13px;
+  height: 13px;
+}
+
+.ap-order__seal svg path {
+  fill: currentColor;
+  stroke: currentColor;
+}
+
+.ap-order__title {
+  margin: var(--space-md) 0 0;
+  color: var(--color-ink-900);
+}
+
+.ap-order__sent {
+  margin: var(--space-xs) 0 0;
+  color: var(--color-text-muted);
+}
+
+/* --- 2 · line items --------------------------------------------------- */
+.ap-order__items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.ap-order__item {
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
+  align-items: center;
+  column-gap: var(--space-md);
+}
+
+.ap-order__thumb {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-none);
+  background: var(--color-canvas);
+}
+
+.ap-order__thumb--blank {
+  display: block;
+}
+
+.ap-order__item-body {
+  min-width: 0;
+}
+
+.ap-order__item-meta {
+  margin: 0;
+  font-size: var(--text-body);
+  color: var(--color-ink-900);
+}
+
+.ap-order__item-name {
+  font-weight: var(--font-weight-body-strong);
+}
+
+.ap-order__dot {
+  color: var(--color-text-muted);
+}
+
+.ap-order__qty {
+  margin: 2px 0 0;
+  color: var(--color-text-muted);
+}
+
+.ap-order__item-price {
+  font-weight: var(--font-weight-body-strong);
+  color: var(--color-ink-900);
+  white-space: nowrap;
+}
+
+/* --- 3 · estimated delivery ---------------------------------------------- */
+.ap-order__label {
+  margin: 0;
+  color: var(--color-ink-900);
+}
+
+.ap-order__delivery-window {
+  margin: var(--space-xs) 0 0;
+  color: var(--color-text-muted);
+}
+
+.ap-order__delivery-note {
+  margin: var(--space-xs) 0 0;
+  color: var(--color-text-muted);
+}
+
+/* --- 4 · keep exploring (blocked, marked) ------------------------------ */
+.ap-order__ph {
+  margin-left: 4px;
+  font-weight: var(--font-weight-body);
+  letter-spacing: 0;
+  color: var(--color-text-muted);
+}
+
+.ap-order__explore-empty {
+  margin: var(--space-sm) 0 0;
+  padding: var(--space-md);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+}
+
+/* --- 5 · Collectors Club CTA ----------------------------------------- */
+.ap-order__club {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-top: var(--space-lg);
+  padding: var(--space-md) 0;
+  color: var(--color-fragile-ink);
+  font-weight: var(--font-weight-body-strong);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: opacity var(--motion-transactional);
+}
+
+.ap-order__club:hover {
+  opacity: 0.75;
+}
+
+.ap-order__club-arrow {
+  text-decoration: none;
+}

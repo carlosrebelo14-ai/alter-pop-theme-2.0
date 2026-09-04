@@ -217,6 +217,14 @@ uploaded copy is stale until a restart + re-verify says otherwise.
   `metafields.ociostock.licence`. Reviews read the Shopify Product Reviews
   app metafields (`metafields.reviews.rating` / `.rating_count`) — no app
   installed, marked empty state.
+- **OcioStock supplier descriptions arrive raw + multi-language** (app
+  backlog). `product.description` from the sync app is unedited supplier
+  copy — running-text blocks like "Brand / Manufacturer …", "License /
+  Universe …", licensor names in Spanish (e.g. "El Señor De Los Anillos").
+  It renders **verbatim** on the PDP body. Needs a **curated description
+  field on the app side**; the theme must NOT sanitise / regex supplier
+  text. Separate from the Identity Block + seal (those already read the
+  BLOCKED `alterpop.*` fields, not the description).
 - **`alterpop.fragile`** (Phase 7) — a per-SKU boolean, **its own field, not
   derivable from `alterpop.tier`**: not every Premium piece is fragile, and an
   Impulse piece can be. `sections/main-product.liquid` reads
@@ -363,6 +371,14 @@ uploaded copy is stale until a restart + re-verify says otherwise.
     break anything.
   - Dawn 16 ships no classic customer templates regardless (dropped upstream
     when new accounts became default); `customer.*` locale strings remain.
+- **Primary market is Espanha (ES) — ADMIN pending, not code.** The store is
+  Portuguese (billing address PT, currency EUR) but Settings -> Markets has
+  **"España" as the primary market**; Portugal is only a secondary market.
+  Shopify therefore defaults `localization.country` to Spain, so the mobile
+  drawer country selector opens on "Spain | EUR €". The theme renders
+  Shopify's value faithfully — nothing to fix in Liquid. Merchant decision
+  in **Settings -> Markets** (set Portugal primary); affects hreflang, SEO
+  and tax logic.
 - **Mobile filter drawer** (Phase 6, wireframe 5b). The `.mobile-facets__*`
   restyle moved out of `universe-room.css` into shared
   `assets/facets-drawer.css`, loaded from `main-collection-product-grid.liquid`

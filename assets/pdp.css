@@ -386,14 +386,15 @@
 }
 
 .ap-pdp .product-form__submit {
+  --ap-btn-height: 48px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 48px;
+  height: var(--ap-btn-height);
   padding: 0 var(--space-lg);
   border: 1px solid transparent;
-  border-radius: 0 0 var(--radius-md) 0;
+  border-radius: 0 0 calc(var(--ap-btn-height) / 3) 0;
   background: var(--color-marigold);
   color: var(--color-ink-900);
   font-family: var(--font-body);

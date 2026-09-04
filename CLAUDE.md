@@ -57,18 +57,27 @@ Known wireframe facts that override earlier prompt summaries:
 - Hero CTA "Shop the Universe" IS Marigold + the asymmetric brand corner —
   the DS groups it with Add to Cart / Checkout as the primary purchase-CTA
   family. The hero eyebrow is also Marigold in the wireframe.
-- **Asymmetric brand corner — only bottom-right is rounded.** Confirmed at
-  high zoom against wireframe 2a ("Shop the Universe") and 3b (PDP "Add to
-  Cart"): top-left, top-right and bottom-left are square; only bottom-right
-  is rounded (`--radius-md`). `.ap-btn--primary` in `assets/buttons.css` is
-  `border-radius: 0 0 var(--radius-md) 0`. The written design-system spec
-  said "0/md/md/md" (top-left square, other three rounded) — that is a
-  **design-system/wireframe contradiction**; the wireframe wins per
-  source-of-truth precedence, but flag it to the designer to reconcile the
-  written spec. Fixed in the primitive plus the three call sites that
-  restate the radius at higher specificity (`assets/cart-drawer.css`
-  `#CartDrawer-Checkout`, `assets/cart-page.css` `#checkout`,
-  `assets/pdp.css` `.ap-pdp .product-form__submit`).
+- **Asymmetric brand corner — only bottom-right is rounded, radius = height
+  ÷ 3.** Confirmed two ways against wireframe 2a ("Shop the Universe") and
+  3b (PDP "Add to Cart"): high-zoom visual read (top-left, top-right,
+  bottom-left square; only bottom-right rounded), then confirmed by
+  extracting the PDF's own vector path data (PyMuPDF `get_drawings`) and
+  measuring the corner's bezier geometry directly. Both buttons: height
+  28.58pt, corner radius 9.53pt — **exactly height / 3** (0.33333, checked
+  to 5 decimals across 8 anchor points per curve, both instances agree to
+  the point). That is much larger than `--radius-md` (6px on a 44-48px
+  button is only ~13%) — the brand corner is proportional to the button's
+  OWN height, not a fixed token from the radius scale.
+  `.ap-btn--primary` in `assets/buttons.css` is
+  `border-radius: 0 0 calc(var(--ap-btn-height) / 3) 0`; the three call
+  sites that restate the button at higher specificity
+  (`assets/cart-drawer.css` `#CartDrawer-Checkout`, `assets/cart-page.css`
+  `#checkout`, `assets/pdp.css` `.ap-pdp .product-form__submit`) each set
+  their own `--ap-btn-height: 48px` and reuse the same `calc()`. The
+  written design-system spec said "0/md/md/md" (top-left square, fixed
+  6px radius) — a **design-system/wireframe contradiction on both which
+  corner and the radius size**; the wireframe wins per source-of-truth
+  precedence, but flag it to the designer to reconcile the written spec.
 - Homepage 1a/1b is much larger than Phase 2 as first built: hero, trust,
   Explore Universes (name overlaid on the doorway, not below), New Arrivals
   rail, **Bestsellers = a ranked numbered list with "N sold this month"**

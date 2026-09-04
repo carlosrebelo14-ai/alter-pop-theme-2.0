@@ -1,0 +1,372 @@
+/* ============================================================================
+   Alterpop — Cart page (/cart). Page-width sibling of the wireframe 1d cart
+   drawer: same free-shipping line, same item layout, same Marigold Checkout.
+   Self-contained: tokens.css + buttons.css (global) + component-price.css.
+   Dawn's cart.js keeps the <cart-items> / quantity-input / cart-remove-button
+   markup contract; this file is loaded last so it wins on equal specificity.
+   ============================================================================ */
+
+.ap-cart-page__inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+/* --- head -------------------------------------------------------------- */
+.ap-cart-page__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  padding-bottom: var(--space-lg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.ap-cart-page__title {
+  margin: 0;
+  color: var(--color-ink-900);
+}
+
+.ap-cart-page__cont {
+  flex: 0 0 auto;
+  color: var(--color-text-muted);
+  font-size: var(--text-caption);
+}
+
+/* --- free-shipping bar (shared with the drawer) ---------------------- */
+.ap-cart__shipbar {
+  padding: var(--space-md) var(--space-lg);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.ap-cart__shipbar-text {
+  margin: 0 0 var(--space-sm);
+  color: var(--color-ink-900);
+}
+
+.ap-cart__shipbar-track {
+  height: 4px;
+  border-radius: var(--radius-full);
+  background: var(--color-border);
+  overflow: hidden;
+}
+
+.ap-cart__shipbar-fill {
+  display: block;
+  height: 100%;
+  background: var(--color-ink-900);
+  transition: width var(--motion-transactional);
+}
+
+/* --- line items — flatten Dawn's table, keep the row as a grid ------- */
+.ap-cart-page .cart-items,
+.ap-cart-page .cart-items > tbody,
+.ap-cart-page .cart-items td {
+  display: block;
+  border: 0;
+  padding: 0;
+}
+
+.ap-cart-page .cart-items > thead { display: none; }
+
+.ap-cart-page .cart-item {
+  display: grid;
+  grid-template: none;
+  grid-template-columns: 88px 1fr auto;
+  column-gap: var(--space-lg);
+  row-gap: var(--space-md);
+  margin: 0;
+  padding: var(--space-xl) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.ap-cart-page .cart-item:first-child { padding-top: 0; }
+
+.ap-cart-page .cart-item > td + td { padding-left: 0; }
+
+.ap-cart-page .cart-item__media {
+  grid-column: 1;
+  grid-row: 1 / 3;
+}
+
+.ap-cart-page .cart-item__image-container,
+.ap-cart-page .cart-item__image {
+  width: 88px;
+  height: 88px;
+  max-width: none;
+  object-fit: cover;
+  border-radius: var(--radius-none);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+.ap-cart-page .cart-item__details {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
+}
+
+.ap-cart-page .cart-item__name {
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-display);
+  font-size: var(--text-h3);
+  line-height: var(--leading-heading);
+  color: var(--color-ink-900);
+  text-decoration: none;
+}
+
+.ap-cart-page .ap-cart-item__meta {
+  margin: 2px 0 0;
+  color: var(--color-text-muted);
+}
+
+/* Dawn also prints a bare unit price + option list under the title — mute it */
+.ap-cart-page .cart-item__details > .product-option,
+.ap-cart-page .cart-item__details dl,
+.ap-cart-page .cart-item__details .cart-item__discounted-prices {
+  margin: 2px 0 0;
+  font-size: var(--text-caption);
+  color: var(--color-text-muted);
+}
+
+.ap-cart-page .cart-item__totals {
+  grid-column: 3;
+  grid-row: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.ap-cart-page .cart-item__totals .loading__spinner { display: none; }
+
+.ap-cart-page .cart-item__price-wrapper .price {
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body-strong);
+  font-size: var(--text-price-card);
+  color: var(--color-ink-900);
+}
+
+.ap-cart-page .cart-item__quantity {
+  grid-column: 2 / 4;
+  grid-row: 2;
+  padding: 0;
+}
+
+.ap-cart-page .cart-item__quantity-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.ap-cart-page .quantity {
+  display: inline-flex;
+  align-items: center;
+  width: auto;
+  height: 36px;
+  border: 1px solid var(--color-ink-900);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.ap-cart-page .quantity__button {
+  width: 34px;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--color-ink-900);
+  cursor: pointer;
+}
+
+.ap-cart-page .quantity__button svg { width: 12px; height: 12px; }
+
+.ap-cart-page .quantity__input {
+  width: 40px;
+  height: 100%;
+  border: 0;
+  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+  background: transparent;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  color: var(--color-ink-900);
+  -moz-appearance: textfield;
+}
+
+.ap-cart-page .quantity__input::-webkit-outer-spin-button,
+.ap-cart-page .quantity__input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.ap-cart-page .cart-remove-button .button,
+.ap-cart-page cart-remove-button .button {
+  width: 32px;
+  height: 32px;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.ap-cart-page cart-remove-button .button:hover { color: var(--color-ink-900); }
+.ap-cart-page cart-remove-button svg { width: 14px; height: 14px; }
+
+.ap-cart-page .cart-item__error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-top: var(--space-xs);
+  color: var(--color-fragile-ink);
+  font-size: var(--text-microcopy);
+}
+
+.ap-cart-page .cart-item__error:has(.cart-item__error-text:empty) { display: none; }
+
+/* --- desktop: one row, four columns --------------------------------- */
+@media screen and (min-width: 750px) {
+  .ap-cart-page .cart-item {
+    grid-template-columns: 96px 1fr 200px 160px;
+    align-items: start;
+  }
+
+  .ap-cart-page .cart-item__media { grid-row: 1; }
+  .ap-cart-page .cart-item__image-container,
+  .ap-cart-page .cart-item__image { width: 96px; height: 96px; }
+
+  .ap-cart-page .cart-item__quantity {
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: start;
+  }
+
+  .ap-cart-page .cart-item__totals {
+    grid-column: 4;
+    grid-row: 1;
+  }
+}
+
+/* --- footer / totals ------------------------------------------------- */
+/* Dawn tags the footer wrapper .is-empty when the cart is empty — hide it
+   whole (subtotal, delivery line, disabled Checkout, dynamic buttons), same
+   as the drawer. */
+#main-cart-footer.is-empty { display: none; }
+
+#main-cart-footer .cart__footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  margin-left: auto;
+  max-width: 420px;
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--color-border);
+}
+
+#main-cart-footer .totals {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 0;
+}
+
+#main-cart-footer .totals__total {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body);
+  font-size: var(--text-body);
+  color: var(--color-text-muted);
+}
+
+#main-cart-footer .totals__total-value {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body-strong);
+  font-size: var(--text-price-pdp);
+  color: var(--color-ink-900);
+}
+
+#main-cart-footer .ap-cart__delivery {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+/* wireframe 1d has no tax / shipping note under the subtotal */
+#main-cart-footer .tax-note { display: none; }
+
+#main-cart-footer .cart__ctas { margin: 0; }
+
+/* Checkout — .ap-btn--primary look. base.css `.button` (loaded earlier) is a
+   bare class; a lone #id selector outranks it. */
+#main-cart-footer #checkout {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 48px;
+  padding: 0 var(--space-lg);
+  border: 1px solid transparent;
+  border-radius: 0 var(--radius-md) var(--radius-md) var(--radius-md);
+  background: var(--color-marigold);
+  color: var(--color-ink-900);
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body-strong);
+  font-size: var(--text-button);
+  letter-spacing: var(--tracking-button);
+  line-height: var(--leading-flat);
+  cursor: pointer;
+  transition: filter var(--motion-transactional);
+}
+
+#main-cart-footer #checkout::after { display: none; }
+#main-cart-footer #checkout:hover:not([disabled]) { filter: brightness(0.94); }
+#main-cart-footer #checkout:active { transform: scale(0.98); }
+
+#main-cart-footer #checkout[disabled] {
+  background: var(--color-border);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+.ap-cart-page .cart__dynamic-checkout-buttons { margin-top: var(--space-sm); }
+
+/* --- empty state (mirrors the drawer) ------------------------------- */
+.ap-cart__empty { display: none; }
+
+.ap-cart-page.is-empty .ap-cart__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-4xl) var(--space-xl);
+  text-align: center;
+}
+
+.ap-cart-page.is-empty .ap-cart__shipbar,
+.ap-cart-page.is-empty .cart__contents,
+.ap-cart-page.is-empty #cart {
+  display: none;
+}
+
+.ap-cart__empty-mark svg {
+  width: 40px;
+  height: 40px;
+  color: var(--color-border);
+}
+
+.ap-cart__empty-heading { margin: 0; color: var(--color-ink-900); }
+
+.ap-cart__empty .cart__login-paragraph {
+  margin: var(--space-xs) 0 0;
+  color: var(--color-text-muted);
+}
+
+.ap-cart__empty .cart__login-paragraph a { color: var(--color-ink-900); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ap-cart__shipbar-fill { transition-duration: 0.01ms; }
+}

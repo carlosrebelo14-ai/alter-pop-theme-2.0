@@ -29,6 +29,7 @@
       }
     },
     "continue_shopping": "Continue shopping",
+    "delivery_estimate": "dispatched in 24–48h · arrives in 6–9 business days",
     "pagination": {
       "label": "Pagination",
       "page": "Page {{ number }}",
@@ -352,7 +353,6 @@
       "identity_placeholder": "[ line · manufacturer · year ]",
       "type_placeholder": "[ type ]",
       "in_stock_generic": "In stock",
-      "dispatch": "dispatched in 24–48h · arrives in 6–9 business days",
       "fragile": "Fragile item — handled with care, shipped in reinforced protective packaging.",
       "tech_specs": "Tech Specs",
       "specifications": "Specifications",

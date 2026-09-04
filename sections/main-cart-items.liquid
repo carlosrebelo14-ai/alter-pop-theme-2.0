@@ -1,9 +1,7 @@
-{{ 'component-cart.css' | asset_url | stylesheet_tag }}
-{{ 'component-cart-items.css' | asset_url | stylesheet_tag }}
-{{ 'component-totals.css' | asset_url | stylesheet_tag }}
 {{ 'component-price.css' | asset_url | stylesheet_tag }}
-{{ 'component-discounts.css' | asset_url | stylesheet_tag }}
 {{ 'quantity-popover.css' | asset_url | stylesheet_tag }}
+{%- comment -%} Alterpop restyle — page-width sibling of the wireframe 1d cart drawer. Dawn's cart.js keeps the <cart-items> markup contract; cart-page.css (loaded last) restyles. {%- endcomment -%}
+{{ 'cart-page.css' | asset_url | stylesheet_tag }}
 
 {%- style -%}
   .section-{{ section.id }}-padding {
@@ -26,30 +24,48 @@
 <script src="{{ 'quantity-popover.js' | asset_url }}" defer="defer"></script>
 
 <cart-items
-  class="gradient color-{{ section.settings.color_scheme }} isolate{% if cart == empty %} is-empty{% else %} section-{{ section.id }}-padding{% endif %}"
+  class="ap-cart-page gradient color-{{ section.settings.color_scheme }} isolate{% if cart == empty %} is-empty{% else %} section-{{ section.id }}-padding{% endif %}"
   view-event-payload="{{ cart | standard_event_data: 'view', context: 'page' | escape }}"
 >
-  <div class="page-width">
-    <div class="title-wrapper-with-link">
-      <h1 class="title title--primary">{{ 'sections.cart.title' | t }}</h1>
-      <a href="{{ routes.all_products_collection_url }}" class="underlined-link">
+  <div class="page-width ap-cart-page__inner">
+    <div class="ap-cart-page__head">
+      <h1 class="ap-cart-page__title type-h2">{{ 'sections.cart_drawer.title' | t }}</h1>
+      <a href="{{ routes.all_products_collection_url }}" class="ap-cart-page__cont underlined-link">
         {{- 'general.continue_shopping' | t -}}
       </a>
     </div>
 
-    <div class="cart__warnings">
-      <h1 class="cart__empty-text">{{ 'sections.cart.empty' | t }}</h1>
-      <a href="{{ routes.all_products_collection_url }}" class="button">
-        {{ 'general.continue_shopping' | t }}
+    {%- comment -%} Empty state — mirrors the drawer (wireframe 1d): symbol, heading, secondary CTA. {%- endcomment -%}
+    <div class="cart__warnings ap-cart__empty">
+      <span class="ap-cart__empty-mark" aria-hidden="true">
+        {{- 'symbol-ink.svg' | inline_asset_content -}}
+      </span>
+      <p class="ap-cart__empty-heading type-h3">{{ 'sections.cart_drawer.empty_heading' | t }}</p>
+      <a href="{{ routes.all_products_collection_url }}" class="ap-btn ap-btn--secondary">
+        {{- 'sections.cart_drawer.back_to_catalog' | t -}}
       </a>
 
       {%- if shop.customer_accounts_enabled and customer == null -%}
-        <h2 class="cart__login-title">{{ 'sections.cart.login.title' | t }}</h2>
-        <p class="cart__login-paragraph">
+        <p class="cart__login-paragraph type-caption">
           {{ 'sections.cart.login.paragraph_html' | t: link: routes.account_login_url }}
         </p>
       {%- endif -%}
     </div>
+
+    {%- comment -%} Free-shipping progress — shared line + fill bar, same as the drawer. {%- endcomment -%}
+    {%- if cart != empty -%}
+      {%- assign fs_threshold = 5000 -%}
+      {%- assign fs_pct = cart.total_price | times: 100 | divided_by: fs_threshold -%}
+      {%- if fs_pct > 100 -%}{%- assign fs_pct = 100 -%}{%- endif -%}
+      <div class="ap-cart__shipbar" role="status">
+        <p class="ap-cart__shipbar-text type-caption">
+          {%- render 'free-shipping-line', threshold_amount: 50 -%}
+        </p>
+        <div class="ap-cart__shipbar-track">
+          <span class="ap-cart__shipbar-fill" style="width: {{ fs_pct }}%;"></span>
+        </div>
+      </div>
+    {%- endif -%}
 
     <form action="{{ routes.cart_url }}" class="cart__contents critical-hidden" method="post" id="cart">
       <div class="cart__items" id="main-cart-items" data-id="{{ section.id }}">
@@ -119,6 +135,17 @@
                           modal_id: cart_disclosure_modal_id
                         -%}
                       </div>
+
+                      {%- comment -%} Meta line: FRANCHISE (BLOCKED) · dimension (live) — same as the drawer. {%- endcomment -%}
+                      {%- assign ci_fr = item.product.metafields.alterpop.franchise.value -%}
+                      {%- assign ci_dim = item.product.metafields.ociostock.dimensions.value -%}
+                      {%- if ci_fr != blank or ci_dim != blank -%}
+                        <p class="ap-cart-item__meta type-caption">
+                          {%- if ci_fr != blank -%}{{ ci_fr | escape }}{%- endif -%}
+                          {%- if ci_fr != blank and ci_dim != blank -%} &middot; {% endif -%}
+                          {%- if ci_dim != blank -%}{{ ci_dim | escape }}{%- endif -%}
+                        </p>
+                      {%- endif -%}
 
                       {%- if item.original_price != item.final_price -%}
                         <div class="cart-item__discounted-prices">

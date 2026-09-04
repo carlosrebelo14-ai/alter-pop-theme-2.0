@@ -194,12 +194,16 @@
                 {%- endif -%}
               </span>
               {%- if is_premium -%}
-                <span class="ap-pdp__dispatch">{{ 'sections.pdp.dispatch' | t }}</span>
+                <span class="ap-pdp__dispatch">{{ 'general.delivery_estimate' | t }}</span>
               {%- endif -%}
             </p>
 
-            {%- comment -%} ---- Fragile notice (premium, or explicit fragile flag) ---- {%- endcomment -%}
-            {%- if is_premium or ap_fragile -%}
+            {%- comment -%}
+              ---- Fragile notice — depends ONLY on the per-SKU alterpop.fragile
+              flag, never on the tier. While that field does not exist yet
+              (BLOCKED) ap_fragile is always blank, so the notice stays hidden.
+            {%- endcomment -%}
+            {%- if ap_fragile -%}
               <p class="ap-pdp__fragile" role="note">
                 <span class="ap-pdp__fragile-icon" aria-hidden="true">
                   {{- 'icon-error.svg' | inline_asset_content -}}
@@ -276,7 +280,7 @@
                 product_form_id: product_form_id,
                 section_id: section.id
               %}
-              <p class="ap-pdp__dispatch-repeat type-caption">{{ 'sections.pdp.dispatch' | t }}</p>
+              <p class="ap-pdp__dispatch-repeat type-caption">{{ 'general.delivery_estimate' | t }}</p>
             </div>
 
             {%- comment -%} ---- Spec sheet ---- {%- endcomment -%}

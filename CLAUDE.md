@@ -217,6 +217,20 @@ uploaded copy is stale until a restart + re-verify says otherwise.
   `metafields.ociostock.licence`. Reviews read the Shopify Product Reviews
   app metafields (`metafields.reviews.rating` / `.rating_count`) — no app
   installed, marked empty state.
+- **`alterpop.fragile`** (Phase 7) — a per-SKU boolean, **its own field, not
+  derivable from `alterpop.tier`**: not every Premium piece is fragile, and an
+  Impulse piece can be. `sections/main-product.liquid` reads
+  `product.metafields.alterpop.fragile.value` into `ap_fragile`; the PDP
+  fragile notice renders on `{% if ap_fragile %}` ALONE (decoupled from
+  `is_premium` in Phase 7). BLOCKED — field does not exist, so `ap_fragile` is
+  always blank and the notice stays hidden (no placeholder — it's a prominent
+  warm box between price and ATC). Same flag is the trigger for the Protective
+  Shipping delivery-customisation function (see the Phase 7 checkout doc).
+- **Delivery estimate copy is ONE key** (Phase 7): `general.delivery_estimate`
+  = "dispatched in 24–48h · arrives in 6–9 business days". Used by the PDP
+  (stock line + below ATC), the cart page footer, and — as plain rate-name
+  text typed in admin — the checkout Standard shipping method. The old
+  `sections.pdp.dispatch` key was removed.
 - **PDP keeps Dawn's mechanics**: `<product-info>` + product-info.js,
   `product-media-gallery` snippet + media-gallery.js + product-modal.js
   (the `.ap-pdp__media` wrapper carries `product product--thumbnail
@@ -280,6 +294,38 @@ uploaded copy is stale until a restart + re-verify says otherwise.
   placement are re-declared at `.cart-drawer .cart-item*` specificity, and
   the table flatten must NOT include `tr` (that selector is `(0,2,1)` and
   would beat `.cart-item { display:grid }`).
+- **Cart page** (Phase 7, `/cart`). Page-width sibling of the drawer — same
+  visual language, no separate wireframe (1d is the only cart mock).
+  `sections/main-cart-items.liquid` + `main-cart-footer.liquid` keep Dawn's
+  `<cart-items>` markup + cart.js contract; `assets/cart-page.css` (loaded
+  last, in place of the dropped `component-cart*.css`) owns the layout.
+  Additions mirror the drawer: `free-shipping-line` + fill bar, FRANCHISE
+  (BLOCKED) · dimension meta line, `general.delivery_estimate` caption under
+  the subtotal, empty state (symbol + "Your Cart Is Empty" + "Back to the
+  Catalog"), Checkout as `.ap-btn--primary` (a lone `#checkout` selector
+  outranks base.css `.button`). `#main-cart-footer.is-empty { display:none }`
+  hides the footer whole when the cart empties (Dawn tags that wrapper).
+- **Checkout is native Shopify + Basic-plan-limited** (Phase 7). No
+  `checkout.liquid`, no Checkout UI Extensions (Plus-only). Wireframe 4a/4c is
+  read as "what the checkout editor + Shipping settings can configure", not a
+  page to build — see `docs/phase-7-checkout-config.md` for the branding
+  checklist, the marked wireframe divergences (asymmetric button corner,
+  Hanken/Inter fonts, in-checkout Protective-Shipping checkbox, authenticity
+  seal — all impossible on Basic / native checkout), and the Protective
+  Shipping delivery-customisation approach.
+- **Order confirmation page (4b) — BLOCKED on missing customer-account
+  infrastructure.** This theme has no `templates/customers/` at all (absent in
+  the Dawn baseline `a717245` and at HEAD) — no `order`, `account`, `login`,
+  `register`, `addresses`, `reset_password`, `activate_account`. So there is
+  nothing to restyle and no `/account` area to reach an order from. Building
+  4b means creating the whole customer-account template set first; deferred to
+  its own phase pending a decision (standalone order template reachable only
+  via the order-status "View order" + email links, vs. the full set).
+- **Native "Thank you" / Order status page is not theme-editable** on Basic
+  (Plus-only structural control; only the deprecated Additional Scripts box).
+  The 4b content (estimated-delivery line, "Keep Exploring [franchise]",
+  "Join the Collectors Club" CTA) has no home until either the order template
+  above is built or the store moves to Plus.
 - **Mobile filter drawer** (Phase 6, wireframe 5b). The `.mobile-facets__*`
   restyle moved out of `universe-room.css` into shared
   `assets/facets-drawer.css`, loaded from `main-collection-product-grid.liquid`

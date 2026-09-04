@@ -318,6 +318,9 @@
       "franchise_placeholder": "[ franchise ]",
       "join_club": "Create an Account & Join the Collectors Club"
     },
+    "franchise_archive": {
+      "tiles_empty": "Archive tiles appear here once the Universe field is connected in the sync app."
+    },
     "catalogue": {
       "lines": "Lines",
       "explore_by": "Explore by",

@@ -613,6 +613,29 @@
   object-fit: cover;
 }
 
+/* marked placeholder — no tile images set (same pattern as Shop by Character) */
+.ap-archive__tiles--skeleton {
+  opacity: 0.72;
+}
+
+.ap-archive__tile-ph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface);
+}
+
+.ap-archive__tile-ph svg {
+  width: 24px;
+  height: 24px;
+  color: var(--color-border);
+}
+
+.ap-archive__tiles-note {
+  margin: var(--space-sm) 0 0;
+  color: var(--color-text-muted);
+}
+
 /* .ap-btn ap-btn--secondary. Only the muted sub-label is section-specific. */
 .ap-archive__cta-sub {
   font-size: var(--text-caption);

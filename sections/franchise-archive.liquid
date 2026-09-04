@@ -39,19 +39,45 @@
       {%- endif -%}
 
       {%- if section.blocks.size > 0 -%}
-        <ul class="ap-archive__tiles" role="list">
-          {%- for block in section.blocks -%}
-            <li class="ap-archive__tile" {{ block.shopify_attributes }}>
-              <a href="{{ block.settings.link | default: routes.all_products_collection_url }}">
-                {%- if block.settings.image != blank -%}
-                  {{ block.settings.image | image_url: width: 400 | image_tag: loading: 'lazy', class: 'ap-archive__tile-img', sizes: '160px', widths: '160, 240, 320, 400', alt: '' }}
-                {%- else -%}
-                  <span class="ap-archive__tile-ph" aria-hidden="true"></span>
-                {%- endif -%}
-              </a>
-            </li>
-          {%- endfor -%}
-        </ul>
+        {%- liquid
+          assign tiles_have_image = false
+          for block in section.blocks
+            if block.settings.image != blank
+              assign tiles_have_image = true
+            endif
+          endfor
+        -%}
+        {%- if tiles_have_image -%}
+          <ul class="ap-archive__tiles" role="list">
+            {%- for block in section.blocks -%}
+              <li class="ap-archive__tile" {{ block.shopify_attributes }}>
+                <a href="{{ block.settings.link | default: routes.all_products_collection_url }}">
+                  {%- if block.settings.image != blank -%}
+                    {{ block.settings.image | image_url: width: 400 | image_tag: loading: 'lazy', class: 'ap-archive__tile-img', sizes: '160px', widths: '160, 240, 320, 400', alt: '' }}
+                  {%- else -%}
+                    <span class="ap-archive__tile-ph" aria-hidden="true"></span>
+                  {%- endif -%}
+                </a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- else -%}
+          {%- comment -%} No tile images set — marked placeholder, same pattern as Shop by Character. {%- endcomment -%}
+          <div class="ap-archive__tiles-empty" role="note">
+            <ul class="ap-archive__tiles ap-archive__tiles--skeleton" role="list" aria-hidden="true">
+              {%- for block in section.blocks -%}
+                <li class="ap-archive__tile">
+                  <span class="ap-archive__tile-ph">
+                    {{- 'symbol-ink.svg' | inline_asset_content -}}
+                  </span>
+                </li>
+              {%- endfor -%}
+            </ul>
+            <p class="ap-archive__tiles-note type-caption">
+              {{ 'sections.franchise_archive.tiles_empty' | t }}
+            </p>
+          </div>
+        {%- endif -%}
       {%- endif -%}
 
       {%- if section.settings.cta_label != blank -%}

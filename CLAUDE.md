@@ -330,23 +330,36 @@ uploaded copy is stale until a restart + re-verify says otherwise.
   Club CTA -> `routes.account_register_url` (forward link — see the account
   pending item), hidden when `customer` is set. Reachable via the
   order-status "View order details" link + the confirmation email `?key=`
-  token; no `/account` needed. Dawn's own `customers/*` were never vendored
-  into `a717245` (verified: no commit ever touched those paths — an
-  incomplete Dawn copy, not a Phase 0A removal).
+  token; no `/account` needed. **`a717245` is a faithful, complete copy of
+  Dawn 16.0.0** — Dawn 16 itself ships NO `templates/customers/` and no
+  `main-account`/`main-login`/`main-order` sections (Shopify dropped the
+  classic Liquid customer templates once new customer accounts became the
+  default; only `assets/customer.js` and the `customer.*` locale strings
+  remain). So `main-order.liquid` + `order.liquid` here are net-new Alterpop
+  files, not a restore.
 - **Native "Thank you" / Order status page is not theme-editable** on Basic
   (Plus-only structural control; only the deprecated Additional Scripts box).
   The 4b page above is the order *detail* view (reached after the fact); the
   immediate post-purchase "Thank you" screen keeps Shopify's default until the
   store moves to Plus.
-- **No customer-account area — PENDING MAJOR, own phase, before any launch.**
-  The store has no `/account`: `templates/customers/` shipped only the
-  standalone `order.liquid` above. The header ("Account", `routes.account_url`)
-  and the footer "My Account" group (Log in, Create account, Orders) already
-  link to `/account` — **dead links in production**. Building the customer
-  template set (`login`, `register`, `account`, `addresses`,
-  `reset_password`, `activate_account` + their `main-*` sections; the
-  `customer.*` locale strings already exist in `en.default.json`) is a
-  separate phase to schedule before launch. Not part of Phase 7.
+- **Customer-account area — PENDING MAJOR, own phase, before any launch.**
+  `templates/customers/` holds only the standalone `order.liquid` above.
+  The header ("Account", `routes.account_url`) and the footer "My Account"
+  group (Log in, Create account, Orders) link to `/account`. Whether those
+  are dead links depends on **Settings -> Customer accounts** in admin —
+  CHECK THIS:
+  - *New customer accounts* (Shopify-hosted, the modern default): `/account`
+    works with zero theme files — login/register/profile/addresses/order
+    history are all Shopify-hosted, themed only via checkout branding.
+    Nothing to build; maybe tidy the footer's classic Log in / Create
+    account / Orders sub-links (the hosted portal is one entry point).
+  - *Classic customer accounts*: needs classic Liquid templates
+    (`login` / `register` / `account` / `addresses` / `reset_password` /
+    `activate_account` + `main-*` sections). **Dawn 16 ships none of these**
+    — they'd be written from scratch or ported from Dawn <=15. The
+    `customer.*` locale strings are already in `en.default.json`.
+  - *Accounts disabled*: `/account` 404s — remove the header + footer links.
+  Not part of Phase 7. Decide after the admin check.
 - **Mobile filter drawer** (Phase 6, wireframe 5b). The `.mobile-facets__*`
   restyle moved out of `universe-room.css` into shared
   `assets/facets-drawer.css`, loaded from `main-collection-product-grid.liquid`

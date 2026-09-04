@@ -131,11 +131,14 @@ Chosen option 1: `templates/customers/order.liquid`
 (`{% section 'main-order' %}`) + `sections/main-order.liquid` +
 `assets/customer-order.css`. Nothing else in `templates/customers/`.
 
-- **Why this was needed:** Dawn's `customers/*` templates were **never
-  vendored** into this theme — verified that no commit in the repo has ever
-  touched `templates/customers/` or `sections/main-order|login|account|…`.
-  `a717245` "vendor: Dawn 16.0.0 baseline" is an *incomplete* copy of Dawn 16
-  (which does ship the full set); it was not a Phase 0A removal.
+- **Why this was needed:** **Dawn 16.0.0 ships no classic customer
+  templates.** Verified against the official `Shopify/dawn` `v16.0.0` tree —
+  its `templates/` folder is the same 13 files vendored in `a717245`; there
+  is no `templates/customers/` and no `main-account`/`main-login`/`main-order`
+  section, only `assets/customer.js`. Shopify dropped the classic Liquid
+  customer templates once *new customer accounts* (Shopify-hosted) became the
+  default. So `a717245` is a faithful copy — the order page here is a net-new
+  Alterpop file, not a restore.
 - **Reachability:** the order-status page's "View order details" link and the
   order-confirmation email both carry a `?key=` token that authenticates
   without a customer login, so this page works with **no `/account` area**.
@@ -164,12 +167,18 @@ Chosen option 1: `templates/customers/order.liquid`
 - The immediate post-purchase **Thank-you / Order-status screen** stays
   Shopify default (not theme-editable on Basic). 4b above is the order
   *detail* view, reached after the fact.
-- **No customer-account area (PENDING MAJOR, own phase before launch).** The
-  header "Account" and footer "My Account" group already link to `/account`,
-  which does not exist → dead links in production. Building `login` /
-  `register` / `account` / `addresses` / `reset_password` /
-  `activate_account` (+ `main-*` sections; `customer.*` locale strings already
-  present) is a separate phase.
+- **Customer-account area (PENDING MAJOR, own phase before launch).** The
+  header "Account" and footer "My Account" group link to `/account`. Whether
+  that resolves depends on **Settings → Customer accounts** in admin (needs
+  checking):
+  - *New customer accounts* (modern Shopify-hosted default) → `/account`
+    works with no theme files; only checkout-branding theming. Nothing to
+    build.
+  - *Classic customer accounts* → needs classic Liquid templates, which
+    **Dawn 16 does not ship** — write from scratch or port from Dawn ≤15.
+    `customer.*` locale strings are already in `en.default.json`.
+  - *Disabled* → `/account` 404s; remove the header + footer links.
+  Decide after the admin check; separate phase either way.
 
 ---
 

@@ -406,6 +406,26 @@ novo a pedir à app?
 - Copy legal pendente de advogado: placeholder claramente marcado
 ```
 
+#### Estado da Fase 8 (concluída)
+
+Branch `feat/phase-7-checkout` (continuação). Commit da Fase 8: ver
+`feat(phase-8): legal page template + cookie consent banner`.
+
+- Template legal genérico: `sections/legal-page.liquid` +
+  `templates/page.legal.json` (páginas `page.*`); `sections/main-policy.liquid`
+  + `templates/policy.liquid` (`/policies/*` nativas — o tipo `policy` não
+  aceita templates JSON); Contact (10c) = `templates/page.contact.json`
+  (`legal-page` + `sections/legal-contact.liquid`). CSS partilhado
+  `assets/legal-page.css`.
+- Cookie banner: `snippets/cookie-banner.liquid` +
+  `assets/cookie-banner.{css,js}`, render em `theme.liquid`, grupo "Cookie
+  consent" em `settings_schema.json`. Accept/Reject ambos `.ap-btn--secondary`,
+  sem Marigold. Ligado à Customer Privacy API do Shopify.
+- Copy legal e identificação da empresa (nome/NIF/morada) = placeholders
+  marcados, pendentes de advogado / dados fiscais.
+- Pendente admin: atribuir o template "Legal page" às páginas Cookie Policy /
+  Shipping-Returns; preencher o corpo das políticas em Settings → Policies.
+
 ---
 
 ## Bloqueios transversais (campos que a app ainda não fornece)

@@ -387,6 +387,38 @@ uploaded copy is stale until a restart + re-verify says otherwise.
   now "Clear Filters" / "View Results" per 5b. Store has no Search &
   Discovery filters (same C1 caveat as Phase 3) — the drawer shows only
   Sort until they are configured in admin.
+- **Legal pages** (Phase 8, wireframes 10a/10b/10c). One structure, three
+  entry points: `sections/legal-page.liquid` + `templates/page.legal.json`
+  for `page.*` legal pages (Cookie Policy, Shipping/Returns — assign the
+  "Legal page" template per page in admin); `sections/main-policy.liquid` +
+  `templates/policy.liquid` for native `/policies/*` (Terms, Privacy — the
+  `policy` type does NOT support JSON templates, hence `.liquid`; `policy`
+  is a valid global there, `theme-check-disable UndefinedObject` silences a
+  false warning); `templates/page.contact.json` = `legal-page` header +
+  `sections/legal-contact.liquid` (10c). All share `assets/legal-page.css`.
+  Breadcrumb "Legal" is a plain label, not a link (no legal index page).
+  "Last updated" is a section setting -> marked `DD Month YYYY` placeholder
+  when unset; on `/policies/*` it is one shared value for all policies.
+  Empty body -> marked placeholder. Legal copy itself is a marked
+  placeholder pending lawyer review. Contact keeps Dawn's `{% form
+  'contact' %}` contract; "Send Message" is `.ap-btn--secondary`. Company
+  Identification repeats the footer's marked `[ … — a confirmar ]` fine
+  print. Complaints Book is an external link to `livroreclamacoes.pt`
+  (one click away, per PT law), never an internal page.
+- **Cookie Consent Banner** (Phase 8). `snippets/cookie-banner.liquid` +
+  `assets/cookie-banner.{css,js}`, rendered from `layout/theme.liquid`
+  after `footer-group`, gated on `settings.cookie_banner_enabled` (new
+  "Cookie consent" group in `settings_schema.json`, default on; also a
+  `cookie_banner_policy_page` picker, falls back to `/pages/cookie-policy`).
+  **Accept and Reject are STRICTLY equal weight — both `.ap-btn--secondary`,
+  no Marigold anywhere** (that colour is purchase-CTA-only; asymmetry here
+  is auditable under GDPR). Wired to Shopify's Customer Privacy API
+  (`consent-tracking-api`): loads the feature, shows only when
+  `shouldShowBanner()` / `shouldShowGDPRBanner()` is true, calls
+  `setTrackingConsent({analytics,marketing,preferences,sale_of_data})` on
+  choice, `localStorage['ap-cookie-consent']` mirror as fallback when the
+  API is absent. Renders `hidden`; JS reveals with a bottom slide
+  (`--motion-transactional`, `z-index: 90`).
 - **OPEN QUESTION for the app side — how is the Character (and Line) field
   modelled?** A Shopify `page` has no product association, so the Character /
   Line page's product source hangs on this choice: a list-of-products

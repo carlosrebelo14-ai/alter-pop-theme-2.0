@@ -175,15 +175,52 @@ uploaded copy is stale until a restart + re-verify says otherwise.
 
 ## Open TODOs / unverified assumptions
 
-- **Header curation collection handles** (Phase 1B) are best-guess and NOT yet
-  verified against the store: `new-arrivals`, `limited-editions-exclusives`,
-  `gifts-under-25`, `outlet` (used in `sections/header.liquid` +
-  `snippets/mobile-drawer.liquid`). Confirm the real handles later; they do
-  not come from the admin menu (shared with the live theme).
-- **Footer link handles** (Phase 1D) not yet verified: `/pages/cookie-policy`
-  and `/pages/contact` in `sections/footer.liquid` (no native Shopify policy
-  for cookies; contact page handle assumed). Terms/Privacy use the standard
-  `/policies/*` URLs (exist only if filled in admin).
+- **Header curation collection handles** (Phase 1B) — verified against the
+  store via the Admin API:
+  - `/collections/new-arrivals` **EXISTS** — 805 products, rule tag =
+    "new-arrival", sorted `CREATED_DESC`. Real curation, live.
+  - `/collections/limited-editions-exclusives` and `/collections/gifts-under-25`
+    **DO NOT EXIST** — dead links in `sections/header.liquid` +
+    `snippets/mobile-drawer.liquid` today. **App dependency, not an admin
+    task**: both are tier curation (Limited Editions = Premium-tier
+    exclusives; Gifts Under €25 = price-appropriate Impulse pieces) and
+    correctly depend on the BLOCKED `alterpop.tier` flag (Phase 4). Creating
+    them today with title-keyword or price-only rules would be **inference**
+    — forbidden by the v3 non-negotiable principle (no inference from
+    tags/titles/prices/collections). They stay unbuilt until the tier field
+    exists; then the merchant builds the smart-collection rule on it.
+  - `outlet` — locale key `sections.header.outlet` exists but is not
+    currently rendered as its own link (folded into the combined "Gifts
+    Under €25 / Outlet" header/drawer label, which points at
+    `gifts-under-25`). `/collections/outlet` does not exist in the store.
+    Not tier-dependent — simple **merchant admin task** whenever a
+    standalone Outlet link is wanted.
+- **Footer link handles** (Phase 1D) — verified against the store:
+  - `/pages/contact` (title "Contacto") **EXISTS**.
+  - `/pages/faq` **EXISTS** (linked via the footer's `faq_url` setting, a
+    merchant-set URL field, not a hardcoded handle — no action needed).
+  - `/pages/cookie-policy` **DOES NOT EXIST** — dead link in
+    `sections/footer.liquid` (and the Phase 8 cookie-banner fallback).
+    Not tier-dependent — **merchant admin task**: create the page, assign
+    the "Legal page" template (`templates/page.legal.json`, Phase 8).
+  - Terms/Privacy use the standard `/policies/*` URLs — confirmed to exist
+    with PT sample copy already in Settings → Policies (see the Phase 8
+    entry below).
+- **Bestsellers / Trending / "premium-collectibles" — none are usable
+  curation sources**, verified via the Admin API:
+  - `best-sellers` and `all-products` both return **5575 products** — the
+    saved rule is `tag != "__alterpop-nonexistent-tag-zzz__"`, which
+    excludes nothing. Both ARE the entire catalog, not curation. The
+    homepage Bestsellers rail (`sections/bestsellers.liquid`, collection
+    setting defaults to `all` in `templates/index.json` as a marked dev
+    fallback) will show the whole catalog, not real bestsellers, until a
+    merchant points it at a genuinely curated collection.
+  - `trending` has **0 products** — no product carries a "trending" tag.
+  - `premium-collectibles` (49 products) is ruled on **title keywords**
+    (Statue, Figuarts, Replica, Limited Edition, Diorama) — this is title
+    inference, same problem as everywhere else in this doc: it must NOT be
+    substituted as a tier source for the Identity Block / Premium regime
+    / Limited Editions collection, even though the name is tempting.
 - **Footer legal fine print** (Phase 1D) is placeholder — legal company name,
   NIF and fiscal address were not provided; rendered as clearly-marked
   `[ … — a confirmar ]` boxes in `sections/footer.liquid`. Full legal copy is

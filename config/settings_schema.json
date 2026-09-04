@@ -1466,5 +1466,26 @@
         "label": "t:settings_schema.customer_accounts.settings.customer_account_menu.label"
       }
     ]
+  },
+  {
+    "name": "Cookie consent",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Bottom banner wired to Shopify's Customer Privacy API. Shows only where consent is legally required and no choice has been recorded. Accept and Reject carry equal visual weight — never Marigold."
+      },
+      {
+        "type": "checkbox",
+        "id": "cookie_banner_enabled",
+        "label": "Show the cookie consent banner",
+        "default": true
+      },
+      {
+        "type": "page",
+        "id": "cookie_banner_policy_page",
+        "label": "Cookie Policy page",
+        "info": "Linked from the banner. Falls back to /pages/cookie-policy when unset."
+      }
+    ]
   }
 ]

@@ -1,0 +1,46 @@
+{%- comment -%}
+  Alterpop — Cookie Consent Banner (Phase 8). Same family as the state
+  overlays. RGPD note: Accept and Reject have STRICTLY equal visual weight
+  and NEITHER uses Marigold — that colour is reserved to purchase CTAs, and
+  using it here would create an auditable asymmetry under GDPR.
+
+  Wired to Shopify's Customer Privacy API (cookie-banner.js). Rendered hidden;
+  JS reveals it only when the visitor's region requires consent and no choice
+  has been recorded yet. Explanatory sentence is functional copy, pending
+  legal review — the Cookie Policy page carries the full text.
+{%- endcomment -%}
+
+{%- if settings.cookie_banner_enabled -%}
+  {{ 'cookie-banner.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'cookie-banner.js' | asset_url }}" defer="defer"></script>
+
+  <aside
+    id="ap-cookie-banner"
+    class="ap-cookie"
+    role="dialog"
+    aria-modal="false"
+    aria-label="{{ 'sections.cookie_banner.aria_label' | t }}"
+    hidden
+  >
+    <div class="ap-cookie__inner page-width">
+      <p class="ap-cookie__text type-caption">
+        {{ 'sections.cookie_banner.body' | t }}
+        {%- assign cookie_page = settings.cookie_banner_policy_page -%}
+        {%- if cookie_page != blank -%}
+          <a class="ap-cookie__link" href="{{ cookie_page.url }}">{{ 'sections.cookie_banner.learn_more' | t }}</a>
+        {%- else -%}
+          <a class="ap-cookie__link" href="/pages/cookie-policy">{{ 'sections.cookie_banner.learn_more' | t }}</a>
+        {%- endif -%}
+      </p>
+
+      <div class="ap-cookie__actions">
+        <button type="button" class="ap-btn ap-btn--secondary ap-cookie__btn" data-ap-cookie="decline">
+          {{ 'sections.cookie_banner.decline' | t }}
+        </button>
+        <button type="button" class="ap-btn ap-btn--secondary ap-cookie__btn" data-ap-cookie="accept">
+          {{ 'sections.cookie_banner.accept' | t }}
+        </button>
+      </div>
+    </div>
+  </aside>
+{%- endif -%}

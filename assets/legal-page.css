@@ -1,0 +1,204 @@
+/* ============================================================================
+   Alterpop — Legal page (wireframes 10a / 10b / 10c). One structure for
+   Terms & Conditions, Privacy Policy, Cookie Policy, Shipping/Returns and the
+   Contact variant. Breadcrumb "Legal > [Page]", H1, "last updated", plain
+   body. No imagery, no product grid. Self-contained: tokens.css + buttons.css.
+   Shared by sections/legal-page.liquid (page.*), sections/main-policy.liquid
+   (/policies/*) and sections/legal-contact.liquid (Contact 10c).
+   ============================================================================ */
+
+.ap-legal {
+  padding: var(--space-3xl) 0 var(--space-4xl);
+}
+
+.ap-legal__inner {
+  max-width: 760px;
+  margin-inline: auto;
+}
+
+/* --- breadcrumb ------------------------------------------------------- */
+.ap-legal__crumbs {
+  margin: 0 0 var(--space-lg);
+  font-size: var(--text-caption);
+  color: var(--color-text-muted);
+}
+
+.ap-legal__crumbs-sep {
+  margin: 0 var(--space-xs);
+  color: var(--color-border);
+}
+
+.ap-legal__crumbs-leaf {
+  color: var(--color-ink-900);
+}
+
+/* --- header --------------------------------------------------------- */
+.ap-legal__title {
+  margin: 0;
+  color: var(--color-ink-900);
+}
+
+.ap-legal__updated {
+  margin: var(--space-sm) 0 0;
+  color: var(--color-text-muted);
+}
+
+.ap-legal__ph {
+  color: var(--color-text-muted);
+}
+
+/* --- body (rte / policy.body) -------------------------------------- */
+.ap-legal__body {
+  margin-top: var(--space-2xl);
+  color: var(--color-ink-900);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+}
+
+.ap-legal__body > :first-child { margin-top: 0; }
+
+.ap-legal__body h2 {
+  margin: var(--space-2xl) 0 var(--space-sm);
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body-strong);
+  font-size: var(--text-body);
+  line-height: var(--leading-heading);
+  color: var(--color-ink-900);
+}
+
+.ap-legal__body h3 {
+  margin: var(--space-xl) 0 var(--space-xs);
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body-strong);
+  font-size: var(--text-body);
+  color: var(--color-ink-900);
+}
+
+.ap-legal__body p,
+.ap-legal__body ul,
+.ap-legal__body ol {
+  margin: 0 0 var(--space-md);
+}
+
+.ap-legal__body ul,
+.ap-legal__body ol {
+  padding-left: var(--space-xl);
+}
+
+.ap-legal__body li {
+  margin-bottom: var(--space-xs);
+}
+
+.ap-legal__body a {
+  color: var(--color-ink-900);
+  text-underline-offset: 2px;
+}
+
+.ap-legal__body--placeholder {
+  color: var(--color-text-muted);
+}
+
+.ap-legal__note {
+  margin-top: var(--space-xl);
+  padding: var(--space-md) var(--space-lg);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+}
+
+/* --- Contact variant (10c) ---------------------------------------- */
+.ap-legal__section-rule {
+  margin: var(--space-2xl) 0;
+  border: 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.ap-legal__subhead {
+  margin: 0 0 var(--space-md);
+  color: var(--color-ink-900);
+}
+
+.ap-contact__fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.ap-contact__field {
+  display: block;
+}
+
+.ap-contact__label {
+  display: block;
+  margin-bottom: var(--space-xs);
+  font-size: var(--text-caption);
+  color: var(--color-text-muted);
+}
+
+.ap-contact__input,
+.ap-contact__textarea {
+  width: 100%;
+  padding: var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-ink-900);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+}
+
+.ap-contact__input:focus,
+.ap-contact__textarea:focus {
+  outline: 2px solid var(--color-ink-900);
+  outline-offset: 1px;
+  border-color: var(--color-ink-900);
+}
+
+.ap-contact__textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+.ap-contact__form-status {
+  margin: 0 0 var(--space-lg);
+  padding: var(--space-md) var(--space-lg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-caption);
+  color: var(--color-ink-900);
+}
+
+.ap-contact__form-status--error {
+  border-color: var(--color-fragile-ink);
+  color: var(--color-fragile-ink);
+}
+
+.ap-legal__company {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-caption);
+  line-height: var(--leading-body);
+}
+
+.ap-legal__company .ap-legal__ph {
+  color: var(--color-text-muted);
+}
+
+.ap-legal__complaints {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-top: var(--space-md);
+  color: var(--color-fragile-ink);
+  font-weight: var(--font-weight-body-strong);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.ap-legal__complaints:hover { opacity: 0.75; }
+
+@media screen and (min-width: 750px) {
+  .ap-legal { padding-top: var(--space-4xl); }
+}

@@ -1,0 +1,80 @@
+/* ============================================================================
+   Alterpop — Cookie Consent Banner (Phase 8). Bottom-anchored, same overlay
+   family as the state components. Self-contained: tokens.css + buttons.css.
+
+   RGPD: .ap-cookie__btn Accept / Decline are IDENTICAL in weight — both are
+   .ap-btn--secondary (outline ink). No Marigold anywhere in this component.
+   ============================================================================ */
+
+.ap-cookie {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 90;
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  box-shadow: var(--shadow-md);
+  transform: translateY(100%);
+  transition: transform var(--motion-transactional);
+}
+
+.ap-cookie.is-visible {
+  transform: translateY(0);
+}
+
+.ap-cookie__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  padding-top: var(--space-md);
+  padding-bottom: var(--space-md);
+}
+
+.ap-cookie__text {
+  flex: 1 1 auto;
+  margin: 0;
+  color: var(--color-ink-900);
+  line-height: var(--leading-body);
+}
+
+.ap-cookie__link {
+  color: var(--color-ink-900);
+  text-underline-offset: 2px;
+  white-space: nowrap;
+}
+
+.ap-cookie__actions {
+  flex: 0 0 auto;
+  display: flex;
+  gap: var(--space-sm);
+}
+
+/* both buttons: equal footprint, no colour hierarchy */
+.ap-cookie__btn {
+  --ap-btn-height: 40px;
+  min-width: 108px;
+}
+
+@media screen and (max-width: 749px) {
+  .ap-cookie__inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-md);
+  }
+
+  .ap-cookie__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ap-cookie__btn {
+    min-width: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ap-cookie {
+    transition-duration: 0.01ms;
+  }
+}

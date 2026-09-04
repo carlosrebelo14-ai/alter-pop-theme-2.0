@@ -6,13 +6,7 @@
         "color_scheme": "scheme-1",
         "show_breadcrumb": true
       }
-    },
-    "contact": {
-      "type": "legal-contact",
-      "settings": {
-        "color_scheme": "scheme-1"
-      }
     }
   },
-  "order": ["main", "contact"]
+  "order": ["main"]
 }

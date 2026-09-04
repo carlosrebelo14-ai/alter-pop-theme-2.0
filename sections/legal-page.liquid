@@ -1,0 +1,74 @@
+{{ 'legal-page.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  Alterpop — Legal page, generic reusable structure (wireframes 10a / 10b).
+  Breadcrumb "Legal > [Page]", H1, "last updated", plain body. No imagery.
+  Used by page.* resources via templates/page.legal.json (Cookie Policy,
+  Shipping/Returns, etc.). Native /policies/* (Terms, Privacy) get the same
+  look from sections/main-policy.liquid. Legal copy is merchant-supplied in
+  the page body; when empty a marked placeholder renders (structure only).
+{%- endcomment -%}
+
+<section class="ap-legal color-{{ section.settings.color_scheme }}">
+  <div class="ap-legal__inner page-width">
+
+    {%- if section.settings.show_breadcrumb -%}
+      <nav class="ap-legal__crumbs" aria-label="{{ 'sections.legal.breadcrumb_label' | t }}">
+        <span>{{ 'sections.legal.breadcrumb_root' | t }}</span>
+        <span class="ap-legal__crumbs-sep" aria-hidden="true">&rsaquo;</span>
+        <span class="ap-legal__crumbs-leaf" aria-current="page">{{ page.title | escape }}</span>
+      </nav>
+    {%- endif -%}
+
+    <h1 class="ap-legal__title type-h2">{{ page.title | escape }}</h1>
+
+    <p class="ap-legal__updated type-caption">
+      {%- if section.settings.last_updated != blank -%}
+        {{ 'sections.legal.last_updated' | t: date: section.settings.last_updated }}
+      {%- else -%}
+        <span class="ap-legal__ph">{{ 'sections.legal.last_updated' | t: date: 'DD Month YYYY' }}</span>
+      {%- endif -%}
+    </p>
+
+    {%- if page.content != blank -%}
+      <div class="ap-legal__body rte">
+        {{ page.content }}
+      </div>
+    {%- else -%}
+      <div class="ap-legal__body ap-legal__body--placeholder rte">
+        <p>{{ 'sections.legal.placeholder_intro' | t }}</p>
+      </div>
+      <p class="ap-legal__note type-caption" role="note">{{ 'sections.legal.placeholder_note' | t }}</p>
+    {%- endif -%}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Legal page",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumb",
+      "label": "Show \"Legal ›\" breadcrumb",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "last_updated",
+      "label": "Last updated date",
+      "info": "Free text, e.g. \"12 September 2025\". Shows a marked placeholder when empty."
+    }
+  ],
+  "presets": [{ "name": "Legal page" }]
+}
+{% endschema %}

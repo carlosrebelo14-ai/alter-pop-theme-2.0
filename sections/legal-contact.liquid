@@ -1,0 +1,128 @@
+{{ 'legal-page.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  Alterpop — Contact variant (wireframe 10c). Sits under the shared
+  legal-page header (breadcrumb + H1 + last updated + intro copy from the
+  page body). Adds: contact form, repeated Company Identification, and a
+  one-click Complaints Book link (livroreclamacoes.pt — required by PT law
+  to be one click away, not buried in body copy).
+
+  Keeps Dawn's {% form 'contact' %} contract (contact[name] / [email] /
+  [body], plus a custom "Subject" field surfaced in the notification email).
+{%- endcomment -%}
+
+<section class="ap-legal ap-legal--contact color-{{ section.settings.color_scheme }}">
+  <div class="ap-legal__inner page-width">
+
+    <hr class="ap-legal__section-rule">
+
+    <h2 class="ap-legal__subhead type-h3">{{ 'sections.legal.contact_form_heading' | t }}</h2>
+
+    {%- form 'contact', id: 'ContactForm', class: 'ap-contact__form' -%}
+      {%- if form.posted_successfully? -%}
+        <p class="ap-contact__form-status" role="status" tabindex="-1" autofocus>
+          {{ 'templates.contact.form.post_success' | t }}
+        </p>
+      {%- elsif form.errors -%}
+        <p class="ap-contact__form-status ap-contact__form-status--error" role="alert" tabindex="-1" autofocus>
+          {{ 'templates.contact.form.error_heading' | t }}
+          {{ form.errors | default_errors }}
+        </p>
+      {%- endif -%}
+
+      <div class="ap-contact__fields">
+        <label class="ap-contact__field">
+          <span class="ap-contact__label">{{ 'templates.contact.form.name' | t }}</span>
+          <input
+            class="ap-contact__input"
+            type="text"
+            name="contact[{{ 'templates.contact.form.name' | t }}]"
+            value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
+            autocomplete="name"
+          >
+        </label>
+
+        <label class="ap-contact__field">
+          <span class="ap-contact__label">{{ 'templates.contact.form.email' | t }}</span>
+          <input
+            class="ap-contact__input"
+            type="email"
+            name="contact[email]"
+            value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+            autocomplete="email"
+            required
+            aria-required="true"
+            {% if form.errors contains 'email' %}aria-invalid="true"{% endif %}
+          >
+        </label>
+
+        <label class="ap-contact__field">
+          <span class="ap-contact__label">{{ 'sections.legal.contact_subject' | t }}</span>
+          <input
+            class="ap-contact__input"
+            type="text"
+            name="contact[{{ 'sections.legal.contact_subject' | t }}]"
+            value="{{ form.subject }}"
+          >
+        </label>
+
+        <label class="ap-contact__field">
+          <span class="ap-contact__label">{{ 'templates.contact.form.comment' | t }}</span>
+          <textarea
+            class="ap-contact__textarea"
+            name="contact[{{ 'templates.contact.form.comment' | t }}]"
+            required
+            aria-required="true"
+          >{{ form.body }}</textarea>
+        </label>
+      </div>
+
+      <button type="submit" class="ap-btn ap-btn--secondary">
+        {{ 'sections.legal.contact_submit' | t }}
+      </button>
+    {%- endform -%}
+
+    <hr class="ap-legal__section-rule">
+
+    {%- comment -%}
+      Company Identification — repeated here per 10c. PLACEHOLDER: legal name,
+      NIF and fiscal address not yet supplied (same marked pattern as the
+      footer fine print). Do not invent.
+    {%- endcomment -%}
+    <h2 class="ap-legal__subhead type-h3">{{ 'sections.legal.company_heading' | t }}</h2>
+    <p class="ap-legal__company">
+      <span class="ap-legal__ph">[ Nome legal, Lda. — a confirmar ]</span> &middot;
+      <span class="ap-legal__ph">[ NIF PT000 000 000 — a confirmar ]</span> &middot;
+      <span class="ap-legal__ph">[ Morada fiscal completa — a confirmar ]</span>
+    </p>
+
+    <hr class="ap-legal__section-rule">
+
+    <a
+      class="ap-legal__complaints"
+      href="https://www.livroreclamacoes.pt/inicio"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <span>{{ 'sections.footer.complaints_book' | t }} ({{ 'sections.legal.complaints_pt' | t }})</span>
+      <span aria-hidden="true">&rarr;</span>
+    </a>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Contact block",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}

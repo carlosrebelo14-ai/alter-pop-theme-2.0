@@ -1,0 +1,77 @@
+{{ 'legal-page.css' | asset_url | stylesheet_tag }}
+{% # theme-check-disable UndefinedObject %}
+{%- comment -%}
+  `policy` is a valid Shopify global on templates/policy.* — theme-check's
+  object registry just doesn't know it for this section, hence the disable.
+{%- endcomment -%}
+{%- comment -%}
+  Alterpop — native store policy pages (/policies/refund-policy,
+  /privacy-policy, /terms-of-service, /shipping-policy, ...). Same visual
+  structure as sections/legal-page.liquid so Terms & Privacy match the
+  Cookie Policy page. `policy` exposes only .title + .body (merchant-set in
+  admin - Settings - Policies); there is no per-policy "last updated" field,
+  so that line is a shared section setting with a marked placeholder.
+{%- endcomment -%}
+
+<section class="ap-legal color-{{ section.settings.color_scheme }}">
+  <div class="ap-legal__inner page-width">
+
+    {%- if section.settings.show_breadcrumb -%}
+      <nav class="ap-legal__crumbs" aria-label="{{ 'sections.legal.breadcrumb_label' | t }}">
+        <span>{{ 'sections.legal.breadcrumb_root' | t }}</span>
+        <span class="ap-legal__crumbs-sep" aria-hidden="true">&rsaquo;</span>
+        <span class="ap-legal__crumbs-leaf" aria-current="page">{{ policy.title | escape }}</span>
+      </nav>
+    {%- endif -%}
+
+    <h1 class="ap-legal__title type-h2">{{ policy.title | escape }}</h1>
+
+    <p class="ap-legal__updated type-caption">
+      {%- if section.settings.last_updated != blank -%}
+        {{ 'sections.legal.last_updated' | t: date: section.settings.last_updated }}
+      {%- else -%}
+        <span class="ap-legal__ph">{{ 'sections.legal.last_updated' | t: date: 'DD Month YYYY' }}</span>
+      {%- endif -%}
+    </p>
+
+    {%- if policy.body != blank -%}
+      <div class="ap-legal__body rte">
+        {{ policy.body }}
+      </div>
+    {%- else -%}
+      <div class="ap-legal__body ap-legal__body--placeholder rte">
+        <p>{{ 'sections.legal.placeholder_intro' | t }}</p>
+      </div>
+      <p class="ap-legal__note type-caption" role="note">{{ 'sections.legal.placeholder_note' | t }}</p>
+    {%- endif -%}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Policy page",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumb",
+      "label": "Show \"Legal ›\" breadcrumb",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "last_updated",
+      "label": "Last updated date (all policies)",
+      "info": "Free text, e.g. \"12 September 2025\". Applies to every /policies/* page. Marked placeholder when empty."
+    }
+  ]
+}
+{% endschema %}

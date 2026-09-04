@@ -321,6 +321,25 @@
     "franchise_archive": {
       "tiles_empty": "Archive tiles appear here once the Universe field is connected in the sync app."
     },
+    "legal": {
+      "breadcrumb_label": "Breadcrumb",
+      "breadcrumb_root": "Legal",
+      "last_updated": "Last updated {{ date }}",
+      "placeholder_intro": "[ Placeholder body copy — structure only. The legal text for this page is supplied separately before launch. ]",
+      "placeholder_note": "Legal copy pending — marked placeholder, not final wording.",
+      "contact_form_heading": "Send us a message",
+      "contact_subject": "Subject",
+      "contact_submit": "Send Message",
+      "company_heading": "Company Identification",
+      "complaints_pt": "Livro de Reclamações"
+    },
+    "cookie_banner": {
+      "aria_label": "Cookie consent",
+      "body": "We use cookies to run the store and, with your consent, to measure traffic and personalise content.",
+      "learn_more": "Cookie Policy",
+      "accept": "Accept",
+      "decline": "Reject"
+    },
     "catalogue": {
       "lines": "Lines",
       "explore_by": "Explore by",

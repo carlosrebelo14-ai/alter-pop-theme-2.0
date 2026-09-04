@@ -125,39 +125,51 @@ configurable.
 
 ---
 
-## 4. Order confirmation (4b) — BLOCKED
+## 4. Order confirmation (4b) — BUILT as a standalone order template
 
-**This theme has no customer-account templates at all.** `templates/customers/`
-is absent — verified at the Dawn baseline `a717245` and at HEAD. Missing:
-`order`, `account`, `login`, `register`, `addresses`, `reset_password`,
-`activate_account`, plus their `main-*` sections.
+Chosen option 1: `templates/customers/order.liquid`
+(`{% section 'main-order' %}`) + `sections/main-order.liquid` +
+`assets/customer-order.css`. Nothing else in `templates/customers/`.
 
-Consequences:
+- **Why this was needed:** Dawn's `customers/*` templates were **never
+  vendored** into this theme — verified that no commit in the repo has ever
+  touched `templates/customers/` or `sections/main-order|login|account|…`.
+  `a717245` "vendor: Dawn 16.0.0 baseline" is an *incomplete* copy of Dawn 16
+  (which does ship the full set); it was not a Phase 0A removal.
+- **Reachability:** the order-status page's "View order details" link and the
+  order-confirmation email both carry a `?key=` token that authenticates
+  without a customer login, so this page works with **no `/account` area**.
+- **Layout (4b):** emerald seal + "Order {name} Confirmed", "we sent the
+  details to {email}", line items (Character · Franchise · Height), Estimated
+  Delivery window, "Keep Exploring [franchise]", "Create an Account & Join the
+  Collectors Club →".
+- **Data:** `order.name` / `.email` / `.created_at` and Height
+  (`ociostock.dimensions`) are live. Character (`alterpop.character`) is
+  BLOCKED → product title (honest, same rule as the PDP). Franchise
+  (`alterpop.franchise`) is BLOCKED → the meta slot is omitted and "Keep
+  Exploring" shows a `[ franchise ]` placeholder + a marked empty state (no
+  product grid — the set can't be picked without the field). The delivery
+  window is `created_at + 8..13 calendar days`, a calendar approximation of
+  `general.delivery_estimate` (24–48h dispatch + 6–9 business days), with the
+  canonical copy shown beneath it. The Club CTA points at
+  `routes.account_register_url` (forward link) and is hidden when `customer`
+  is set.
+- **Not render-verified:** viewing it needs a real order + the `?key=` token /
+  a customer session, neither available on the dev store. Validated by
+  `theme check` (0 new offenses) + review; confirm visually against a real
+  test order once one exists.
 
-- There is no `templates/customers/order.liquid` to restyle into 4b.
-- There is no `/account` area, so even a standalone order template would only
-  be reachable via the order-status page's "View order details" link and the
-  confirmation-email link.
-- The native **Thank-you / Order-status page** itself is **not theme-editable
-  on Basic** (Plus-only). So the 4b extras — estimated-delivery line
-  ("between Oct 12 and Oct 16"), "Keep Exploring [franchise]" thumbnails,
-  "Create an Account & Join the Collectors Club →" CTA — have **no host**
-  on the current plan without the customer order template.
+### Still Plus-only / still pending
 
-**Decision needed before 4b proceeds** (its own phase):
-
-1. **Standalone order template.** Add `templates/customers/order.liquid` +
-   `sections/main-order.liquid` only, styled per 4b, reachable via the
-   order-status "View order" link + email. Leave `/account` unbuilt (Shopify
-   serves its generic fallback). Smallest surface; the 4b content lives here.
-2. **Full customer-account set.** Restore + style `login`, `register`,
-   `account`, `order`, `addresses`, `reset_password`, `activate_account`.
-   Larger; gives a coherent logged-in area and a real path to orders.
-3. **Defer entirely** until the store is on Plus and the Thank-you page
-   becomes editable.
-
-Recommendation: **(1)** — it delivers the wireframe's post-purchase artifact
-with the least scope, and (2) can layer on later.
+- The immediate post-purchase **Thank-you / Order-status screen** stays
+  Shopify default (not theme-editable on Basic). 4b above is the order
+  *detail* view, reached after the fact.
+- **No customer-account area (PENDING MAJOR, own phase before launch).** The
+  header "Account" and footer "My Account" group already link to `/account`,
+  which does not exist → dead links in production. Building `login` /
+  `register` / `account` / `addresses` / `reset_password` /
+  `activate_account` (+ `main-*` sections; `customer.*` locale strings already
+  present) is a separate phase.
 
 ---
 
@@ -168,8 +180,10 @@ with the least scope, and (2) can layer on later.
   language; new `assets/cart-page.css`; Dawn `cart.js` contract kept intact.
   Free-shipping line + bar, franchise · dimension meta line, delivery-estimate
   caption, Marigold Checkout (`.ap-btn--primary`, plain radius), empty state.
+- **Standalone order page (4b)** — `templates/customers/order.liquid` +
+  `sections/main-order.liquid` + `assets/customer-order.css` (see §4).
 - **`general.delivery_estimate`** — single locale key for the unified copy;
-  PDP (`sections/main-product.liquid`) and the cart page both read it; the old
+  the PDP, the cart page and the order page all read it; the old
   `sections.pdp.dispatch` key was removed.
 - **PDP fragile notice decoupled** — `{% if ap_fragile %}` only; hidden while
   `alterpop.fragile` (own field, distinct from `alterpop.tier`) does not

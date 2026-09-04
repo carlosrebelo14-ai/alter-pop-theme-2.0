@@ -167,18 +167,14 @@ Chosen option 1: `templates/customers/order.liquid`
 - The immediate post-purchase **Thank-you / Order-status screen** stays
   Shopify default (not theme-editable on Basic). 4b above is the order
   *detail* view, reached after the fact.
-- **Customer-account area (PENDING MAJOR, own phase before launch).** The
-  header "Account" and footer "My Account" group link to `/account`. Whether
-  that resolves depends on **Settings → Customer accounts** in admin (needs
-  checking):
-  - *New customer accounts* (modern Shopify-hosted default) → `/account`
-    works with no theme files; only checkout-branding theming. Nothing to
-    build.
-  - *Classic customer accounts* → needs classic Liquid templates, which
-    **Dawn 16 does not ship** — write from scratch or port from Dawn ≤15.
-    `customer.*` locale strings are already in `en.default.json`.
-  - *Disabled* → `/account` 404s; remove the header + footer links.
-  Decide after the admin check; separate phase either way.
+- **Customer-account area — resolved, nothing to build.** The store runs
+  `NEW_CUSTOMER_ACCOUNTS` (`customerAccounts=OPTIONAL`), Shopify-hosted at
+  `account.alterpop.store` — not themeable, no theme files. Header uses the
+  `<shopify-account>` web component (+ `routes.account_url` fallback), mobile
+  drawer uses `routes.account_url`, footer has no account links, `/account`
+  302s to the hosted portal. The 4b `templates/customers/order.liquid` does
+  not conflict — it only ever renders the tokenised `?key=` order-status URL,
+  which is not a hosted-portal route.
 
 ---
 

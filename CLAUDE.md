@@ -342,24 +342,27 @@ uploaded copy is stale until a restart + re-verify says otherwise.
   The 4b page above is the order *detail* view (reached after the fact); the
   immediate post-purchase "Thank you" screen keeps Shopify's default until the
   store moves to Plus.
-- **Customer-account area — PENDING MAJOR, own phase, before any launch.**
-  `templates/customers/` holds only the standalone `order.liquid` above.
-  The header ("Account", `routes.account_url`) and the footer "My Account"
-  group (Log in, Create account, Orders) link to `/account`. Whether those
-  are dead links depends on **Settings -> Customer accounts** in admin —
-  CHECK THIS:
-  - *New customer accounts* (Shopify-hosted, the modern default): `/account`
-    works with zero theme files — login/register/profile/addresses/order
-    history are all Shopify-hosted, themed only via checkout branding.
-    Nothing to build; maybe tidy the footer's classic Log in / Create
-    account / Orders sub-links (the hosted portal is one entry point).
-  - *Classic customer accounts*: needs classic Liquid templates
-    (`login` / `register` / `account` / `addresses` / `reset_password` /
-    `activate_account` + `main-*` sections). **Dawn 16 ships none of these**
-    — they'd be written from scratch or ported from Dawn <=15. The
-    `customer.*` locale strings are already in `en.default.json`.
-  - *Accounts disabled*: `/account` 404s — remove the header + footer links.
-  Not part of Phase 7. Decide after the admin check.
+- **Customer-account area — NOT a build item (resolved).** The store runs
+  `NEW_CUSTOMER_ACCOUNTS` (`customerAccounts=OPTIONAL`), hosted by Shopify at
+  `account.alterpop.store`. That surface is not themeable and needs no theme
+  files — login / register / profile / order history / addresses are all
+  Shopify-hosted (branded only via checkout branding). Nothing to build, no
+  pre-launch phase.
+  - Header (`sections/header.liquid`) already uses the `<shopify-account>`
+    web component when `shop.customer_accounts_enabled`, with an
+    `href="{{ routes.account_url }}"` fallback. Mobile drawer uses
+    `routes.account_url`. Footer has no account links. No hardcoded
+    `/account` paths anywhere; `/account` 302s to the hosted portal.
+  - `templates/customers/order.liquid` (the Phase 7 4b page) does NOT
+    conflict: new accounts own `/account`, `/account/login`,
+    `/account/register`, `/account/orders` (list), `/account/addresses`; the
+    theme's classic template only ever renders the tokenised order-status URL
+    `/account/orders/{id}?key={token}` from the order-status page and the
+    confirmation email. If Shopify routes that URL to the hosted portal, the
+    template just isn't hit — it intercepts no hosted route, so it can't
+    break anything.
+  - Dawn 16 ships no classic customer templates regardless (dropped upstream
+    when new accounts became default); `customer.*` locale strings remain.
 - **Mobile filter drawer** (Phase 6, wireframe 5b). The `.mobile-facets__*`
   restyle moved out of `universe-room.css` into shared
   `assets/facets-drawer.css`, loaded from `main-collection-product-grid.liquid`

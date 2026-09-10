@@ -32,7 +32,7 @@
       "settings": {
         "heading": "New Arrivals",
         "pill": "",
-        "collection": "all",
+        "collection": "new-arrivals",
         "layout": "rail",
         "compact_cards": false,
         "products_to_show": 8,

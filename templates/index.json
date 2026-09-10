@@ -36,6 +36,7 @@
         "layout": "rail",
         "compact_cards": false,
         "products_to_show": 8,
+        "min_items": 4,
         "columns_desktop": 4,
         "view_all_label": "Shop All"
       }
@@ -70,6 +71,7 @@
         "layout": "rail",
         "compact_cards": false,
         "products_to_show": 6,
+        "min_items": 1,
         "columns_desktop": 3,
         "view_all_label": "Shop All"
       }
@@ -83,6 +85,7 @@
         "layout": "grid",
         "compact_cards": true,
         "products_to_show": 12,
+        "min_items": 4,
         "columns_desktop": 6,
         "view_all_label": ""
       }

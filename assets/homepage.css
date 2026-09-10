@@ -350,6 +350,14 @@
 /* ============================================================================
    Product rail (New Arrivals / Limited Editions / Gifts Under €25)
    ============================================================================ */
+/* Below its per-instance min_items the rail renders an empty <section> carrying
+   data-ap-empty (audit marker). It has no padding of its own so it is already
+   zero-height; this makes the collapse explicit and future-proofs it against a
+   later .ap-rail padding rule. */
+.ap-rail[data-ap-empty] {
+  display: none;
+}
+
 .ap-rail__inner {
   max-width: var(--page-width, 1400px);
   margin: 0 auto;

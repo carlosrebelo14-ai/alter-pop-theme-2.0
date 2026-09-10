@@ -9,6 +9,15 @@
                      Limited Editions)
   layout: "grid"  -> plain responsive grid (Gifts Under €25, with compact cards)
   pill:            optional label next to the heading ("Limited Run").
+
+  Below `min_items` (a per-instance setting) the WHOLE section collapses —
+  heading included, not CSS-hidden. A merchandising rail showing 1-3 cards
+  reads as broken layout, not an honest short catalog. `data-ap-empty` on the
+  wrapper is the universal audit marker; it fires whenever the threshold is
+  missed, whatever that instance's threshold is. `.ap-rail` carries no padding
+  of its own (all spacing is in `.ap-rail__inner`, which is not rendered when
+  empty) so a collapsed section leaves no orphan vertical gap. Self-heals: the
+  section returns on its own once the collection fills past `min_items`.
 {%- endcomment -%}
 
 {%- liquid
@@ -19,28 +28,42 @@
   if section.settings.layout == 'grid'
     assign is_grid = true
   endif
+
+  assign rail_count = 0
+  if coll != blank
+    assign rail_count = coll.products_count
+  endif
+  assign rail_empty = false
+  if rail_count < section.settings.min_items
+    assign rail_empty = true
+  endif
 -%}
 
-<section class="ap-rail" style="--ap-rail-cols: {{ cols }};">
-  <div class="ap-rail__inner">
-    <div class="ap-rail__head">
-      <div class="ap-rail__title-wrap">
-        {%- if section.settings.heading != blank -%}
-          <h2 class="ap-section-heading">{{ section.settings.heading | escape }}</h2>
-        {%- endif -%}
-        {%- if section.settings.pill != blank -%}
-          <span class="ap-pill">{{ section.settings.pill | escape }}</span>
+<section
+  class="ap-rail"
+  data-ap-slot="{{ coll.handle }}"
+  {% if rail_empty %}data-ap-empty{% endif %}
+  style="--ap-rail-cols: {{ cols }};"
+>
+  {%- unless rail_empty -%}
+    <div class="ap-rail__inner">
+      <div class="ap-rail__head">
+        <div class="ap-rail__title-wrap">
+          {%- if section.settings.heading != blank -%}
+            <h2 class="ap-section-heading">{{ section.settings.heading | escape }}</h2>
+          {%- endif -%}
+          {%- if section.settings.pill != blank -%}
+            <span class="ap-pill">{{ section.settings.pill | escape }}</span>
+          {%- endif -%}
+        </div>
+        {%- if section.settings.view_all_label != blank and coll != blank -%}
+          <a class="ap-btn ap-btn--ghost ap-rail__shopall" href="{{ coll.url }}">
+            {{- section.settings.view_all_label | escape }}
+            <span aria-hidden="true">&rarr;</span>
+          </a>
         {%- endif -%}
       </div>
-      {%- if section.settings.view_all_label != blank and coll != blank -%}
-        <a class="ap-btn ap-btn--ghost ap-rail__shopall" href="{{ coll.url }}">
-          {{- section.settings.view_all_label | escape }}
-          <span aria-hidden="true">&rarr;</span>
-        </a>
-      {%- endif -%}
-    </div>
 
-    {%- if coll != blank and coll.products_count > 0 -%}
       <ul class="ap-rail__list{% if is_grid %} ap-rail__list--grid{% endif %}" role="list">
         {%- assign skip_rail_card_styles = false -%}
         {%- for product in coll.products limit: limit -%}
@@ -56,10 +79,8 @@
           {%- assign skip_rail_card_styles = true -%}
         {%- endfor -%}
       </ul>
-    {%- else -%}
-      <p class="ap-empty">{{ 'sections.product_rail.empty' | t }}</p>
-    {%- endif -%}
-  </div>
+    </div>
+  {%- endunless -%}
 </section>
 
 {% schema %}
@@ -88,6 +109,13 @@
       "min": 4, "max": 16, "step": 1, "default": 8,
       "label": "Products to show",
       "info": "Curated and limited — not a paginated catalog."
+    },
+    {
+      "type": "range",
+      "id": "min_items",
+      "min": 1, "max": 12, "step": 1, "default": 4,
+      "label": "Minimum products to display",
+      "info": "Below this the whole section is hidden — a rail of 1-3 reads as broken."
     },
     { "type": "range", "id": "columns_desktop", "min": 3, "max": 6, "step": 1, "default": 4, "label": "Columns on desktop" },
     { "type": "text", "id": "view_all_label", "label": "\"Shop All\" label", "default": "Shop All" }

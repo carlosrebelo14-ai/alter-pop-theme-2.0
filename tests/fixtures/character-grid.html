@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fixture — Character grid / EXPLORE BY cuts</title>
+<style>
+  /* Minimal stand-in for the DS. The real page inherits tokens + .type-*
+     from tokens.css; only what ap-character-cuts.js actually reads matters:
+     --motion-transactional, the [data-*] card fields, the DOM contract. */
+  :root {
+    --motion-transactional: 120ms cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: Inter, system-ui, sans-serif;
+  }
+  body { margin: 0; padding: 24px; background: #F7F6F2; color: #121014; }
+  h1 { font-size: 18px; }
+  h2 { font-size: 14px; text-transform: uppercase; letter-spacing: .04em; margin-top: 40px; }
+  .note { max-width: 60ch; color: #6E6A63; font-size: 13px; line-height: 1.5; }
+
+  [data-ap-cut-bar] { display: flex; gap: 8px; margin: 16px 0; flex-wrap: wrap; }
+  [data-ap-cut-chip] {
+    font: inherit; font-size: 13px; padding: 6px 14px; border: 1px solid #D9D7D0;
+    background: #FBFAF7; border-radius: 999px; cursor: pointer;
+  }
+  [data-ap-cut-chip][aria-pressed="true"] { background: #121014; color: #fff; border-color: #121014; }
+  [data-ap-cut-chip][disabled] { opacity: .4; cursor: not-allowed; }
+
+  [data-ap-cut-grid] {
+    display: grid; gap: 16px; grid-template-columns: repeat(2, 1fr);
+  }
+  @media (min-width: 750px) { [data-ap-cut-grid] { grid-template-columns: repeat(3, 1fr); gap: 24px; } }
+  @media (min-width: 990px) { [data-ap-cut-grid] { grid-template-columns: repeat(4, 1fr); } }
+
+  .card {
+    border: 1px solid #D9D7D0; background: #FBFAF7; border-radius: 8px;
+    padding: 14px; display: flex; flex-direction: column; gap: 4px; font-size: 12px;
+  }
+  .card[hidden] { display: none; }
+  .card__n { font-weight: 700; font-size: 14px; }
+  .card__f { color: #6E6A63; }
+
+  .ap-cut-group {
+    grid-column: 1 / -1; font-size: 12px; text-transform: uppercase; letter-spacing: .04em;
+    font-weight: 600; color: #6E6A63; padding: 8px 0 2px; border-bottom: 1px solid #D9D7D0;
+  }
+  .ap-cut-group[hidden] { display: none; }
+
+  [data-ap-cut-loadmore] {
+    margin-top: 20px; font: inherit; font-size: 13px; padding: 10px 20px;
+    border: 1px solid #121014; background: transparent; border-radius: 4px; cursor: pointer;
+  }
+  [data-ap-cut-loadmore][hidden] { display: none; }
+</style>
+</head>
+<body>
+
+<h1>Fixture — <code>ap-character-cuts.js</code></h1>
+<p class="note">
+  Open in a browser. <b>Instance A</b> exercises all three live cuts, the
+  <code>Unsorted</code> cluster (cards with an empty field), the FLIP reorder
+  at <code>--motion-transactional</code>, the 50-card ceiling (60 cards → 10
+  clipped, "Load more" reveals +50), and <code>?cut=</code> round-tripping to
+  the URL. <b>Instance B</b> has no <code>data-year</code> on any card, so the
+  <em>Year</em> chip must render <code>disabled</code> + <code>aria-disabled="true"</code>
+  and wire no listener.
+</p>
+
+<section>
+  <h2>Instance A — 60 cards, all cuts live</h2>
+  <div data-ap-cut-bar>
+    <button type="button" data-ap-cut-chip="line" aria-pressed="false">Line</button>
+    <button type="button" data-ap-cut-chip="height" aria-pressed="false">Height</button>
+    <button type="button" data-ap-cut-chip="year" aria-pressed="false">Year</button>
+  </div>
+  <div data-ap-cut-grid data-ap-cut="">
+      <article class="card" data-line="Grandista" data-height="S" data-year="2019">
+        <span class="card__n">#01</span>
+        <span class="card__f">line: <b>Grandista</b></span>
+        <span class="card__f">height: <b>S</b></span>
+        <span class="card__f">year: <b>2019</b></span>
+      </article>
+      <article class="card" data-line="Ichiban Kuji" data-height="S" data-year="2022">
+        <span class="card__n">#02</span>
+        <span class="card__f">line: <b>Ichiban Kuji</b></span>
+        <span class="card__f">height: <b>S</b></span>
+        <span class="card__f">year: <b>2022</b></span>
+      </article>
+      <article class="card" data-line="Q Posket" data-height="M" data-year="">
+        <span class="card__n">#03</span>
+        <span class="card__f">line: <b>Q Posket</b></span>
+        <span class="card__f">height: <b>M</b></span>
+        <span class="card__f">year: <b>—</b></span>
+      </article>
+      <article class="card" data-line="Master Stars Piece" data-height="M" data-year="2021">
+        <span class="card__n">#04</span>
+        <span class="card__f">line: <b>Master Stars Piece</b></span>
+        <span class="card__f">height: <b>M</b></span>
+        <span class="card__f">year: <b>2021</b></span>
+      </article>
+      <article class="card" data-line="" data-height="L" data-year="2024">
+        <span class="card__n">#05</span>
+        <span class="card__f">line: <b>—</b></span>
+        <span class="card__f">height: <b>L</b></span>
+        <span class="card__f">year: <b>2024</b></span>
+      </article>
+      <article class="card" data-line="Grandista" data-height="L" data-year="2020">
+        <span class="card__n">#06</span>
+        <span class="card__f">line: <b>Grandista</b></span>
+        <span class="card__f">height: <b>L</b></span>
+        <span class="card__f">year: <b>2020</b></span>
+      </article>
+      <article class="card" data-line="Ichiban Kuji" data-height="" data-year="2023">
+        <span class="card__n">#07</span>
+        <span class="card__f">line: <b>Ichiban Kuji</b></span>
+        <span class="card__f">height: <b>—</b></span>
+        <span class="card__f">year: <b>2023</b></span>
+      </article>
+      <article class="card" data-line="Q Posket" data-height="" data-year="2019">
+        <span class="card__n">#08</span>
+        <span class="card__f">line: <b>Q Posket</b></span>
+        <span class="card__f">height: <b>—</b></span>
+        <span class="card__f">year: <b>2019</b></span>
+      </article>
+      <article class="card" data-line="Master Stars Piece" data-height="S" data-year="2022">
+        <span class="card__n">#09</span>
+        <span class="card__f">line: <b>Master Stars Piece</b></span>
+        <span class="card__f">height: <b>S</b></span>
+        <span class="card__f">year: <b>2022</b></span>
+      </article>
+      <article class="card" data-line="" data-height="S" data-year="">
+        <span class="card__n">#10</span>
+        <span class="card__f">line: <b>—</b></span>
+        <span class="card__f">height: <b>S</b></span>
+        <span class="card__f">year: <b>—</b></span>
+      </article>
+      <article class="card" data-line="Grandista" data-height="M" data-year="2021">
+        <span class="card__n">#11</span>
+        <span class="card__f">line: <b>Grandista</b></span>
+        <span class="card__f">height: <b>M</b></span>
+        <span class="card__f">year: <b>2021</b></span>
+      </article>
+      <article class="card" data-line="Ichiban Kuji" data-height="M" data-year="2024">
+        <span class="card__n">#12</span>
+        <span class="card__f">line: <b>Ichiban Kuji</b></span>
+        <span class="card__f">height: <b>M</b></span>
+        <span class="card__f">year: <b>2024</b></span>
+      </article>
+      <article class="card" data-line="Q Posket" data-height="L" data-year="2020">
+        <span class="card__n">#13</span>
+        <span class="card__f">line: <b>Q Posket</b></span>
+        <span class="card__f">height: <b>L</b></span>
+        <span class="card__f">year: <b>2020</b></span>
+      </article>
+      <article class="card" data-line="Master Stars Piece" data-height="L" data-year="2023">
+        <span class="card__n">#14</span>
+        <span class="card__f">line: <b>Master Stars Piece</b></span>
+        <span class="card__f">height: <b>L</b></span>
+        <span class="card__f">year: <b>2023</b></span>
+      </article>
+      <article class="card" data-line="" data-height="" data-year="2019">
+        <span class="card__n">#15</span>
+        <span class="card__f">line: <b>—</b></span>
+        <span class="card__f">height: <b>—</b></span>
+        <span class="card__f">year: <b>2019</b></span>
+      </article>
+      <article class="card" data-line="Grandista" data-height="" data-year="2022">
+        <span class="card__n">#16</span>
+        <span class="card__f">line: <b>Grandista</b></span>
+        <span class="card__f">height: <b>—</b></span>
+        <span class="card__f">year: <b>2022</b></span>
+      </article>
+      <article class="card" data-line="Ichiban Kuji" data-height="S" data-year="">
+        <span class="card__n">#17</span>
+        <span class="card__f">line: <b>Ichiban Kuji</b></span>
+        <span class="card__f">height: <b>S</b></span>
+        <span class="card__f">year: <b>—</b></span>
+      </article>
+      <article class="card" data-line="Q Posket" data-height="S" data-year="2021">
+        <span class="card__n">#18</span>
+        <span class="card__f">line: <b>Q Posket</b></span>
+        <span class="card__f">height: <b>S</b></span>
+        <span class="card__f">year: <b>2021</b></span>
+      </article>
+      <article class="card" data-line="Master Stars Piece" data-height="M" data-year="2024">
+        <span class="card__n">#19</span>
+        <span class="card__f">line: <b>Master Stars Piece</b></span>
+        <span class="card__f">height: <b>M</b></span>
+        <span class="card__f">year: <b>2024</b></span>
+      </article>
+      <article class="card" data-line="" data-height="M" data-year="2020">
+        <span class="card__n">#20</span>
+        <span class="card__f">line: <b>—</b></span>
+        <span class="card__f">height: <b>M</b></span>
+        <span class="card__f">year: <b>2020</b></span>
+      </article>
+      <article class="card" data-line="Grandista" data-height="L" data-year="2023">
+        <span class="card__n">#21</span>
+        <span class="card__f">line: <b>Grandista</b></span>
+        <span class="card__f">height: <b>L</b></span>
+        <span class="card__f">year: <b>2023</b></span>
+      </article>
+      <article class="card" data-line="Ichiban Kuji" data-height="L" data-year="2019">
+        <span class="card__n">#22</span>
+        <span class="card__f">line: <b>Ichiban Kuji</b></span>
+        <span class="card__f">height: <b>L</b></span>
+        <span class="card__f">year: <b>2019</b></span>
+      </article>
+      <article class="card" data-line="Q Posket" data-height="" data-year="2022">
+        <span class="card__n">#23</span>
+        <span class="card__f">line: <b>Q Posket</b></span>
+        <span class="card__f">height: <b>—</b></span>
+        <span class="card__f">year: <b>2022</b></span>
+      </article>
+      <article class="card" data-line="Master Stars Piece" data-height="" data-year="">
+        <span class="card__n">#24</span>
+        <span class="card__f">line: <b>Master Stars Piece</b></span>
+        <span class="card__f">height: <b>—</b></span>
+        <span class="card__f">year: <b>—</b></span>
+      </article>
+      <article class="card" data-line="" data-height="S" data-year="2021">
+        <span class="card__n">#25</span>
+        <span class="card__f">line: <b>—</b></span>
+        <span class="card__f">height: <b>S</b></span>
+        <span class="card__f">year: <b>2021</b></span>
+      </article>
+      <article class="card" data-line="Grandista" data-height="S" data-year="2024">
+        <span class="card__n">#26</span>
+        <span class="card__f">line: <b>Grandista</b></span>
+        <span class="card__f">height: <b>S</b></span>
+        <span class="card__f">year: <b>2024</b></span>
+      </article>
+      <article class="card" data-line="Ichiban Kuji" data-height="M" data-year="2020">
+        <span class="card__n">#27</span>
+        <span class="card__f">line: <b>Ichiban Kuji</b></span>
+        <span class="card__f">height: <b>M</b></span>
+        <span class="card__f">year: <b>2020</b></span>
+      </article>
+      <article class="card" data-line="Q Posket" data-height="M" data-year="2023">
+        <span class="card__n">#28</span>
+        <span class="card__f">line: <b>Q Posket</b></span>
+        <span class="card__f">height: <b>M</b></span>
+        <span class="card__f">year: <b>2023</b></span>
+      </article>
+      <article class="card" data-line="Master Stars Piece" data-height="L" data-year="2019">
+        <span class="card__n">#29</span>
+        <span class="card__f">line: <b>Master Stars Piece</b></span>
+        <span class="card__f">height: <b>L</b></span>
+        <span class="card__f">year: <b>2019</b></span>
+      </article>
+      <article class="card" data-line="" data-height="L" data-year="2022">
+        <span class="card__n">#30</span>
+        <span class="card__f">line: <b>—</b></span>
+        <span class="card__f">height: <b>L</b></span>
+        <span class="card__f">year: <b>2022</b></span>
+      </article>
+      <article class="card" data-line="Grandista" data-height="" data-year="">
+        <span class="card__n">#31</span>
+        <span class="card__f">line: <b>Grandista</b></span>
+        <span class="card__f">height: <b>—</b></span>
+        <span class="card__f">year: <b>—</b></span>
+      </article>
+      <article class="card" data-line="Ichiban Kuji" data-height="" data-year="2021">
+        <span class="card__n">#32</span>
+        <span class="card__f">line: <b>Ichiban Kuji</b></span>
+        <span class="card__f">height: <b>—</b></span>
+        <span class="card__f">year: <b>2021</b></span>
+      </article>
+      <article class="card" data-line="Q Posket" data-height="S" data-year="2024">
+        <span class="card__n">#33</span>
+        <span class="card__f">line: <b>Q Posket</b></span>
+        <span class="card__f">height: <b>S</b></span>
+        <span class="card__f">year: <b>2024</b></span>
+      </article>
+      <article class="card" data-line="Master Stars Piece" data-height="S" data-year="2020">
+        <span class="card__n">#34</span>
+        <span class="card__f">line: <b>Master Stars Piece</b></span>
+        <span class="card__f">height: <b>S</b></span>
+        <span class="card__f">year: <b>2020</b></span>
+      </article>
+      <article class="card" data-line="" data-height="M" data-year="2023">
+        <span class="card__n">#35</span>
+        <span class="card__f">line: <b>—</b></span>
+        <span class="card__f">height: <b>M</b></span>
+        <span class="card__f">year: <b>2023</b></span>
+      </article>
+      <article class="card" data-line="Grandista" data-height="M" data-year="2019">
+        <span class="card__n">#36</span>
+        <span class="card__f">line: <b>Grandista</b></span>
+        <span class="card__f">height: <b>M</b></span>
+        <span class="card__f">year: <b>2019</b></span>
+      </article>
+      <article class="card" data-line="Ichiban Kuji" data-height="L" data-year="2022">
+        <span class="card__n">#37</span>
+        <span class="card__f">line: <b>Ichiban Kuji</b></span>
+        <span class="card__f">height: <b>L</b></span>
+        <span class="card__f">year: <b>2022</b></span>
+      </article>
+      <article class="card" data-line="Q Posket" data-height="L" data-year="">
+        <span class="card__n">#38</span>
+        <span class="card__f">line: <b>Q Posket</b></span>
+        <span class="card__f">height: <b>L</b></span>
+        <span class="card__f">year: <b>—</b></span>
+      </article>
+      <article class="card" data-line="Master Stars Piece" data-height="" data-year="2021">
+        <span class="card__n">#39</span>
+        <span class="card__f">line: <b>Master Stars Piece</b></span>
+        <span class="card__f">height: <b>—</b></span>
+        <span class="card__f">year: <b>2021</b></span>
+      </article>
+      <article class="card" data-line="" data-height="" data-year="2024">
+        <span class="card__n">#40</span>
+        <span class="card__f">line: <b>—</b></span>
+        <span class="card__f">height: <b>—</b></span>
+        <span class="card__f">year: <b>2024</b></span>
+      </article>
+      <article class="card" data-line="Grandista" data-height="S" data-year="2020">
+        <span class="card__n">#41</span>
+        <span class="card__f">line: <b>Grandista</b></span>
+        <span class="card__f">height: <b>S</b></span>
+        <span class="card__f">year: <b>2020</b></span>
+      </article>
+      <article class="card" data-line="Ichiban Kuji" data-height="S" data-year="2023">
+        <span class="card__n">#42</span>
+        <span class="card__f">line: <b>Ichiban Kuji</b></span>
+        <span class="card__f">height: <b>S</b></span>
+        <span class="card__f">year: <b>2023</b></span>
+      </article>
+      <article class="card" data-line="Q Posket" data-height="M" data-year="2019">
+        <span class="card__n">#43</span>
+        <span class="card__f">line: <b>Q Posket</b></span>
+        <span class="card__f">height: <b>M</b></span>
+        <span class="card__f">year: <b>2019</b></span>
+      </article>
+      <article class="card" data-line="Master Stars Piece" data-height="M" data-year="2022">
+        <span class="card__n">#44</span>
+        <span class="card__f">line: <b>Master Stars Piece</b></span>
+        <span class="card__f">height: <b>M</b></span>
+        <span class="card__f">year: <b>2022</b></span>
+      </article>
+      <article class="card" data-line="" data-height="L" data-year="">
+        <span class="card__n">#45</span>
+        <span class="card__f">line: <b>—</b></span>
+        <span class="card__f">height: <b>L</b></span>
+        <span class="card__f">year: <b>—</b></span>
+      </article>
+      <article class="card" data-line="Grandista" data-height="L" data-year="2021">
+        <span class="card__n">#46</span>
+        <span class="card__f">line: <b>Grandista</b></span>
+        <span class="card__f">height: <b>L</b></span>
+        <span class="card__f">year: <b>2021</b></span>
+      </article>
+      <article class="card" data-line="Ichiban Kuji" data-height="" data-year="2024">
+        <span class="card__n">#47</span>
+        <span class="card__f">line: <b>Ichiban Kuji</b></span>
+        <span class="card__f">height: <b>—</b></span>
+        <span class="card__f">year: <b>2024</b></span>
+      </article>
+      <article class="card" data-line="Q Posket" data-height="" data-year="2020">
+        <span class="card__n">#48</span>
+        <span class="card__f">line: <b>Q Posket</b></span>
+        <span class="card__f">height: <b>—</b></span>
+        <span class="card__f">year: <b>2020</b></span>
+      </article>
+      <article class="card" data-line="Master Stars Piece" data-height="S" data-year="2023">
+        <span class="card__n">#49</span>
+        <span class="card__f">line: <b>Master Stars Piece</b></span>
+        <span class="card__f">height: <b>S</b></span>
+        <span class="card__f">year: <b>2023</b></span>
+      </article>
+      <article class="card" data-line="" data-height="S" data-year="2019">
+        <span class="card__n">#50</span>
+        <span class="card__f">line: <b>—</b></span>
+        <span class="card__f">height: <b>S</b></span>
+        <span class="card__f">year: <b>2019</b></span>
+      </article>
+      <article class="card" data-line="Grandista" data-height="M" data-year="2022">
+        <span class="card__n">#51</span>
+        <span class="card__f">line: <b>Grandista</b></span>
+        <span class="card__f">height: <b>M</b></span>
+        <span class="card__f">year: <b>2022</b></span>
+      </article>
+      <article class="card" data-line="Ichiban Kuji" data-height="M" data-year="">
+        <span class="card__n">#52</span>
+        <span class="card__f">line: <b>Ichiban Kuji</b></span>
+        <span class="card__f">height: <b>M</b></span>
+        <span class="card__f">year: <b>—</b></span>
+      </article>
+      <article class="card" data-line="Q Posket" data-height="L" data-year="2021">
+        <span class="card__n">#53</span>
+        <span class="card__f">line: <b>Q Posket</b></span>
+        <span class="card__f">height: <b>L</b></span>
+        <span class="card__f">year: <b>2021</b></span>
+      </article>
+      <article class="card" data-line="Master Stars Piece" data-height="L" data-year="2024">
+        <span class="card__n">#54</span>
+        <span class="card__f">line: <b>Master Stars Piece</b></span>
+        <span class="card__f">height: <b>L</b></span>
+        <span class="card__f">year: <b>2024</b></span>
+      </article>
+      <article class="card" data-line="" data-height="" data-year="2020">
+        <span class="card__n">#55</span>
+        <span class="card__f">line: <b>—</b></span>
+        <span class="card__f">height: <b>—</b></span>
+        <span class="card__f">year: <b>2020</b></span>
+      </article>
+      <article class="card" data-line="Grandista" data-height="" data-year="2023">
+        <span class="card__n">#56</span>
+        <span class="card__f">line: <b>Grandista</b></span>
+        <span class="card__f">height: <b>—</b></span>
+        <span class="card__f">year: <b>2023</b></span>
+      </article>
+      <article class="card" data-line="Ichiban Kuji" data-height="S" data-year="2019">
+        <span class="card__n">#57</span>
+        <span class="card__f">line: <b>Ichiban Kuji</b></span>
+        <span class="card__f">height: <b>S</b></span>
+        <span class="card__f">year: <b>2019</b></span>
+      </article>
+      <article class="card" data-line="Q Posket" data-height="S" data-year="2022">
+        <span class="card__n">#58</span>
+        <span class="card__f">line: <b>Q Posket</b></span>
+        <span class="card__f">height: <b>S</b></span>
+        <span class="card__f">year: <b>2022</b></span>
+      </article>
+      <article class="card" data-line="Master Stars Piece" data-height="M" data-year="">
+        <span class="card__n">#59</span>
+        <span class="card__f">line: <b>Master Stars Piece</b></span>
+        <span class="card__f">height: <b>M</b></span>
+        <span class="card__f">year: <b>—</b></span>
+      </article>
+      <article class="card" data-line="" data-height="M" data-year="2021">
+        <span class="card__n">#60</span>
+        <span class="card__f">line: <b>—</b></span>
+        <span class="card__f">height: <b>M</b></span>
+        <span class="card__f">year: <b>2021</b></span>
+      </article>
+  </div>
+  <button type="button" data-ap-cut-loadmore hidden>Load more</button>
+</section>
+
+<section>
+  <h2>Instance B — Year is a dead cut</h2>
+  <div data-ap-cut-bar>
+    <button type="button" data-ap-cut-chip="line" aria-pressed="false">Line</button>
+    <button type="button" data-ap-cut-chip="height" aria-pressed="false">Height</button>
+    <button type="button" data-ap-cut-chip="year" aria-pressed="false">Year</button>
+  </div>
+  <div data-ap-cut-grid data-ap-cut="">
+    <article class="card" data-line="Grandista" data-height="M"><span class="card__n">#01</span><span class="card__f">no year</span></article>
+    <article class="card" data-line="Grandista" data-height="L"><span class="card__n">#02</span><span class="card__f">no year</span></article>
+    <article class="card" data-line="Q Posket" data-height="S"><span class="card__n">#03</span><span class="card__f">no year</span></article>
+    <article class="card" data-line="" data-height=""><span class="card__n">#04</span><span class="card__f">no line, no height, no year</span></article>
+  </div>
+</section>
+
+<script src="../../assets/ap-character-cuts.js" defer></script>
+</body>
+</html>

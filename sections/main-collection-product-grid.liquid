@@ -106,10 +106,23 @@
         {%- comment -%} Alterpop restyle of the mobile filter drawer (wireframe 5b); Dawn's facets.js untouched. {%- endcomment -%}
         {{ 'facets-drawer.css' | asset_url | stylesheet_tag }}
         <script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
+        {%- liquid
+          # has_filters gates the empty 260px vertical facet gutter. When the store
+          # has zero Search & Discovery filters configured, enable_filtering is still
+          # on but there is nothing to show — collapse the column. Flips back to true
+          # on its own once filters are configured in admin; NOT dead code, do not remove.
+          assign has_filters = false
+          for filter in collection.filters
+            if filter.values.size > 0 or filter.type == 'price_range'
+              assign has_filters = true
+              break
+            endif
+          endfor
+        -%}
         {%- if section.settings.enable_filtering or section.settings.enable_sorting -%}
           <aside
             aria-labelledby="verticalTitle"
-            class="facets-wrapper{% unless section.settings.enable_filtering %} facets-wrapper--no-filters{% endunless %}{% if section.settings.filter_type != 'vertical' %} page-width{% endif %}"
+            class="facets-wrapper{% unless section.settings.enable_filtering and has_filters %} facets-wrapper--no-filters{% endunless %}{% if section.settings.filter_type != 'vertical' %} page-width{% endif %}"
             id="main-collection-filters"
             data-id="{{ section.id }}"
           >

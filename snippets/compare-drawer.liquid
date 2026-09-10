@@ -3,7 +3,9 @@
   pages (the `compare` toggle only renders there). Max 2 products, no
   persistence between sessions (in-memory only — no storage). One table:
   Manufacturer, Weight, Dimensions, Official Seal, Price, Availability.
-  Rendered once per page by catalogue-grid.liquid; compare-drawer.js drives it.
+  Rendered once per page by the Character grid section; compare-drawer.js
+  drives it. DORMANT until `sections/character-grid.liquid` exists (Phase 5
+  Character, blocked on the `character` metaobject + its `products` field).
 {%- endcomment -%}
 
 <compare-drawer class="ap-compare" data-max="2" hidden>

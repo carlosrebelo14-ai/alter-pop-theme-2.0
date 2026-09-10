@@ -1,0 +1,74 @@
+/* Alterpop — Line template (collection.line). Header band only; the product
+   grid below is Dawn's main-collection-product-grid, styled by the theme's
+   existing collection CSS (no data-ap-grid reset needed — the Line page uses
+   Dawn's own flex grid straight, exactly like /collections/all).
+
+   Sizing in rem accounts for Dawn's html { font-size: 62.5% } (1rem = 10px).
+   No font-size is declared here — size comes from the .type-* class; only
+   weight and tracking are overridden per wireframe 9b. */
+
+.ap-line-header {
+  background: var(--color-canvas);
+  padding-block: 3.2rem 2.4rem;
+  animation: ap-editorial-in var(--motion-editorial) both;
+}
+
+.ap-line-header__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.ap-line-header__crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--color-text-muted);
+}
+
+.ap-line-header__title {
+  margin: 0;
+  font-weight: var(--font-weight-display-max); /* 900 — wireframe 9b */
+  letter-spacing: -0.02em;
+  color: var(--color-ink-900);
+}
+
+.ap-line-header__manufacturer {
+  margin: 0;
+  color: var(--color-ink-900);
+}
+
+.ap-line-header__editorial {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--color-text-muted);
+}
+
+.ap-line-header__editorial > :first-child { margin-top: 0; }
+.ap-line-header__editorial > :last-child { margin-bottom: 0; }
+
+/* Empty-slot instrumentation. Identity metadata keeps its marked placeholder
+   visible; editorial prose collapses so an empty box never reads as a bug. */
+.ap-line-header [data-ap-slot="editorial"][data-ap-empty] {
+  display: none;
+}
+
+.ap-line-header__meta {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.ap-line-header .ap-ph {
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+@media (min-width: 750px) {
+  .ap-line-header {
+    padding-block: 4.8rem 3.2rem;
+  }
+  .ap-line-header__inner {
+    gap: 1.6rem;
+  }
+}

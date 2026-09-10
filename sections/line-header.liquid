@@ -1,0 +1,89 @@
+{{ 'line-template.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  Alterpop — Line header. Source of truth: Wireframe 9b (Line Page).
+  Renders on templates/collection.line.json (a collection whose
+  templateSuffix is "line", written by the sync app at create/update time
+  and only above the 3-piece threshold).
+
+  Data moved from page.* to collection.* (Phase 5 rework):
+    H1                  -> collection.title
+    manufacturer        -> collection.metafields.alterpop.manufacturer  (BLOCKED -> "[ manufacturer ]")
+    editorial paragraph -> collection.metafields.alterpop.editorial     (BLOCKED -> slot collapses)
+    piece count         -> collection.products_count  (live, computable)
+    grid / filters / sort -> main-collection-product-grid (Dawn + Search & Discovery)
+
+  Breadcrumb "Lines" is a plain label, not a link — no Lines index page
+  exists and Shopify does not expose a /lines/ route root, so the wireframe
+  /lines/grandista is not buildable; the real route is /collections/{handle}.
+
+  The 3+ pieces rule is the sync app's: it only creates the collection above
+  the threshold. The theme renders what exists and never hides a collection
+  by count (that would be inference). Empty collection -> Dawn's default
+  empty state via the product grid; this header still renders (title, count 0).
+
+  EMPTY-SLOT INSTRUMENTATION (spec: "estados vazios"). Every slot carries
+  data-ap-slot; an empty one carries data-ap-empty for auditing. Treatment
+  splits by slot kind and is intentionally inconsistent:
+    - Identity metadata (manufacturer) -> marked placeholder, visible. A
+      structured field of predictable size; its absence is useful signal.
+    - Editorial prose (editorial) -> collapses, no placeholder. A placeholder
+      where a paragraph belongs reads as a layout bug, and prose can't be
+      marked-as-missing without looking like real copy.
+  The same rule pair applies later to character-header and the Universe Rooms.
+
+  Enters with the shared editorial animation (ap-editorial-in, 400ms;
+  neutralised under prefers-reduced-motion in tokens.css).
+{%- endcomment -%}
+
+{%- liquid
+  assign manufacturer = collection.metafields.alterpop.manufacturer.value
+  assign editorial = collection.metafields.alterpop.editorial.value
+  assign piece_count = collection.products_count
+-%}
+
+<section class="ap-line-header" aria-label="{{ collection.title | escape }}">
+  <div class="ap-line-header__inner page-width">
+    <nav class="ap-line-header__crumbs type-caption" aria-label="Breadcrumb">
+      <span>{{ 'sections.catalogue.lines' | t }}</span>
+      <span aria-hidden="true">&rsaquo;</span>
+      <span aria-current="page">{{ collection.title | escape }}</span>
+    </nav>
+
+    <h1 class="ap-line-header__title type-display">{{ collection.title | escape | upcase }}</h1>
+
+    <p
+      class="ap-line-header__manufacturer type-body"
+      data-ap-slot="manufacturer"
+      {% if manufacturer == blank %}data-ap-empty{% endif %}
+    >
+      {%- if manufacturer != blank -%}
+        {{ manufacturer | escape }}
+      {%- else -%}
+        <span class="ap-ph">{{ 'sections.catalogue.manufacturer_placeholder' | t }}</span>
+      {%- endif -%}
+    </p>
+
+    <div
+      class="ap-line-header__editorial type-body rte"
+      data-ap-slot="editorial"
+      {% if editorial == blank %}data-ap-empty{% endif %}
+    >
+      {%- if editorial != blank -%}{{ editorial }}{%- endif -%}
+    </div>
+
+    <p class="ap-line-header__meta type-caption" data-ap-slot="products-count">
+      {{ 'sections.catalogue.count_pieces' | t: count: piece_count }}
+    </p>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Line header",
+  "tag": "section",
+  "class": "section",
+  "settings": [],
+  "enabled_on": { "templates": ["collection"] }
+}
+{% endschema %}

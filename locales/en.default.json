@@ -341,6 +341,7 @@
       "decline": "Reject"
     },
     "catalogue": {
+      "home": "Home",
       "lines": "Lines",
       "explore_by": "Explore by",
       "cut_line": "Line",

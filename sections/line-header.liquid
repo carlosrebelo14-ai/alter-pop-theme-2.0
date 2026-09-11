@@ -17,6 +17,16 @@
   exists and Shopify does not expose a /lines/ route root, so the wireframe
   /lines/grandista is not buildable; the real route is /collections/{handle}.
 
+  Interim breadcrumb (Phase 5 addendum): Home > Lines > [Line]. "Home" links
+  to routes.root_url and is always present. "Lines" stays a fixed label —
+  it is what the wireframe's Universe level collapses to until bl_7 (the
+  field linking a Line collection to its parent Universe) exists. NEVER
+  derive the Universe from tags/title/cross-collection membership — that is
+  inference. Once bl_7 lands, "Lines" is replaced by the real Universe,
+  linked to its Universe Room, and the middle crumb below is the place to
+  wire it in (kept collapsed, no placeholder — a breadcrumb never shows
+  "[ universe ]").
+
   The 3+ pieces rule is the sync app's: it only creates the collection above
   the threshold. The theme renders what exists and never hides a collection
   by count (that would be inference). Empty collection -> Dawn's default
@@ -45,7 +55,20 @@
 <section class="ap-line-header" aria-label="{{ collection.title | escape }}">
   <div class="ap-line-header__inner page-width">
     <nav class="ap-line-header__crumbs type-caption" aria-label="Breadcrumb">
-      <span>{{ 'sections.catalogue.lines' | t }}</span>
+      <a href="{{ routes.root_url }}">{{ 'sections.catalogue.home' | t }}</a>
+      <span aria-hidden="true">&rsaquo;</span>
+      {%- comment -%}
+        Universe level — BLOCKED (bl_7). Collapses to the fixed "Lines"
+        label until collection.metafields.alterpop.universe exists; then
+        swap for a link to the Universe Room. Never derive it from tags,
+        title, or cross-collection membership.
+      {%- endcomment -%}
+      {%- assign ap_universe = collection.metafields.alterpop.universe.value -%}
+      {%- if ap_universe != blank -%}
+        <a href="{{ ap_universe.url }}">{{ ap_universe.title | escape }}</a>
+      {%- else -%}
+        <span>{{ 'sections.catalogue.lines' | t }}</span>
+      {%- endif -%}
       <span aria-hidden="true">&rsaquo;</span>
       <span aria-current="page">{{ collection.title | escape }}</span>
     </nav>

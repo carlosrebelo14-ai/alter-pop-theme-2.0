@@ -52,7 +52,7 @@
                 list keeps its visible justification. No inference.
               {%- endcomment -%}
               <p class="ap-best__meta">
-                {%- if franchise != blank -%}{{ franchise | escape }}&nbsp;·&nbsp;{%- endif -%}
+                {%- if franchise != blank -%}{%- render 'ap-meta-text', value: franchise, limit: 2 -%}&nbsp;·&nbsp;{%- endif -%}
                 {%- if dimension != blank -%}{{ dimension | escape }}&nbsp;·&nbsp;{%- endif -%}
                 {%- if sold != blank -%}
                   {{ sold | escape }} {{ 'sections.bestsellers.sold_this_month' | t }}

@@ -643,6 +643,13 @@
   [data-template-suffix="universe-room"] .product-grid {
     grid-template-columns: repeat(3, 1fr);
   }
+
+  /* 1-2 products: centre instead of flush-left in a 3-col track. Card width
+     stays the same as the dense state — no stretching to fill. */
+  [data-template-suffix="universe-room"] .product-grid.ap-grid--sparse {
+    grid-template-columns: repeat(auto-fit, minmax(22rem, 28rem));
+    justify-content: center;
+  }
 }
 
 /* Dawn's flex `.grid__item` width math is neutralised by ap-grid-reset.css

@@ -64,6 +64,7 @@
     },
     "limited_editions": {
       "type": "product-rail",
+      "disabled": true,
       "settings": {
         "heading": "Limited Editions",
         "pill": "Limited Run",
@@ -78,6 +79,7 @@
     },
     "gifts_under_25": {
       "type": "product-rail",
+      "disabled": true,
       "settings": {
         "heading": "Gifts Under €25",
         "pill": "",

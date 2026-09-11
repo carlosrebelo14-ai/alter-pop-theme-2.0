@@ -137,6 +137,15 @@
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   color: var(--color-text-muted);
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.ap-card__meta-sep {
+  opacity: 0.55;
 }
 
 .ap-card__title {

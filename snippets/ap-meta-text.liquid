@@ -1,0 +1,23 @@
+{%- comment -%}
+  Renders an Alterpop list-or-scalar metafield (franchise / line / character)
+  as clean text. metafield.value on a list-type field returns an array —
+  printing it directly stringifies to `["STAR WARS"]`. This snippet is the
+  only place that ever touches metafields.alterpop.* .value for display.
+
+  Params:
+    value (required) — metafield.value (array or string)
+    sep   (optional)  — separator between values, default ' / '
+    limit (optional)  — max number of values to show, default 0 (all)
+{%- endcomment -%}
+{%- liquid
+  assign ap_sep = sep | default: ' / '
+  assign ap_out = ''
+  if value != blank
+    assign ap_parts = value | join: '||' | split: '||'
+    if limit != blank and limit > 0
+      assign ap_parts = ap_parts | slice: 0, limit
+    endif
+    assign ap_out = ap_parts | join: ap_sep | strip
+  endif
+-%}
+{{- ap_out | escape -}}

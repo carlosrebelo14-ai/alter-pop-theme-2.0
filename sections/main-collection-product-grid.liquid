@@ -162,12 +162,17 @@
               class="collection{% if section.settings.filter_type != 'vertical' %} page-width{% endif %}"
             >
               <div class="loading-overlay gradient"></div>
+              {%- comment -%} Universe Room, 1-2 products: sparse state, centred rather than flush-left in a 3-col grid (temporary — the room fills in as the catalog grows). {%- endcomment -%}
+              {%- assign ap_grid_sparse = '' -%}
+              {%- if template.suffix == 'universe-room' and collection.products_count > 0 and collection.products_count <= 2 -%}
+                {%- assign ap_grid_sparse = ' ap-grid--sparse' -%}
+              {%- endif -%}
               <ul
                 id="product-grid"
                 data-id="{{ section.id }}"
                 class="
                   grid product-grid grid--{{ section.settings.columns_mobile }}-col-tablet-down
-                  grid--{{ section.settings.columns_desktop }}-col-desktop
+                  grid--{{ section.settings.columns_desktop }}-col-desktop{{ ap_grid_sparse }}
                   {% if section.settings.quick_add == 'bulk' %} collection-quick-add-bulk{% endif %}
                 "
               >

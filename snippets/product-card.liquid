@@ -104,6 +104,10 @@
       assign franchise = ''
     endif
 
+    # franchise / line are list-type metafields (crossover support) — .value
+    # is an array. Never print it directly; render 'ap-meta-text' handles the
+    # array-or-scalar text, capped to 2 values here (card is tight on width).
+
     assign title_id = 'ap-card-title-' | append: uid | append: '-' | append: card_product.id
   -%}
 
@@ -140,9 +144,15 @@
 
         {%- if franchise != blank or line != blank -%}
           <p class="ap-card__meta">
-            {%- if franchise != blank -%}{{ franchise | upcase | escape }}{%- endif -%}
-            {%- if franchise != blank and line != blank -%} · {% endif -%}
-            {%- if line != blank -%}{{ line | upcase | escape }}{%- endif -%}
+            {%- if franchise != blank -%}
+              <span class="ap-card__franchise">{%- render 'ap-meta-text', value: franchise, limit: 2 -%}</span>
+            {%- endif -%}
+            {%- if franchise != blank and line != blank -%}
+              <span class="ap-card__meta-sep" aria-hidden="true"> · </span>
+            {%- endif -%}
+            {%- if line != blank -%}
+              <span class="ap-card__line">{%- render 'ap-meta-text', value: line, limit: 1 -%}</span>
+            {%- endif -%}
           </p>
         {%- endif -%}
       {%- endunless -%}

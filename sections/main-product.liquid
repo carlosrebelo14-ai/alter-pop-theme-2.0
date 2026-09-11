@@ -132,7 +132,7 @@
               <h1 class="visually-hidden">{{ product.title | escape }}</h1>
               <p class="ap-pdp__name type-h2">
                 {%- if ap_character != blank -%}
-                  {{- ap_character | escape -}}
+                  {%- render 'ap-meta-text', value: ap_character -%}
                 {%- else -%}
                   <span class="ap-pdp__ph">{{ 'sections.pdp.character_placeholder' | t }}</span>
                 {%- endif -%}
@@ -141,7 +141,9 @@
               {%- liquid
                 assign id_mid = ''
                 if ap_line != blank
-                  assign id_mid = ap_line | escape
+                  capture id_mid
+                    render 'ap-meta-text', value: ap_line
+                  endcapture
                 endif
                 if ap_manufacturer != blank
                   if id_mid != blank

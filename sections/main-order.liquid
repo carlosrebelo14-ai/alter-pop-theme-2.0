@@ -37,7 +37,9 @@
   for li in order.line_items
     assign li_fr = li.product.metafields.alterpop.franchise.value
     if li_fr != blank
-      assign oc_franchise = li_fr
+      capture oc_franchise
+        render 'ap-meta-text', value: li_fr
+      endcapture
       break
     endif
   endfor
@@ -70,7 +72,12 @@
     <ul class="ap-order__card ap-order__items" role="list">
       {%- for li in order.line_items -%}
         {%- liquid
-          assign li_char = li.product.metafields.alterpop.character.value
+          assign li_char_raw = li.product.metafields.alterpop.character.value
+          if li_char_raw != blank
+            capture li_char
+              render 'ap-meta-text', value: li_char_raw
+            endcapture
+          endif
           if li_char == blank
             assign li_char = li.product.title
           endif
@@ -96,7 +103,7 @@
           <div class="ap-order__item-body">
             <p class="ap-order__item-meta">
               <span class="ap-order__item-name">{{ li_char | escape }}</span>
-              {%- if li_fr != blank -%}<span class="ap-order__dot"> &middot; </span>{{ li_fr | escape }}{%- endif -%}
+              {%- if li_fr != blank -%}<span class="ap-order__dot"> &middot; </span>{%- render 'ap-meta-text', value: li_fr -%}{%- endif -%}
               {%- if li_dim != blank -%}<span class="ap-order__dot"> &middot; </span>{{ li_dim | escape }}{%- endif -%}
             </p>
             {%- if li.quantity > 1 -%}

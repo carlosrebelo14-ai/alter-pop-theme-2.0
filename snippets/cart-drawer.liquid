@@ -177,7 +177,7 @@
                           {%- assign ci_dim = item.product.metafields.ociostock.dimensions.value -%}
                           {%- if ci_fr != blank or ci_dim != blank -%}
                             <p class="ap-cart-item__meta type-caption">
-                              {%- if ci_fr != blank -%}{{ ci_fr | escape }}{%- endif -%}
+                              {%- if ci_fr != blank -%}{%- render 'ap-meta-text', value: ci_fr -%}{%- endif -%}
                               {%- if ci_fr != blank and ci_dim != blank -%} &middot; {% endif -%}
                               {%- if ci_dim != blank -%}{{ ci_dim | escape }}{%- endif -%}
                             </p>

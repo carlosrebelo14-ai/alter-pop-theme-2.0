@@ -137,6 +137,54 @@ Current users: `sections/main-collection-product-grid.liquid` (the
 `data-ap-grid` is gated on `template.suffix == 'universe-room'`) and
 `sections/main-product.liquid` (`.ap-pdp__media`).
 
+**`grid--peek` is two different Dawn rules wearing one class name — don't
+assume which one applies (hit 2026-09-13).** The bare selector
+`.grid--peek .grid__item { width: calc(50% - spacing - 3rem) }` in
+`base.css` is Dawn's default: a **3-card peek carousel** width, meant for
+card rails (related products, collection sliders) where you want the next
+card sliver visible at the edge. It only steps aside for a narrower or
+fuller width when the markup *also* carries a `grid--N-col-tablet-down` /
+`grid--N-col-desktop` modifier class. `product-media-gallery.liquid`'s
+`.product__media-list` carries `grid grid--peek` but **no column modifier**
+— so on a first pass at restoring its width math (the gallery-collapse fix
+above), it's easy to reach for that bare selector and get a genuinely
+correct, byte-identical Dawn 16.0.0 rule that is nonetheless the *wrong*
+Dawn rule for this markup: a single-image PDP hero rendered at ~36% width
+with neighbors peeking on both sides, sized like a card-rail item because
+that's the only unscoped rule available. Verified against the `a717245`
+baseline that this is unmodified stock Dawn CSS, not an Alterpop mistake —
+the mistake was reapplying it to markup that never asked for peek
+behavior.
+
+**When Dawn CSS and the markup's own sizing hints disagree, the markup
+usually knows something the bare CSS rule doesn't.** An `<img>`'s `sizes`
+attribute is a `desktop_columns` / `mobile_columns` calculation baked in
+at render time from the *same* section settings that produced the
+surrounding class list — it's a second, independent expression of layout
+intent, computed by different Liquid than the CSS was written against. If
+`sizes` says one slide per viewport (`calc(100vw / N - Xrem)` with `N: 1`)
+while the applied CSS says ~36% width, that mismatch is the tell: go
+compare against the wireframe (source-of-truth #1) rather than trusting
+whichever Dawn selector happens to match. Here, `sizes` and wireframe 3a/3b
+(PDP mobile, single full-width hero + dot progress indicator, no peek, no
+visible thumbnail grid) agreed with each other and disagreed with the
+`.grid--peek .grid__item` fallback — that 2-vs-1 agreement is what settled
+it. Fixed by re-declaring `width`/`min-width: 100%` scoped to
+`.ap-pdp__media[data-ap-grid] .product__media-item` in `pdp.css`, not by
+editing the shared Liquid snippet (also referenced, if unused, by Dawn's
+stock `featured-product.liquid` — neutralizing at the point of use in CSS
+stays consistent with how `ap-grid-reset.css` already treats this same
+snippet).
+
+**Dots-vs-thumbnail-grid is a known, approved wireframe deviation, not yet
+built.** Wireframe 3a/3b show a 3-dot progress indicator under the mobile
+hero; the current build renders Dawn's stock 64px thumbnail grid instead
+(wraps to 3 rows on a 9-media product, ~220-238px tall — with the hero
+now correctly full-width, that pushes price/Add to Cart below the fold on
+a 375×812 viewport). Approved to build, but as its own branch with its
+own visual verification — it's a JS/motion change (dot-swap interaction),
+not a CSS-only fix, and shouldn't ship bundled with a hero-width hotfix.
+
 ## z-index bands (hard rule — found by a QA pass, 2026-09-13)
 
 The theme has several independent fixed/absolute overlays that can be open

@@ -11,7 +11,11 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 90;
+  /* Persistent bottom bar — must stay BELOW every modal/drawer overlay
+     (reserved band 80-99, see CLAUDE.md "z-index bands"), otherwise an
+     unaccepted banner blocks controls inside whatever is open on top of it
+     (hit this with the cart drawer's Checkout button). */
+  z-index: 75;
   background: var(--color-surface);
   border-top: 1px solid var(--color-border);
   box-shadow: var(--shadow-md);

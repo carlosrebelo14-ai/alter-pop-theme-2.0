@@ -137,6 +137,33 @@ Current users: `sections/main-collection-product-grid.liquid` (the
 `data-ap-grid` is gated on `template.suffix == 'universe-room'`) and
 `sections/main-product.liquid` (`.ap-pdp__media`).
 
+## z-index bands (hard rule — found by a QA pass, 2026-09-13)
+
+The theme has several independent fixed/absolute overlays that can be open
+at the same time (cookie banner + cart drawer + menu drawer + search dialog),
+so their z-indexes are a single coordinated stack, not per-component
+choices. Bumping one in isolation to beat another (done once — the search
+dialog was raised to fix the hamburger icon overlapping it, without
+checking it against the cookie banner) just moves the same overlap bug to a
+different pair of layers. Reserved bands, low to high:
+
+- **0-40** — in-page/local stacking (cards, badges, sticky header row).
+  Not globally coordinated; only matters within its own component.
+- **59-71** — header drawer chrome: `.menu-drawer__overlay` (59),
+  `.menu-drawer` (60), `.menu-drawer-container` incl. the hamburger/X
+  toggle (70/71, persistent — not just when open).
+- **75** — `.ap-cookie` (cookie consent banner). Persistent bottom bar;
+  must stay BELOW every modal/drawer overlay so an unaccepted banner never
+  blocks a control inside whatever is open on top of it.
+- **80-99** — modal/drawer overlay band, reserved for full-viewport
+  dialogs and drawers: `.ap-search__dialog` (82), cart `.drawer` (95).
+
+When adding a new fixed overlay, or changing an existing z-index, place it
+in the right band and check it against every OTHER layer that can be open
+at the same time — not just the one bug report is about. Verify with the
+layer you're not currently fixing still visible (e.g. test the search
+dialog with the cookie banner un-accepted, not after dismissing it).
+
 ## Verification (also a hard rule)
 
 **Render verification is always against the served HTML from the dev server,

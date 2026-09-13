@@ -7,17 +7,31 @@
   Plain <details> (id starts with "Details-" so global.js wires Escape-to-close
   + aria). The strip is absolutely positioned full-width under .header-wrapper.
 
-  BLOQUEADO: aguarda app — the Universes/Franchises list.
-  Same slot as the mobile drawer: shop.metafields.alterpop.universes.value,
-  each item { title, url, image }. Empty -> dev placeholder list. NO inference.
+  Source, in order of precedence:
+  1. shop.metafields.alterpop.universes.value — the app-populated list
+     ({ title, url, image } per item). BLOQUEADO: app dependency, not live.
+  2. header section setting `universe_collections` (collection_list) — an
+     explicit merchant pick of real collections, entered in the theme
+     editor. Not inference: the merchant is naming the collections
+     directly, same as any other Dawn collection-list section setting.
+  3. dev placeholder list, only when neither of the above is set.
+  Same three-way source as the mobile drawer (snippets/mobile-drawer.liquid).
+
+  Accepts: universe_collections {Array<collection>} — from the header
+  section's `universe_collections` setting, passed in by sections/header.liquid.
 {% endcomment %}
 
 {%- liquid
   assign ap_universes = shop.metafields.alterpop.universes.value
   assign ap_universes_is_placeholder = false
+  assign ap_universes_from_collections = false
   if ap_universes == blank
-    assign ap_universes_is_placeholder = true
-    assign ph_titles = 'Star Wars,Demon Slayer,One Piece,Stranger Things,The Mandalorian,Attack on Titan,Marvel' | split: ','
+    if universe_collections.size > 0
+      assign ap_universes_from_collections = true
+    else
+      assign ap_universes_is_placeholder = true
+      assign ph_titles = 'Star Wars,Demon Slayer,One Piece,Stranger Things,The Mandalorian,Attack on Titan,Marvel' | split: ','
+    endif
   endif
 -%}
 
@@ -40,6 +54,21 @@
                   <span class="ap-universes__thumb--ph" aria-hidden="true">{{ title | slice: 0, 1 }}</span>
                 </span>
                 <span class="ap-universes__name">{{ title }}</span>
+              </a>
+            </li>
+          {%- endfor -%}
+        {%- elsif ap_universes_from_collections -%}
+          {%- for collection in universe_collections -%}
+            <li>
+              <a href="{{ collection.url }}">
+                <span class="ap-universes__thumb">
+                  {%- if collection.featured_image -%}
+                    {{ collection.featured_image | image_url: width: 96 | image_tag: loading: 'lazy', alt: collection.title | escape }}
+                  {%- else -%}
+                    <span class="ap-universes__thumb--ph" aria-hidden="true">{{ collection.title | slice: 0, 1 }}</span>
+                  {%- endif -%}
+                </span>
+                <span class="ap-universes__name">{{ collection.title | escape }}</span>
               </a>
             </li>
           {%- endfor -%}

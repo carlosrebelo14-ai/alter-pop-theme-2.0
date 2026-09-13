@@ -78,7 +78,8 @@
     {% render 'mobile-drawer',
       show_country_selector: country_selector,
       show_language_selector: language_selector,
-      show_social_links: social_links
+      show_social_links: social_links,
+      universe_collections: section.settings.universe_collections
     %}
 
     {%- if request.page_type == 'index' -%}<h1 class="ap-header__logo-heading">{%- endif -%}
@@ -112,7 +113,7 @@
       admin (partilhado com o live).
     {%- endcomment -%}
     <nav class="ap-nav" aria-label="{{ 'sections.header.menu' | t }}">
-      {% render 'universes-panel' %}
+      {% render 'universes-panel', universe_collections: section.settings.universe_collections %}
       <a href="{{ curation_base }}/new-arrivals" class="ap-nav__link">{{ 'sections.header.new_arrivals' | t }}</a>
       <a href="{{ curation_base }}/limited-editions-exclusives" class="ap-nav__link">{{ 'sections.header.limited_editions' | t }}</a>
       <a href="{{ curation_base }}/gifts-under-25" class="ap-nav__link">{{ 'sections.header.gifts_outlet' | t }}</a>
@@ -357,6 +358,13 @@
   "class": "section-header",
   "max_blocks": 3,
   "settings": [
+    {
+      "type": "collection_list",
+      "id": "universe_collections",
+      "label": "Universe collections",
+      "info": "Explicit merchant curation for the Universes strip + mobile drawer, used until shop.metafields.alterpop.universes exists — the app-populated metafield takes over automatically once it does.",
+      "limit": 16
+    },
     {
       "type": "text",
       "id": "popular_searches",

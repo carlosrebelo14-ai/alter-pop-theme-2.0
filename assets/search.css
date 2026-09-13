@@ -34,7 +34,8 @@
   top: 0;
   /* above .menu-drawer-container's fixed hamburger/X toggle (z-index: 71 in
      header.css) — otherwise that icon (and the header actions row under it)
-     stays visible on top of the search bar instead of being covered by it. */
+     stays visible on top of the search bar instead of being covered by it.
+     Within the modal/drawer band (80-99, see CLAUDE.md "z-index bands"). */
   z-index: 82;
   display: none;
 }

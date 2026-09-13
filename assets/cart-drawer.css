@@ -9,8 +9,9 @@
 .drawer {
   position: fixed;
   inset: 0 0 0 auto;
-  /* above .ap-cookie (z-index: 90 in cookie-banner.css) — otherwise the
-     unaccepted cookie banner sits on top of the drawer's Checkout button. */
+  /* above .ap-cookie (z-index: 75 in cookie-banner.css) — otherwise the
+     unaccepted cookie banner sits on top of the drawer's Checkout button.
+     Within the modal/drawer band (80-99, see CLAUDE.md "z-index bands"). */
   z-index: 95;
   visibility: hidden;
   transition: visibility var(--motion-transactional);

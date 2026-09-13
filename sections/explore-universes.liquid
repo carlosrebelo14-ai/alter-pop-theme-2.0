@@ -7,18 +7,28 @@
   product cards. Entrance: --motion-editorial.
   Desktop 4-col, mobile 2-col.
 
-  BLOQUEADO: aguarda app — the Universes/Franchises list. Same slot as the
-  header (Phase 1B): shop.metafields.alterpop.universes.value, each item
-  { title, url, image }. Empty -> the same dev placeholder list of 8. NO
-  inference from tags / collections / custom.parent_collection.
+  Source, in order of precedence (same three-way source as the header's
+  universes strip / mobile drawer):
+  1. shop.metafields.alterpop.universes.value — the app-populated list,
+     each item { title, url, image }. BLOQUEADO: app dependency, not live.
+  2. section setting `universe_collections` (collection_list) — an
+     explicit merchant pick of real collections. Not inference: the
+     merchant names the collections directly in the theme editor, same as
+     any other Dawn collection-list section setting.
+  3. dev placeholder list of 8, only when neither of the above is set.
 {%- endcomment -%}
 
 {%- liquid
   assign ap_universes = shop.metafields.alterpop.universes.value
   assign ap_universes_is_placeholder = false
+  assign ap_universes_from_collections = false
   if ap_universes == blank
-    assign ap_universes_is_placeholder = true
-    assign ph_titles = 'Star Wars,Demon Slayer,Stranger Things,One Piece,Marvel,Naruto,Dragon Ball,The Witcher' | split: ','
+    if section.settings.universe_collections.size > 0
+      assign ap_universes_from_collections = true
+    else
+      assign ap_universes_is_placeholder = true
+      assign ph_titles = 'Star Wars,Demon Slayer,Stranger Things,One Piece,Marvel,Naruto,Dragon Ball,The Witcher' | split: ','
+    endif
   endif
 -%}
 
@@ -40,6 +50,19 @@
             <a class="ap-doorways__tile" href="{{ routes.all_products_collection_url }}">
               <span class="ap-doorways__ph" aria-hidden="true">{{ title | slice: 0, 1 }}</span>
               <span class="ap-doorways__name">{{ title }}</span>
+            </a>
+          </li>
+        {%- endfor -%}
+      {%- elsif ap_universes_from_collections -%}
+        {%- for collection in section.settings.universe_collections -%}
+          <li class="ap-doorways__item">
+            <a class="ap-doorways__tile" href="{{ collection.url }}">
+              {%- if collection.featured_image -%}
+                {{ collection.featured_image | image_url: width: 640 | image_tag: loading: 'lazy', class: 'ap-doorways__img', sizes: '(min-width: 750px) 25vw, 50vw', widths: '320, 480, 640', alt: collection.title | escape }}
+              {%- else -%}
+                <span class="ap-doorways__ph" aria-hidden="true">{{ collection.title | slice: 0, 1 }}</span>
+              {%- endif -%}
+              <span class="ap-doorways__name">{{ collection.title | escape }}</span>
             </a>
           </li>
         {%- endfor -%}
@@ -67,7 +90,14 @@
   "tag": "section",
   "class": "section-explore-universes",
   "settings": [
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Explore Universes" }
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Explore Universes" },
+    {
+      "type": "collection_list",
+      "id": "universe_collections",
+      "label": "Universe collections",
+      "info": "Explicit merchant curation, used until shop.metafields.alterpop.universes exists — the app-populated metafield takes over automatically once it does.",
+      "limit": 16
+    }
   ],
   "presets": [{ "name": "Explore Universes" }]
 }

@@ -13,11 +13,18 @@
   Universes ->". Below: New Arrivals / Limited Editions & Exclusives /
   Gifts Under €25 / Outlet.
 
-  BLOQUEADO: aguarda app — the franchise list. Same slot as the header
-  (shop.metafields.alterpop.universes.value). Empty -> dev placeholder.
-  No inference from tags / collections / custom.parent_collection.
+  Source, in order of precedence (same three-way source as
+  snippets/universes-panel.liquid):
+  1. shop.metafields.alterpop.universes.value — the app-populated list.
+     BLOQUEADO: app dependency, not live.
+  2. header section setting `universe_collections` (collection_list) — an
+     explicit merchant pick of real collections. Not inference: the
+     merchant names the collections directly in the theme editor.
+  3. dev placeholder list, only when neither of the above is set.
 
-  Accepts: show_country_selector, show_language_selector, show_social_links.
+  Accepts: show_country_selector, show_language_selector, show_social_links,
+  universe_collections {Array<collection>} — from the header section's
+  `universe_collections` setting, passed in by sections/header.liquid.
 {% endcomment %}
 
 {%- liquid
@@ -25,9 +32,14 @@
 
   assign ap_universes = shop.metafields.alterpop.universes.value
   assign ap_universes_is_placeholder = false
+  assign ap_universes_from_collections = false
   if ap_universes == blank
-    assign ap_universes_is_placeholder = true
-    assign ph_titles = 'Star Wars,Demon Slayer,One Piece,Stranger Things,The Mandalorian,Attack on Titan' | split: ','
+    if universe_collections.size > 0
+      assign ap_universes_from_collections = true
+    else
+      assign ap_universes_is_placeholder = true
+      assign ph_titles = 'Star Wars,Demon Slayer,One Piece,Stranger Things,The Mandalorian,Attack on Titan' | split: ','
+    endif
   endif
 -%}
 
@@ -71,6 +83,21 @@
                           <span class="menu-drawer__universe-thumb--ph" aria-hidden="true">{{ title | slice: 0, 1 }}</span>
                         </span>
                         <span class="menu-drawer__universe-name">{{ title }}</span>
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                {%- elsif ap_universes_from_collections -%}
+                  {%- for collection in universe_collections -%}
+                    <li>
+                      <a href="{{ collection.url }}" class="menu-drawer__universe">
+                        <span class="menu-drawer__universe-thumb">
+                          {%- if collection.featured_image -%}
+                            {{ collection.featured_image | image_url: width: 80 | image_tag: loading: 'lazy', alt: collection.title | escape }}
+                          {%- else -%}
+                            <span class="menu-drawer__universe-thumb--ph" aria-hidden="true">{{ collection.title | slice: 0, 1 }}</span>
+                          {%- endif -%}
+                        </span>
+                        <span class="menu-drawer__universe-name">{{ collection.title | escape }}</span>
                       </a>
                     </li>
                   {%- endfor -%}

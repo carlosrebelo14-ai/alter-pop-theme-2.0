@@ -71,6 +71,23 @@
   display: block;
 }
 
+/* Mobile keeps Dawn's swipe slider (component-slider.css) — but the global
+   ap-grid-reset.css strips `.grid__item` width/min-width/flex unconditionally
+   (needed for the Universe Room grid at every viewport), and it loses to
+   Dawn's own `.grid--peek .grid__item` mobile-slide-width rule at equal
+   specificity, loaded later in layout/theme.liquid. Below 750px that
+   collapsed every gallery slide (and its <img>) to ~2px. Re-declare Dawn's
+   mobile slide width at higher specificity so it always wins here, without
+   touching the reset's effect on the Universe Room. */
+@media screen and (max-width: 749px) {
+  .ap-pdp__media[data-ap-grid] .product__media-item {
+    width: calc(50% - var(--grid-mobile-horizontal-spacing) - 3rem);
+    max-width: none;
+    min-width: 35%;
+    flex: 1 0 auto;
+  }
+}
+
 /* Mobile keeps Dawn's swipe slider (component-slider.css). Desktop: a single
    active slide + the thumbnail strip does the switching. */
 @media (min-width: 750px) {

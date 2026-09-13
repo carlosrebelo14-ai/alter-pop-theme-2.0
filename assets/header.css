@@ -444,6 +444,14 @@ details[open] > .header__icon--menu .icon-close {
   transition: opacity var(--motion-transactional), visibility var(--motion-transactional);
 }
 
+/* base.css hides every empty div (`div:empty { display: none }`) — same
+   collision component-cart-drawer.css already patches for
+   .cart-drawer__overlay, needed here too since this scrim div is
+   intentionally childless. */
+.menu-drawer__overlay:empty {
+  display: block;
+}
+
 .menu-drawer-container[open] .menu-drawer__overlay,
 details[open] > .menu-drawer__overlay {
   opacity: 1;

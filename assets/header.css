@@ -432,6 +432,24 @@ details[open] > .header__icon--menu .icon-close {
   overflow-y: auto;
 }
 
+/* Scrim behind the panel — Dawn's menu-drawer has none, leaving the page
+   behind at full brightness while the drawer is open. */
+.menu-drawer__overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 59;
+  background: rgba(18, 16, 20, 0.28);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--motion-transactional), visibility var(--motion-transactional);
+}
+
+.menu-drawer-container[open] .menu-drawer__overlay,
+details[open] > .menu-drawer__overlay {
+  opacity: 1;
+  visibility: visible;
+}
+
 .menu-drawer-container[open] .menu-drawer,
 details[open] > .menu-drawer {
   transform: translateX(0);

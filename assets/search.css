@@ -32,7 +32,10 @@
   left: 0;
   right: 0;
   top: 0;
-  z-index: 60;
+  /* above .menu-drawer-container's fixed hamburger/X toggle (z-index: 71 in
+     header.css) — otherwise that icon (and the header actions row under it)
+     stays visible on top of the search bar instead of being covered by it. */
+  z-index: 82;
   display: none;
 }
 
@@ -188,6 +191,23 @@
 /* --- Compact predictive results --------------------------------------------- */
 .predictive-search__loading-state { display: none; }
 .predictive-search[aria-hidden="true"] { display: none; }
+
+/* Dawn's .predictive-search is `position: absolute` so it never contributes
+   to .ap-search__panel's content height — with .ap-search__popular hidden
+   once a query is typed, the panel then collapses to its own padding
+   (~33px) and its `overflow-y: auto` clips the absolutely-positioned results
+   right there. Un-absolute it: .ap-search__panel is already the dropdown
+   surface, so the results just need to lay out in-flow inside it. */
+.ap-search__panel .predictive-search {
+  position: static;
+  top: auto;
+  left: auto;
+  width: auto;
+  border: 0;
+  box-shadow: none;
+  overflow-y: visible;
+  z-index: auto;
+}
 
 #predictive-search-results {
   display: flex;

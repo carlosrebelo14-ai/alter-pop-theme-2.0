@@ -80,6 +80,17 @@ document.querySelectorAll('[id^="Details-"] summary').forEach((summary) => {
     event.currentTarget.setAttribute('aria-expanded', !event.currentTarget.closest('details').hasAttribute('open'));
   });
 
+  // Native <summary> only toggles on Enter/Space when it keeps the browser's
+  // default `display: list-item` — every Alterpop summary restyles that
+  // (flex/inline-flex for icon + label layout), which silently drops the
+  // native keyboard behavior. role="button" above states the contract; this
+  // supplies the keyboard activation it doesn't include on its own.
+  summary.addEventListener('keydown', (event) => {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    event.preventDefault();
+    summary.click();
+  });
+
   if (summary.closest('header-drawer, menu-drawer')) return;
   summary.parentElement.addEventListener('keyup', onKeyUpEscape);
 });

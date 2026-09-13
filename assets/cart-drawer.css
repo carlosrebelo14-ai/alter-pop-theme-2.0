@@ -9,7 +9,9 @@
 .drawer {
   position: fixed;
   inset: 0 0 0 auto;
-  z-index: 80;
+  /* above .ap-cookie (z-index: 90 in cookie-banner.css) — otherwise the
+     unaccepted cookie banner sits on top of the drawer's Checkout button. */
+  z-index: 95;
   visibility: hidden;
   transition: visibility var(--motion-transactional);
 }

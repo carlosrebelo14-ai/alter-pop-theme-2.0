@@ -375,7 +375,7 @@ header-drawer {
 .menu-drawer-container {
   display: flex;
   position: relative;
-  z-index: 70; /* keep the hamburger/X toggle above the open drawer */
+  z-index: 70; /* local stacking among header siblings only — not the modal band */
 }
 
 .header__icon--menu {
@@ -413,14 +413,26 @@ details[open] > .header__icon--menu .icon-close {
 /* when open, the X sits at the drawer's top-right (wireframe 5a/6c) */
 .menu-drawer-container[open] > .header__icon--menu {
   position: fixed;
-  z-index: 71;
+  z-index: 96;
   top: var(--space-md);
   left: calc(min(88vw, 380px) - 52px);
 }
 
+/* Dawn's own [aria-expanded='true']::before (base.css) is the ORIGINAL
+   full-viewport drawer scrim — width:100% there resolved against the
+   full-width Dawn header icon. Restyled here to a fixed 40x40 button, its
+   width:100% collapses to 40px instead, leaving a near-full-height dark
+   stripe drawn over the drawer AND over .menu-drawer__overlay below.
+   .menu-drawer__overlay now owns the scrim job; kill the stub outright. */
+.header__icon--menu[aria-expanded='true']::before {
+  content: none;
+}
+
 .menu-drawer {
   position: fixed;
-  z-index: 60;
+  /* Within the modal/drawer band (80-99, see CLAUDE.md "z-index bands") —
+     was 60/59, which let .ap-cookie (75) draw over the open drawer. */
+  z-index: 95;
   inset: 0 auto 0 0;
   width: min(88vw, 380px);
   transform: translateX(-100%);
@@ -437,7 +449,7 @@ details[open] > .header__icon--menu .icon-close {
 .menu-drawer__overlay {
   position: fixed;
   inset: 0;
-  z-index: 59;
+  z-index: 94;
   background: rgba(18, 16, 20, 0.28);
   opacity: 0;
   visibility: hidden;

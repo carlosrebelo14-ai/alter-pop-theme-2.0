@@ -142,27 +142,46 @@ Current users: `sections/main-collection-product-grid.liquid` (the
 The theme has several independent fixed/absolute overlays that can be open
 at the same time (cookie banner + cart drawer + menu drawer + search dialog),
 so their z-indexes are a single coordinated stack, not per-component
-choices. Bumping one in isolation to beat another (done once — the search
-dialog was raised to fix the hamburger icon overlapping it, without
-checking it against the cookie banner) just moves the same overlap bug to a
-different pair of layers. Reserved bands, low to high:
+choices. Bumping one in isolation to beat another (done twice in the same
+QA pass — first the search dialog was raised to fix the hamburger icon
+overlapping it without checking it against the cookie banner; then the
+menu drawer was left at 60/59 when the cookie banner was moved to 75,
+so an unaccepted banner drew over the OPEN menu drawer) just moves the
+same overlap bug to a different pair of layers. Reserved bands, low to high:
 
 - **0-40** — in-page/local stacking (cards, badges, sticky header row).
   Not globally coordinated; only matters within its own component.
-- **59-71** — header drawer chrome: `.menu-drawer__overlay` (59),
-  `.menu-drawer` (60), `.menu-drawer-container` incl. the hamburger/X
-  toggle (70/71, persistent — not just when open).
+- **70/71** — `.menu-drawer-container`'s hamburger/X toggle, local
+  stacking among header siblings only (not a modal-band participant —
+  the drawer panel itself moved out of this range, see below).
 - **75** — `.ap-cookie` (cookie consent banner). Persistent bottom bar;
   must stay BELOW every modal/drawer overlay so an unaccepted banner never
   blocks a control inside whatever is open on top of it.
 - **80-99** — modal/drawer overlay band, reserved for full-viewport
-  dialogs and drawers: `.ap-search__dialog` (82), cart `.drawer` (95).
+  dialogs and drawers: `.ap-search__dialog` (82), `.menu-drawer__overlay`
+  (94) + `.menu-drawer` (95, its open-state X-close icon at 96 to stay
+  above its own panel), cart `.drawer` (95).
 
 When adding a new fixed overlay, or changing an existing z-index, place it
 in the right band and check it against every OTHER layer that can be open
 at the same time — not just the one bug report is about. Verify with the
 layer you're not currently fixing still visible (e.g. test the search
-dialog with the cookie banner un-accepted, not after dismissing it).
+dialog with the cookie banner un-accepted, not after dismissing it) —
+**and verify by screenshot on a real preview theme, not by grepping the
+served DOM.** `.menu-drawer__overlay` existed, had the right CSS, and
+still rendered `display: none` because base.css hides every empty `<div>`
+(`div:empty`) at higher specificity than a single-class rule — the same
+collision `.cart-drawer__overlay:empty` in component-cart-drawer.css
+already had to patch. A missing/wrong z-index can also hide behind a
+STUB — `.header__icon--menu[aria-expanded='true']::before` is Dawn's
+original full-viewport drawer scrim, `content:''`/`width:100%`, harmless
+in stock Dawn where that button spans the header; restyled here to a
+fixed 40x40 icon, the same rule collapses into a ~40px near-full-height
+dark stripe drawn over both the drawer and the new scrim. Neutralized
+with `content: none`. Before trusting a fixed/absolute overlay is doing
+nothing, check computed `::before`/`::after` on its ancestors too — grep
+for other Dawn pseudo-elements combining `position: absolute` with
+`width: 100%` before assuming a "decorative" stripe is cosmetic.
 
 ## Verification (also a hard rule)
 

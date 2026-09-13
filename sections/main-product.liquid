@@ -123,13 +123,17 @@
             {%- endif -%}
 
             {%- comment -%}
-              Identity Block — fixed order. The real product title stays as
-              the page <h1> (SEO / a11y need it) but visually hidden; the
-              Character slot is its own line and shows a marked placeholder
-              when the field is absent — never the raw supplier title.
+              Identity Block — fixed order. Character is the display title
+              (its own slot, marked placeholder while alterpop.character is
+              BLOCKED — 4a7a599, not reverted: a blocked field never falls
+              back to the raw supplier title). product.title is a different,
+              always-real field — it is the page's actual <h1> and stays
+              visible as its own subordinate identification line right under
+              Character, never hidden: a PDP has to say what product it is
+              even before Character exists. See CLAUDE.md "PDP regime +
+              Identity Block fields" for the distinction.
             {%- endcomment -%}
             <div class="ap-pdp__identity">
-              <h1 class="visually-hidden">{{ product.title | escape }}</h1>
               <p class="ap-pdp__name type-h2">
                 {%- if ap_character != blank -%}
                   {%- render 'ap-meta-text', value: ap_character -%}
@@ -137,6 +141,7 @@
                   <span class="ap-pdp__ph">{{ 'sections.pdp.character_placeholder' | t }}</span>
                 {%- endif -%}
               </p>
+              <h1 class="ap-pdp__title type-product-title">{{ product.title | escape }}</h1>
 
               {%- liquid
                 assign id_mid = ''

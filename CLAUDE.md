@@ -313,10 +313,18 @@ uploaded copy is stale until a restart + re-verify says otherwise.
   (Character / Line · Manufacturer · Year / Type · Height) reads
   `metafields.alterpop.character` / `.line` / `.manufacturer` / `.year` /
   `.collectible_type` — ALL BLOCKED, rendered as marked placeholders. Only
-  Height is live (`ociostock.dimensions`). Character falls back to
-  `product.title` (honest, not inference). Line only shows with 3+ pieces of
-  that line — not computable, so shown when the field is present; the Line
-  slot collapses when absent, Universe/Franchise is never a substitute.
+  Height is live (`ociostock.dimensions`). **Character does NOT fall back to
+  `product.title`** (`4a7a599` — a blocked field never substitutes the raw
+  supplier title; it shows `[ character ]` until the metafield exists).
+  `product.title` is a separate, always-real field: it is the page's actual
+  `<h1>` and renders as its own visible identification line right under the
+  Character slot (`.ap-pdp__title`, `type-product-title`, clamp 2 lines,
+  subordinate to Character's `type-h2`) — a PDP must say what product it is
+  even before Character ships. Do not conflate the two: Character is the
+  BLOCKED display title, `product.title` is the unblocked identification
+  line. Line only shows with 3+ pieces of that line — not computable, so
+  shown when the field is present; the Line slot collapses when absent,
+  Universe/Franchise is never a substitute.
   Spec sheet License row uses `metafields.alterpop.license` -> raw
   `metafields.ociostock.licence`. Reviews read the Shopify Product Reviews
   app metafields (`metafields.reviews.rating` / `.rating_count`) — no app
@@ -432,8 +440,13 @@ uploaded copy is stale until a restart + re-verify says otherwise.
   line items (Character · Franchise · Height), Estimated Delivery window,
   "Keep Exploring [franchise]", "Create an Account & Join the Collectors Club".
   `order.name` / `.email` / `.created_at` and Height (`ociostock.dimensions`)
-  are live. Character (`alterpop.character`) BLOCKED -> product title
-  (honest, same rule as the PDP). Franchise (`alterpop.franchise`) BLOCKED ->
+  are live. Character (`alterpop.character`) BLOCKED -> falls back to the
+  line item's product title (honest, not inference) — this is a *different*
+  rule from the PDP: the order page has no separate Character slot, so its
+  one Character field takes the fallback the PDP's Character slot doesn't.
+  The PDP shows a blocked-placeholder Character slot (never falling back to
+  `product.title`) plus `product.title` as its own always-visible line —
+  see the Phase 4 PDP entry above. Franchise (`alterpop.franchise`) BLOCKED ->
   the meta slot is omitted and "Keep Exploring" shows a `[ franchise ]`
   placeholder + marked empty state (no product grid — can't pick the set
   without the field). Delivery window = `created_at + 8..13 calendar days`,

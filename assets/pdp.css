@@ -197,6 +197,17 @@
   color: var(--color-ink-900);
 }
 
+/* product.title — always real, always visible; subordinate to Character
+   (.ap-pdp__name, type-h2) so it never competes once Character ships. */
+.ap-pdp__title {
+  margin: 0 0 var(--space-xs);
+  color: var(--color-text-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 .ap-pdp__identity-line {
   margin: 0;
   color: var(--color-text-muted);

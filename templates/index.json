@@ -25,7 +25,27 @@
     },
     "explore_universes": {
       "type": "explore-universes",
-      "settings": { "heading": "Explore Universes" }
+      "settings": {
+        "heading": "Explore Universes",
+        "universe_collections": [
+          "avengers",
+          "batman",
+          "chainsaw-man",
+          "demon-slayer",
+          "dragon-ball",
+          "frozen",
+          "harry-potter",
+          "jujutsu-kaisen",
+          "naruto",
+          "one-piece",
+          "pokemon-universe",
+          "star-wars",
+          "stranger-things",
+          "superman",
+          "the-mandalorian",
+          "tmnt"
+        ]
+      }
     },
     "new_arrivals": {
       "type": "product-rail",

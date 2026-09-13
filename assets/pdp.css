@@ -76,15 +76,33 @@
    (needed for the Universe Room grid at every viewport), and it loses to
    Dawn's own `.grid--peek .grid__item` mobile-slide-width rule at equal
    specificity, loaded later in layout/theme.liquid. Below 750px that
-   collapsed every gallery slide (and its <img>) to ~2px. Re-declare Dawn's
-   mobile slide width at higher specificity so it always wins here, without
-   touching the reset's effect on the Universe Room. */
+   collapsed every gallery slide (and its <img>) to ~2px. Re-declare a slide
+   width at higher specificity so it always wins here, without touching the
+   reset's effect on the Universe Room.
+
+   First pass reused Dawn's bare `.grid--peek .grid__item` value (~50% - 4rem,
+   a 3-card-carousel width meant for card rails) — that's the wrong Dawn
+   rule for this markup. Wireframe 3a/3b (PDP mobile) show one full-width
+   hero image with a dot progress indicator underneath, and the <img>'s own
+   `sizes` attribute already assumes one slide per viewport
+   (`calc(100vw / 1 - 4rem)`, from mobile_columns: 1) — markup and wireframe
+   agree, only this CSS disagreed. One slide per view, full width. */
 @media screen and (max-width: 749px) {
   .ap-pdp__media[data-ap-grid] .product__media-item {
-    width: calc(50% - var(--grid-mobile-horizontal-spacing) - 3rem);
+    width: 100%;
     max-width: none;
-    min-width: 35%;
+    min-width: 100%;
     flex: 1 0 auto;
+  }
+
+  /* media_fit is 'contain' (templates/product.json) but base.css's
+     `.media > img { object-fit: cover }` applies unconditionally below
+     750px — nothing restored `contain` at mobile widths the way the
+     desktop branch below already does. Tall collectibles were cropping
+     top/bottom. Wireframe calls for the full still-life visible, not
+     cropped. */
+  .ap-pdp__media .product-media-container img {
+    object-fit: contain;
   }
 }
 

@@ -5,17 +5,18 @@
   COLLECTION", the free-shipping threshold line, then a rail of small cards.
   Reinforces the €50 threshold (same number as the homepage shipping bar).
 
-  Universe/Franchise is BLOCKED -> the heading falls back to a generic word.
-  Products come from the product's first collection (no clean franchise
-  collection yet). Uses the ONE product card, compact.
+  Character is BLOCKED (no store definition) — the whole section hides
+  until it exists; the theme never shows "same collection" products as a
+  same-universe recommendation without the field to back that claim.
 {%- endcomment -%}
 
 {%- liquid
   assign source = product.collections | first
   assign universe = product.metafields.alterpop.universe.value
+  assign xsell_character = product.metafields.alterpop.character.value
 -%}
 
-{%- if source != blank and source.products.size > 1 -%}
+{%- if xsell_character != blank and source != blank and source.products.size > 1 -%}
   <section class="ap-xsell page-width" aria-labelledby="XSell-{{ section.id }}">
     <p class="ap-xsell__label type-label" id="XSell-{{ section.id }}">
       {%- if universe != blank -%}
@@ -30,15 +31,6 @@
       the €50 figure doesn't match the live store rule. Restore once the
       merchant confirms the real shipping rule.
     {%- endcomment -%}
-
-    {%- comment -%}
-      BLOQUEADO: aguarda app — Franchise/Universe. With the field the row is
-      the same-universe pieces; without it we show the product's collection
-      and mark it so it doesn't read as a real recommendation.
-    {%- endcomment -%}
-    {%- if universe == blank -%}
-      <p class="ap-xsell__ph-note type-caption">{{ 'sections.pdp.xsell_placeholder' | t }}</p>
-    {%- endif -%}
 
     <ul class="ap-xsell__row" role="list">
       {%- assign shown = 0 -%}

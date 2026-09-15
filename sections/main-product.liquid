@@ -54,13 +54,16 @@
 
   assign product_form_id = 'product-form-' | append: section.id
 
-  # --- Identity Block fields (all BLOCKED except height) --------------------
+  # --- Identity Block fields -------------------------------------------
+  # Character still BLOCKED (no definition on the store — 0/8 coverage).
+  # manufacturer reads product.vendor (real, 8/8 coverage) instead of the
+  # never-defined alterpop.manufacturer. type reads alterpop.format (list,
+  # 6/8 coverage) instead of the never-defined alterpop.collectible_type.
+  # Year dropped entirely — no such field, no fallback.
   assign ap_character = product.metafields.alterpop.character.value
   assign ap_line = product.metafields.alterpop.line.value
-  assign ap_manufacturer = product.metafields.alterpop.manufacturer.value
-  assign ap_year = product.metafields.alterpop.year.value
-  assign ap_type = product.metafields.alterpop.collectible_type.value
-  assign ap_height = product.metafields.ociostock.dimensions.value
+  assign ap_manufacturer = product.vendor
+  assign ap_type = product.metafields.alterpop.format.value
 
   assign ap_fragile = product.metafields.alterpop.fragile.value
 
@@ -123,24 +126,22 @@
             {%- endif -%}
 
             {%- comment -%}
-              Identity Block — fixed order. Character is the display title
-              (its own slot, marked placeholder while alterpop.character is
-              BLOCKED — 4a7a599, not reverted: a blocked field never falls
-              back to the raw supplier title). product.title is a different,
-              always-real field — it is the page's actual <h1> and stays
-              visible as its own subordinate identification line right under
-              Character, never hidden: a PDP has to say what product it is
-              even before Character exists. See CLAUDE.md "PDP regime +
-              Identity Block fields" for the distinction.
+              Identity Block — fixed order, every line collapses on its own
+              when blank (2026-09-15 briefing, section 2). Character stays
+              BLOCKED (no store definition) — its slot renders nothing when
+              absent, never falling back to the raw supplier title.
+              product.title is a separate, always-real field — it is the
+              page's actual <h1> and stays visible as its own subordinate
+              identification line right under Character, never hidden: a
+              PDP has to say what product it is even before Character
+              exists. See CLAUDE.md "PDP regime + Identity Block fields".
             {%- endcomment -%}
             <div class="ap-pdp__identity">
-              <p class="ap-pdp__name type-h2">
-                {%- if ap_character != blank -%}
+              {%- if ap_character != blank -%}
+                <p class="ap-pdp__name type-h2">
                   {%- render 'ap-meta-text', value: ap_character -%}
-                {%- else -%}
-                  <span class="ap-pdp__ph">{{ 'sections.pdp.character_placeholder' | t }}</span>
-                {%- endif -%}
-              </p>
+                </p>
+              {%- endif -%}
               <h1 class="ap-pdp__title type-product-title">{{ product.title | escape }}</h1>
 
               {%- liquid
@@ -151,30 +152,24 @@
                   endcapture
                 endif
                 if ap_manufacturer != blank
+                  capture id_manufacturer
+                    render 'ap-meta-text', value: ap_manufacturer
+                  endcapture
                   if id_mid != blank
                     assign id_mid = id_mid | append: ' · '
                   endif
-                  assign id_mid = id_mid | append: ap_manufacturer
-                endif
-                if ap_year != blank
-                  if id_mid != blank
-                    assign id_mid = id_mid | append: ' · '
-                  endif
-                  assign id_mid = id_mid | append: ap_year
+                  assign id_mid = id_mid | append: id_manufacturer
                 endif
               -%}
-              <p class="ap-pdp__identity-line type-caption">
-                {%- if id_mid != blank -%}
-                  {{ id_mid }}
-                {%- else -%}
-                  <span class="ap-pdp__ph">{{ 'sections.pdp.identity_placeholder' | t }}</span>
-                {%- endif -%}
-              </p>
+              {%- if id_mid != blank -%}
+                <p class="ap-pdp__identity-line type-caption">{{ id_mid }}</p>
+              {%- endif -%}
 
-              <p class="ap-pdp__identity-line type-caption">
-                {%- if ap_type != blank -%}{{ ap_type | escape }}{%- else -%}<span class="ap-pdp__ph">{{ 'sections.pdp.type_placeholder' | t }}</span>{%- endif -%}
-                {%- if ap_height != blank -%}&nbsp;&middot;&nbsp;{{ ap_height | escape }}{%- endif -%}
-              </p>
+              {%- if ap_type != blank -%}
+                <p class="ap-pdp__identity-line type-caption">
+                  {%- render 'ap-meta-text', value: ap_type -%}
+                </p>
+              {%- endif -%}
             </div>
 
             {%- comment -%} ---- Price (Dawn snippet; product-info.js swaps #price-<id>) ---- {%- endcomment -%}
@@ -290,14 +285,16 @@
               <p class="ap-pdp__dispatch-repeat type-caption">{{ 'general.delivery_estimate' | t }}</p>
             </div>
 
-            {%- comment -%} ---- Spec sheet ---- {%- endcomment -%}
+            {%- comment -%}
+              ---- Spec sheet ---- Brand reads product.vendor (Category
+              dropped — no clean field, alterpop.collectible_type never
+              existed). License reads alterpop.license, out of contract —
+              the row stays in the markup but renders nothing (rule 0)
+              until that field exists.
+            {%- endcomment -%}
             {%- liquid
               assign spec_sku = v.sku
-              assign spec_brand = product.metafields.alterpop.manufacturer.value
-              assign spec_category = product.metafields.alterpop.collectible_type.value
-              # License / Universe — the clean Franchise/Universe field, BLOCKED.
-              # Do NOT fall back to raw ociostock.licence (multi-language,
-              # unnormalised — e.g. "El Señor De Los Anillos" on an EU store).
+              assign spec_brand = product.vendor
               assign spec_license = product.metafields.alterpop.license.value
               assign spec_ean = v.barcode
               assign spec_weight = v.weight
@@ -309,18 +306,15 @@
               {%- if is_premium -%}
                 <h2 class="ap-pdp__specs-heading type-h3">{{ 'sections.pdp.specifications' | t }}</h2>
                 <dl class="ap-pdp__spec-table" id="ap-spec-table-{{ section.id }}">
-                  {% render 'pdp-spec-row', label: 'SKU', value: spec_sku, ph: true %}
-                  {% render 'pdp-spec-row', label: 'sections.pdp.spec_brand', value: spec_brand, ph: true, i18n: true %}
-                  {% render 'pdp-spec-row', label: 'sections.pdp.spec_category', value: spec_category, ph: true, i18n: true %}
-                  {% render 'pdp-spec-row', label: 'sections.pdp.spec_license', value: spec_license, ph: true, i18n: true %}
-                  {% render 'pdp-spec-row', label: 'EAN', value: spec_ean, ph: true %}
+                  {% render 'pdp-spec-row', label: 'sections.pdp.spec_brand', value: spec_brand, i18n: true %}
+                  {% render 'pdp-spec-row', label: 'SKU', value: spec_sku %}
+                  {% render 'pdp-spec-row', label: 'EAN', value: spec_ean %}
                   {%- if spec_weight > 0 -%}
                     {% assign weight_str = spec_weight | weight_with_unit: spec_weight_unit %}
                     {% render 'pdp-spec-row', label: 'sections.pdp.spec_weight', value: weight_str, i18n: true %}
-                  {%- else -%}
-                    {% render 'pdp-spec-row', label: 'sections.pdp.spec_weight', value: '', ph: true, i18n: true %}
                   {%- endif -%}
-                  {% render 'pdp-spec-row', label: 'sections.pdp.spec_dimensions', value: spec_dims, ph: true, i18n: true %}
+                  {% render 'pdp-spec-row', label: 'sections.pdp.spec_dimensions', value: spec_dims, i18n: true %}
+                  {% render 'pdp-spec-row', label: 'sections.pdp.spec_license', value: spec_license, i18n: true %}
                 </dl>
                 <script src="{{ 'pdp-spec-stagger.js' | asset_url }}" defer="defer"></script>
               {%- else -%}
@@ -330,39 +324,33 @@
                     <span class="ap-pdp__specs-toggle" aria-hidden="true">+</span>
                   </summary>
                   <dl class="ap-pdp__spec-table">
-                    {% render 'pdp-spec-row', label: 'SKU', value: spec_sku, ph: true %}
-                    {% render 'pdp-spec-row', label: 'sections.pdp.spec_brand', value: spec_brand, ph: true, i18n: true %}
-                    {% render 'pdp-spec-row', label: 'sections.pdp.spec_category', value: spec_category, ph: true, i18n: true %}
-                    {% render 'pdp-spec-row', label: 'EAN', value: spec_ean, ph: true %}
-                    {% render 'pdp-spec-row', label: 'sections.pdp.spec_dimensions', value: spec_dims, ph: true, i18n: true %}
+                    {% render 'pdp-spec-row', label: 'sections.pdp.spec_brand', value: spec_brand, i18n: true %}
+                    {% render 'pdp-spec-row', label: 'SKU', value: spec_sku %}
+                    {% render 'pdp-spec-row', label: 'EAN', value: spec_ean %}
+                    {% render 'pdp-spec-row', label: 'sections.pdp.spec_dimensions', value: spec_dims, i18n: true %}
                   </dl>
                 </details>
               {%- endif -%}
             </div>
 
             {%- comment -%}
-              Official licensing seal (premium). BLOCKED: aguarda app — the
-              per-SKU license supplier. Without it we can't name THIS
-              product's licensor, so the seal is a marked placeholder — not a
-              generic "Officially Licensed" claim or a list of every possible
-              licensor.
+              Official licensing seal (premium). alterpop.license_supplier
+              is out of contract — without it we can't name THIS product's
+              licensor, so the whole block hides rather than showing a
+              generic "Officially Licensed" claim or a placeholder.
             {%- endcomment -%}
             {%- if is_premium -%}
               {%- assign seal_supplier = product.metafields.alterpop.license_supplier.value -%}
-              <div class="ap-pdp__seal{% if seal_supplier == blank %} ap-pdp__seal--pending{% endif %}" role="note">
-                {%- if seal_supplier != blank -%}
+              {%- if seal_supplier != blank -%}
+                <div class="ap-pdp__seal" role="note">
                   <p class="ap-pdp__seal-line">
                     <span class="ap-pdp__seal-icon" aria-hidden="true">
                       {{- 'icon-checkmark.svg' | inline_asset_content -}}
                     </span>
                     {{ 'sections.pdp.seal_by' | t: brand: seal_supplier }}
                   </p>
-                {%- else -%}
-                  <p class="ap-pdp__seal-line">
-                    <span class="ap-pdp__ph">{{ 'sections.pdp.seal_placeholder' | t }}</span>
-                  </p>
-                {%- endif -%}
-              </div>
+                </div>
+              {%- endif -%}
             {%- endif -%}
 
           </section>

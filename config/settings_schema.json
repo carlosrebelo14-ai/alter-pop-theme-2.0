@@ -1400,6 +1400,21 @@
     ]
   },
   {
+    "name": "Shipping",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "The single switch for every free-shipping line in the theme (homepage bar, cart drawer, cart page, PDP cross-sell) — they all share snippets/free-shipping-line.liquid. Off by default: the €50 figure hardcoded at each call site doesn't match the live store's shipping rule. Turn on only after updating those thresholds to match."
+      },
+      {
+        "type": "checkbox",
+        "id": "show_free_shipping",
+        "label": "Show free-shipping progress lines",
+        "default": false
+      }
+    ]
+  },
+  {
     "name": "t:settings_schema.cart.name",
     "settings": [
       {

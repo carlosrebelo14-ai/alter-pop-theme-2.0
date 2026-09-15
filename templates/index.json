@@ -86,7 +86,6 @@
     },
     "premium_collectibles": {
       "type": "product-rail",
-      "disabled": true,
       "settings": {
         "heading": "Premium Collectibles",
         "pill": "",

@@ -1,20 +1,23 @@
 {%- comment -%}
   The single free-shipping progress line, shared by the homepage shipping
-  bar and the PDP cross-sell so the empty-cart / reached cases stay in one
-  place. Server-rendered from the cart; callers that need it live re-render
-  the text on Dawn's cartUpdate pub/sub.
+  bar, the cart drawer/page and the PDP cross-sell so the empty-cart /
+  reached cases stay in one place. Server-rendered from the cart; callers
+  that need it live re-render the text on Dawn's cartUpdate pub/sub.
 
-  BLOCKED (2026-09-15 briefing, section 7): the €50 threshold does not match
-  the live store rule (Spain free >= €55, PT/rest of EU pay a flat €8.99, no
-  threshold). Renders nothing until the merchant confirms the real shipping
-  rule — do not re-guess a number here.
+  Gated on the single theme setting settings.show_free_shipping (default
+  false) — the €50 figure baked into every caller doesn't match the live
+  store rule (Spain free >= €55, PT/rest of EU pay a flat €8.99, no
+  threshold). Renders nothing while the flag is off; flip it on once the
+  merchant confirms the real shipping rule and the callers' hardcoded
+  threshold_amount values are updated to match. This is the ONLY switch —
+  don't reintroduce a second one (e.g. commented-out code) here or at a
+  call site.
 
   Accepts:
   - threshold_amount: {Number} in store currency (e.g. 50 = €50). Default 50.
   - reached_text:     {String} shown once the threshold is met. Optional.
 {%- endcomment -%}
-{%- comment -%}
-  Disabled below until the shipping rule is confirmed (see comment above).
+{%- if settings.show_free_shipping -%}
   {%- liquid
     assign fsl_threshold = threshold_amount | default: 50 | times: 100
     assign fsl_remaining = fsl_threshold | minus: cart.total_price
@@ -37,4 +40,4 @@
   {%- else -%}
     {{- 'sections.pdp.xsell_unlocked' | t -}}
   {%- endif -%}
-{%- endcomment -%}
+{%- endif -%}

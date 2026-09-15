@@ -1415,6 +1415,31 @@
     ]
   },
   {
+    "name": "Legal",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Seller identification shown in the footer fine print and on the Contact page's Company Identification block (sections/footer.liquid, sections/legal-contact.liquid). Each line renders only the values that are set; with all three blank, both blocks hide entirely rather than showing a placeholder. The merchant's own values — leave blank until confirmed, never invent them here."
+      },
+      {
+        "type": "text",
+        "id": "legal_name",
+        "label": "Legal company name",
+        "info": "e.g. \"Alterpop, Lda.\""
+      },
+      {
+        "type": "text",
+        "id": "legal_tax_id",
+        "label": "Tax ID (NIF / VAT number)"
+      },
+      {
+        "type": "text",
+        "id": "legal_address",
+        "label": "Fiscal address"
+      }
+    ]
+  },
+  {
     "name": "t:settings_schema.cart.name",
     "settings": [
       {

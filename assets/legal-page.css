@@ -43,10 +43,6 @@
   color: var(--color-text-muted);
 }
 
-.ap-legal__ph {
-  color: var(--color-text-muted);
-}
-
 /* --- body (rte / policy.body) -------------------------------------- */
 .ap-legal__body {
   margin-top: var(--space-2xl);
@@ -180,10 +176,6 @@
   color: var(--color-text-muted);
   font-size: var(--text-caption);
   line-height: var(--leading-body);
-}
-
-.ap-legal__company .ap-legal__ph {
-  color: var(--color-text-muted);
 }
 
 .ap-legal__complaints {

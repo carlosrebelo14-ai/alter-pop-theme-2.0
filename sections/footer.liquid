@@ -104,14 +104,33 @@
       </nav>
 
       {%- comment -%}
-        FINE PRINT — sempre visível, nunca atrás de link. PLACEHOLDER:
-        nome legal, NIF e morada ainda não fornecidos. NÃO inventar.
+        FINE PRINT — legal seller identification, read from the global
+        settings.legal_name / legal_tax_id / legal_address (2026-09-15
+        briefing, review 2). Each segment renders only with a value; the
+        whole line hides with all three blank (rule 0 — no placeholder
+        reaches the customer). Values are the merchant's own to fill in.
       {%- endcomment -%}
-      <p class="ap-footer__fineprint">
-        <span class="ap-footer__placeholder">[ Nome legal, Lda. — a confirmar ]</span> ·
-        <span class="ap-footer__placeholder">[ NIF PT000 000 000 — a confirmar ]</span> ·
-        <span class="ap-footer__placeholder">[ Morada fiscal completa — a confirmar ]</span>
-      </p>
+      {%- liquid
+        assign legal_parts = ''
+        if settings.legal_name != blank
+          assign legal_parts = legal_parts | append: settings.legal_name | escape
+        endif
+        if settings.legal_tax_id != blank
+          if legal_parts != blank
+            assign legal_parts = legal_parts | append: ' · '
+          endif
+          assign legal_parts = legal_parts | append: settings.legal_tax_id | escape
+        endif
+        if settings.legal_address != blank
+          if legal_parts != blank
+            assign legal_parts = legal_parts | append: ' · '
+          endif
+          assign legal_parts = legal_parts | append: settings.legal_address | escape
+        endif
+      -%}
+      {%- if legal_parts != blank -%}
+        <p class="ap-footer__fineprint">{{ legal_parts }}</p>
+      {%- endif -%}
     </div>
   </div>
 </footer>

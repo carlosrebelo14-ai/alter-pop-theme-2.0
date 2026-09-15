@@ -208,14 +208,6 @@
   color: var(--color-text-muted);
 }
 
-.ap-footer__placeholder {
-  display: inline-block;
-  padding: 0 4px;
-  border: 1px dashed var(--color-border);
-  border-radius: var(--radius-xs);
-  background: var(--color-canvas);
-  color: var(--color-ink-900);
-}
 
 @media (prefers-reduced-motion: reduce) {
   .ap-footer__join { transition: none; }

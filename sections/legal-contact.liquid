@@ -85,18 +85,35 @@
     <hr class="ap-legal__section-rule">
 
     {%- comment -%}
-      Company Identification — repeated here per 10c. PLACEHOLDER: legal name,
-      NIF and fiscal address not yet supplied (same marked pattern as the
-      footer fine print). Do not invent.
+      Company Identification — repeated here per 10c, same global settings
+      and same collapse behaviour as the footer fine print (2026-09-15
+      briefing, review 2). The whole block, heading included, hides while
+      all three are blank — the merchant's own values to fill in.
     {%- endcomment -%}
-    <h2 class="ap-legal__subhead type-h3">{{ 'sections.legal.company_heading' | t }}</h2>
-    <p class="ap-legal__company">
-      <span class="ap-legal__ph">[ Nome legal, Lda. — a confirmar ]</span> &middot;
-      <span class="ap-legal__ph">[ NIF PT000 000 000 — a confirmar ]</span> &middot;
-      <span class="ap-legal__ph">[ Morada fiscal completa — a confirmar ]</span>
-    </p>
+    {%- liquid
+      assign legal_parts = ''
+      if settings.legal_name != blank
+        assign legal_parts = legal_parts | append: settings.legal_name | escape
+      endif
+      if settings.legal_tax_id != blank
+        if legal_parts != blank
+          assign legal_parts = legal_parts | append: ' · '
+        endif
+        assign legal_parts = legal_parts | append: settings.legal_tax_id | escape
+      endif
+      if settings.legal_address != blank
+        if legal_parts != blank
+          assign legal_parts = legal_parts | append: ' · '
+        endif
+        assign legal_parts = legal_parts | append: settings.legal_address | escape
+      endif
+    -%}
+    {%- if legal_parts != blank -%}
+      <h2 class="ap-legal__subhead type-h3">{{ 'sections.legal.company_heading' | t }}</h2>
+      <p class="ap-legal__company">{{ legal_parts }}</p>
 
-    <hr class="ap-legal__section-rule">
+      <hr class="ap-legal__section-rule">
+    {%- endif -%}
 
     <a
       class="ap-legal__complaints"

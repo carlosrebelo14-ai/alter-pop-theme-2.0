@@ -17,7 +17,7 @@
 
 {%- liquid
   assign uroom_eyebrow = section.settings.eyebrow | default: 'Universe'
-  assign uroom_heading = section.settings.heading | default: collection.title | default: '[ Universe name ]'
+  assign uroom_heading = section.settings.heading | default: collection.title
 
   assign uroom_text = section.settings.subheading
   if uroom_text == blank and collection.description != blank

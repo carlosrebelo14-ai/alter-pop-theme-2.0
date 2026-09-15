@@ -1,0 +1,28 @@
+{%- comment -%}
+  Alterpop — resolves a product's regime. The only place that reads
+  alterpop.manufacturer_tier (2026-09-15 briefing, section 3). Four raw
+  tier values map to two PDP regimes:
+    ARTISAN / SIGNATURE -> premium
+    COLLECTOR / CORE / blank / unknown -> impulse
+
+  The exact literal Shopify stores ("ARTISAN" vs. "01 ARTISAN" etc.) is
+  unconfirmed on the app side — this snippet accepts only the bare word.
+  If the app's format differs, fix it here and nowhere else.
+
+  Params:
+    product    (required) — the product to read the tier from.
+    force_tier (optional)  — 'impulse' or 'premium', overrides the field
+                              (dev preview only, e.g. ?view=premium).
+
+  Outputs: 'premium' or 'impulse' (no trailing whitespace/newline).
+{%- endcomment -%}
+{%- liquid
+  assign ap_raw = product.metafields.alterpop.manufacturer_tier.value | append: '' | strip | upcase
+  assign ap_regime = 'impulse'
+  if ap_raw == 'ARTISAN' or ap_raw == 'SIGNATURE'
+    assign ap_regime = 'premium'
+  endif
+  if force_tier == 'impulse' or force_tier == 'premium'
+    assign ap_regime = force_tier
+  endif
+-%}{{ ap_regime }}

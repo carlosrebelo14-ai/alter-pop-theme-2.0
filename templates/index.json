@@ -84,13 +84,28 @@
         "cta_link": ""
       }
     },
+    "premium_collectibles": {
+      "type": "product-rail",
+      "disabled": true,
+      "settings": {
+        "heading": "Premium Collectibles",
+        "pill": "",
+        "collection": "premium-collectibles",
+        "layout": "rail",
+        "compact_cards": false,
+        "products_to_show": 6,
+        "min_items": 4,
+        "columns_desktop": 4,
+        "view_all_label": "Shop All"
+      }
+    },
     "limited_editions": {
       "type": "product-rail",
       "disabled": true,
       "settings": {
         "heading": "Limited Editions",
         "pill": "Limited Run",
-        "collection": "all",
+        "collection": "",
         "layout": "rail",
         "compact_cards": false,
         "products_to_show": 6,
@@ -105,7 +120,7 @@
       "settings": {
         "heading": "Gifts Under €25",
         "pill": "",
-        "collection": "all",
+        "collection": "",
         "layout": "grid",
         "compact_cards": true,
         "products_to_show": 12,
@@ -135,6 +150,7 @@
     "new_arrivals",
     "bestsellers",
     "franchise_archive",
+    "premium_collectibles",
     "limited_editions",
     "gifts_under_25",
     "real_customers"

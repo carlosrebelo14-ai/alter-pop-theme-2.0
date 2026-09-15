@@ -23,11 +23,12 @@
                easing — the system's ONLY stagger), still-life gallery enters
                with --motion-editorial, reviews carry a count.
 
-  Regime source: product.metafields.alterpop.tier ('impulse' | 'premium').
-  BLOCKED (does not exist yet) -> defaults to 'impulse'. For development the
-  regime can be forced with the section setting `force_tier`
-  (templates/product.premium.json bakes force_tier: premium, so
-  /products/x?view=premium previews it).
+  Regime source: snippets/ap-tier.liquid, which reads
+  product.metafields.alterpop.manufacturer_tier (four raw values —
+  ARTISAN / SIGNATURE / COLLECTOR / CORE — mapped to two PDP regimes) and
+  is the ONLY place that field is read. For development the regime can be
+  forced with the section setting `force_tier` (templates/product.premium.json
+  bakes force_tier: premium, so /products/x?view=premium previews it).
 
   Identity Block, FIXED order: Character Name / Line · Manufacturer · Year /
   Type · Height. Every field except Height is BLOCKED — rendered as a marked
@@ -38,14 +39,11 @@
 {%- endcomment -%}
 
 {%- liquid
-  assign tier = product.metafields.alterpop.tier.value
   assign forced = section.settings.force_tier
-  if forced == 'impulse' or forced == 'premium'
-    assign tier = forced
-  endif
-  unless tier == 'premium'
-    assign tier = 'impulse'
-  endunless
+  capture tier
+    render 'ap-tier', product: product, force_tier: forced
+  endcapture
+  assign tier = tier | strip
 
   assign is_premium = false
   if tier == 'premium'
@@ -374,7 +372,7 @@
       "type": "select",
       "id": "force_tier",
       "label": "Force regime (development only)",
-      "info": "The real regime comes from product.metafields.alterpop.tier, which does not exist yet. Use this to preview.",
+      "info": "The real regime comes from product.metafields.alterpop.manufacturer_tier via snippets/ap-tier.liquid. Use this to preview.",
       "options": [
         { "value": "none", "label": "Auto (metafield -> impulse)" },
         { "value": "impulse", "label": "Impulse" },

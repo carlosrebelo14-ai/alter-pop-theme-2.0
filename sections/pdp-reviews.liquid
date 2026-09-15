@@ -8,16 +8,16 @@
   (product.metafields.reviews.rating / .rating_count). No review app is
   installed -> an explicit, marked empty state. NO fabricated reviews.
 
-  Regime mirrors the product section: product.metafields.alterpop.tier, with
-  a `force_tier` setting for development.
+  Regime mirrors the product section: snippets/ap-tier.liquid, with a
+  `force_tier` setting for development.
 {%- endcomment -%}
 
 {%- liquid
-  assign tier = product.metafields.alterpop.tier.value
   assign forced = section.settings.force_tier
-  if forced == 'impulse' or forced == 'premium'
-    assign tier = forced
-  endif
+  capture tier
+    render 'ap-tier', product: product, force_tier: forced
+  endcapture
+  assign tier = tier | strip
   assign is_premium = false
   if tier == 'premium'
     assign is_premium = true

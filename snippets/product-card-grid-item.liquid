@@ -1,0 +1,37 @@
+{%- comment -%}
+  One <li> + product-card in the main collection grid. Factored out of
+  sections/main-collection-product-grid.liquid so the sold-out reordering
+  there (two passes over the same page) can call it from either pass while
+  keeping a single running index for lazy-load and animation order.
+
+  Params: product, index (1-based position in the rendered grid, across
+  both passes), section, skip_styles, hide_franchise.
+{%- endcomment -%}
+{%- liquid
+  assign lazy_load = false
+  if index > 2
+    assign lazy_load = true
+  endif
+-%}
+<li
+  class="grid__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+  {% if settings.animations_reveal_on_scroll %}
+    data-cascade
+    style="--animation-order: {{ index }};"
+  {% endif %}
+>
+  {% render 'product-card',
+    card_product: product,
+    media_aspect_ratio: section.settings.image_ratio,
+    image_shape: section.settings.image_shape,
+    show_secondary_image: section.settings.show_secondary_image,
+    show_vendor: section.settings.show_vendor,
+    show_rating: section.settings.show_rating,
+    lazy_load: lazy_load,
+    skip_styles: skip_styles,
+    quick_add: section.settings.quick_add,
+    section_id: section.id,
+    product_view_context: 'collection',
+    hide_franchise: hide_franchise
+  %}
+</li>

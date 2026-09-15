@@ -182,35 +182,59 @@
                 {%- if template.suffix == 'universe-room' -%}
                   {%- assign ap_hide_franchise = true -%}
                 {%- endif -%}
-                {%- for product in collection.products -%}
-                  {% assign lazy_load = false %}
-                  {%- if forloop.index > 2 -%}
-                    {%- assign lazy_load = true -%}
-                  {%- endif -%}
-                  <li
-                    class="grid__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-                    {% if settings.animations_reveal_on_scroll %}
-                      data-cascade
-                      style="--animation-order: {{ forloop.index }};"
-                    {% endif %}
-                  >
-                    {% render 'product-card',
-                      card_product: product,
-                      media_aspect_ratio: section.settings.image_ratio,
-                      image_shape: section.settings.image_shape,
-                      show_secondary_image: section.settings.show_secondary_image,
-                      show_vendor: section.settings.show_vendor,
-                      show_rating: section.settings.show_rating,
-                      lazy_load: lazy_load,
+                {%- comment -%}
+                  Sold-out products sink to the end of the grid (2026-09-15
+                  briefing, section 4) — Shopify's own collection sort and
+                  the Search & Discovery app have no such option. Two passes
+                  over the SAME page of collection.products: available
+                  first, then unavailable, keeping whatever sort/filter is
+                  already active. Only safe within a single page — across
+                  paginated pages this would put every page's sold-out
+                  items after that page's available ones, not truly last,
+                  so it's gated on paginate.pages == 1 (true for every
+                  Universe Room today: ~9 products at 24/page).
+                {%- endcomment -%}
+                {%- assign ap_item_index = 0 -%}
+                {%- if paginate.pages == 1 -%}
+                  {%- for product in collection.products -%}
+                    {%- if product.available -%}
+                      {%- assign ap_item_index = ap_item_index | plus: 1 -%}
+                      {%- render 'product-card-grid-item',
+                        product: product,
+                        index: ap_item_index,
+                        section: section,
+                        skip_styles: skip_card_product_styles,
+                        hide_franchise: ap_hide_franchise
+                      -%}
+                      {%- assign skip_card_product_styles = true -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                  {%- for product in collection.products -%}
+                    {%- unless product.available -%}
+                      {%- assign ap_item_index = ap_item_index | plus: 1 -%}
+                      {%- render 'product-card-grid-item',
+                        product: product,
+                        index: ap_item_index,
+                        section: section,
+                        skip_styles: skip_card_product_styles,
+                        hide_franchise: ap_hide_franchise
+                      -%}
+                      {%- assign skip_card_product_styles = true -%}
+                    {%- endunless -%}
+                  {%- endfor -%}
+                {%- else -%}
+                  {%- for product in collection.products -%}
+                    {%- assign ap_item_index = ap_item_index | plus: 1 -%}
+                    {%- render 'product-card-grid-item',
+                      product: product,
+                      index: ap_item_index,
+                      section: section,
                       skip_styles: skip_card_product_styles,
-                      quick_add: section.settings.quick_add,
-                      section_id: section.id,
-                      product_view_context: 'collection',
                       hide_franchise: ap_hide_franchise
-                    %}
-                  </li>
-                  {%- assign skip_card_product_styles = true -%}
-                {%- endfor -%}
+                    -%}
+                    {%- assign skip_card_product_styles = true -%}
+                  {%- endfor -%}
+                {%- endif -%}
               </ul>
 
               {%- if paginate.pages > 1 -%}

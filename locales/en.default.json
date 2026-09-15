@@ -291,8 +291,7 @@
       "empty": "No products to show yet."
     },
     "bestsellers": {
-      "sold_this_month": "sold this month",
-      "sold_placeholder": "[ vendas/mês — aguarda app ]"
+      "sold_this_month": "sold this month"
     },
     "shipping_bar": {
       "remaining": "{{ amount }} more to free shipping (over {{ threshold }})",

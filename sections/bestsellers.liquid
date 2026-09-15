@@ -47,19 +47,16 @@
               </h3>
               {%- comment -%}
                 Meta: FRANCHISE · dimension · N sold this month.
-                franchise + sold (metafields.alterpop.*) are BLOQUEADO — sold
-                is shown as a MARKED placeholder (not omitted) so the ranked
-                list keeps its visible justification. No inference.
+                franchise + sold (metafields.alterpop.*) are BLOQUEADO; each
+                segment is omitted when absent, no inference.
               {%- endcomment -%}
-              <p class="ap-best__meta">
-                {%- if franchise != blank -%}{%- render 'ap-meta-text', value: franchise -%}&nbsp;·&nbsp;{%- endif -%}
-                {%- if dimension != blank -%}{{ dimension | escape }}&nbsp;·&nbsp;{%- endif -%}
-                {%- if sold != blank -%}
-                  {{ sold | escape }} {{ 'sections.bestsellers.sold_this_month' | t }}
-                {%- else -%}
-                  <span class="ap-best__ph">{{ 'sections.bestsellers.sold_placeholder' | t }}</span>
-                {%- endif -%}
-              </p>
+              {%- if franchise != blank or dimension != blank or sold != blank -%}
+                <p class="ap-best__meta">
+                  {%- if franchise != blank -%}{%- render 'ap-meta-text', value: franchise -%}{%- if dimension != blank or sold != blank -%}&nbsp;·&nbsp;{%- endif -%}{%- endif -%}
+                  {%- if dimension != blank -%}{{ dimension | escape }}{%- if sold != blank -%}&nbsp;·&nbsp;{%- endif -%}{%- endif -%}
+                  {%- if sold != blank -%}{{ sold | escape }} {{ 'sections.bestsellers.sold_this_month' | t }}{%- endif -%}
+                </p>
+              {%- endif -%}
               <p class="ap-best__price">{{ product.price | money }}</p>
             </div>
           </li>

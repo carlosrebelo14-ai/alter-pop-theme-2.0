@@ -52,20 +52,11 @@
       {%- endif -%}
     </div>
 
-    {%- comment -%} Free-shipping progress — shared line + fill bar, same as the drawer. {%- endcomment -%}
-    {%- if cart != empty -%}
-      {%- assign fs_threshold = 5000 -%}
-      {%- assign fs_pct = cart.total_price | times: 100 | divided_by: fs_threshold -%}
-      {%- if fs_pct > 100 -%}{%- assign fs_pct = 100 -%}{%- endif -%}
-      <div class="ap-cart__shipbar" role="status">
-        <p class="ap-cart__shipbar-text type-caption">
-          {%- render 'free-shipping-line', threshold_amount: 50 -%}
-        </p>
-        <div class="ap-cart__shipbar-track">
-          <span class="ap-cart__shipbar-fill" style="width: {{ fs_pct }}%;"></span>
-        </div>
-      </div>
-    {%- endif -%}
+    {%- comment -%}
+      Free-shipping progress — shared line + fill bar, same as the drawer.
+      BLOCKED (2026-09-15 briefing, section 7): the €50 threshold doesn't
+      match the live store rule. Hidden until the merchant confirms it.
+    {%- endcomment -%}
 
     <form action="{{ routes.cart_url }}" class="cart__contents critical-hidden" method="post" id="cart">
       <div class="cart__items" id="main-cart-items" data-id="{{ section.id }}">

@@ -19,6 +19,7 @@
     assign has_image = true
   endif
 -%}
+{%- if section.settings.heading != blank and section.settings.cta_link != blank -%}
 <section class="ap-archive{% unless has_image %} ap-archive--no-image{% endunless %}">
   <div class="ap-archive__inner">
     {%- if has_image -%}
@@ -91,6 +92,7 @@
     </div>
   </div>
 </section>
+{%- endif -%}
 
 {% schema %}
 {
@@ -101,8 +103,8 @@
   "settings": [
     { "type": "image_picker", "id": "image", "label": "Editorial image" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Universe" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "[ Franquia ] Archive" },
-    { "type": "textarea", "id": "text", "label": "Paragraph", "default": "Uma linha editorial curta sobre esta coleção de franquia." },
+    { "type": "text", "id": "heading", "label": "Heading", "info": "Section hides when empty." },
+    { "type": "textarea", "id": "text", "label": "Paragraph" },
     { "type": "text", "id": "cta_label", "label": "CTA label", "default": "Explore the Archive" },
     { "type": "text", "id": "cta_sublabel", "label": "CTA sub-label", "default": "→ Universe Room" },
     { "type": "url", "id": "cta_link", "label": "CTA link" }

@@ -25,9 +25,11 @@
       {%- endif -%}
     </p>
 
-    <p class="ap-xsell__threshold type-caption">
-      {%- render 'free-shipping-line', threshold_amount: section.settings.threshold_amount -%}
-    </p>
+    {%- comment -%}
+      Free-shipping threshold line removed (2026-09-15 briefing, section 7):
+      the €50 figure doesn't match the live store rule. Restore once the
+      merchant confirms the real shipping rule.
+    {%- endcomment -%}
 
     {%- comment -%}
       BLOQUEADO: aguarda app — Franchise/Universe. With the field the row is

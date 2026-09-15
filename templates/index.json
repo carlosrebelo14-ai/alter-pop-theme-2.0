@@ -2,14 +2,15 @@
   "sections": {
     "shipping_bar": {
       "type": "shipping-bar",
+      "disabled": true,
       "settings": { "threshold_amount": 50, "reached_text": "You've unlocked free shipping" }
     },
     "hero": {
       "type": "hero",
       "settings": {
         "eyebrow": "Featured Universe",
-        "heading": "[ Franchise name ]",
-        "subheading": "[ one editorial line about the featured franchise ]",
+        "heading": "",
+        "subheading": "",
         "cta_label": "Shop the Universe",
         "cta_link": ""
       }
@@ -63,6 +64,7 @@
     },
     "bestsellers": {
       "type": "bestsellers",
+      "disabled": true,
       "settings": { "heading": "Bestsellers", "collection": "all", "products_to_show": 5 }
     },
     "franchise_archive": {
@@ -75,8 +77,8 @@
       "block_order": ["t1", "t2", "t3"],
       "settings": {
         "eyebrow": "Universe",
-        "heading": "[ Franquia ] Archive",
-        "text": "[ Uma linha editorial curta sobre esta coleção de franquia ]",
+        "heading": "",
+        "text": "",
         "cta_label": "Explore the Archive",
         "cta_sublabel": "→ Universe Room",
         "cta_link": ""
@@ -114,14 +116,14 @@
     },
     "real_customers": {
       "type": "ugc-gallery",
+      "disabled": true,
       "blocks": {
         "p1": { "type": "photo", "settings": {} },
         "p2": { "type": "photo", "settings": {} },
         "p3": { "type": "photo", "settings": {} },
-        "p4": { "type": "photo", "settings": {} },
-        "r1": { "type": "review", "settings": { "rating": 4, "quote": "box arrived spotless, ahead of schedule." } }
+        "p4": { "type": "photo", "settings": {} }
       },
-      "block_order": ["p1", "p2", "p3", "p4", "r1"],
+      "block_order": ["p1", "p2", "p3", "p4"],
       "settings": { "heading": "Real Customers, Real Collections" }
     }
   },

@@ -38,9 +38,6 @@
       {%- if section.settings.heading != blank -%}
         <h2 class="ap-section-heading">{{ section.settings.heading | escape }}</h2>
       {%- endif -%}
-      {%- if ap_universes_is_placeholder -%}
-        <p class="ap-section-note">{{ 'sections.explore_universes.placeholder_note' | t }}</p>
-      {%- endif -%}
     </div>
 
     <ul class="ap-doorways__list" role="list">

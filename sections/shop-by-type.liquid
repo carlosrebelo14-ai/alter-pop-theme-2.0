@@ -21,8 +21,15 @@
       assign type_filter = f
     endif
   endfor
+  assign type_has_data = false
+  if type_filter != nil and type_filter.values.size > 0
+    assign type_has_data = true
+  elsif section.settings.manual_list != blank
+    assign type_has_data = true
+  endif
 -%}
 
+{%- if type_has_data -%}
 <section class="ap-shopby ap-shopby--type" aria-labelledby="ShopByType-{{ section.id }}">
   <div class="ap-shopby__inner">
     <p class="ap-shopby__label type-label" id="ShopByType-{{ section.id }}">
@@ -44,7 +51,7 @@
         {%- endfor -%}
       </ul>
     {%- elsif section.settings.manual_list != blank -%}
-      <ul class="ap-shopby__row ap-shopby__row--chips" role="list" data-placeholder="true">
+      <ul class="ap-shopby__row ap-shopby__row--chips" role="list">
         {%- assign type_items = section.settings.manual_list | split: ',' -%}
         {%- for item in type_items -%}
           {%- assign type_name = item | strip -%}
@@ -57,20 +64,10 @@
           {%- endif -%}
         {%- endfor -%}
       </ul>
-      <p class="ap-shopby__empty-note type-caption">{{ 'sections.universe_room.shop_by_placeholder' | t }}</p>
-    {%- else -%}
-      {%- comment -%} Explicit empty state — skeleton chips + a discreet note, no invented types. {%- endcomment -%}
-      <div class="ap-shopby__empty" role="note">
-        <ul class="ap-shopby__row ap-shopby__row--chips ap-shopby__row--skeleton" role="list" aria-hidden="true">
-          {%- for i in (1..5) -%}
-            <li><span class="ap-shopby__chip-ph"></span></li>
-          {%- endfor -%}
-        </ul>
-        <p class="ap-shopby__empty-note type-caption">{{ 'sections.universe_room.shop_by_type_empty' | t }}</p>
-      </div>
     {%- endif -%}
   </div>
 </section>
+{%- endif -%}
 
 {% schema %}
 {

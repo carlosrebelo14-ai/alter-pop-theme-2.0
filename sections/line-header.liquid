@@ -8,7 +8,7 @@
 
   Data moved from page.* to collection.* (Phase 5 rework):
     H1                  -> collection.title
-    manufacturer        -> collection.metafields.alterpop.manufacturer  (BLOCKED -> "[ manufacturer ]")
+    manufacturer        -> collection.metafields.alterpop.manufacturer  (BLOCKED -> slot collapses)
     editorial paragraph -> collection.metafields.alterpop.editorial     (BLOCKED -> slot collapses)
     piece count         -> collection.products_count  (live, computable)
     grid / filters / sort -> main-collection-product-grid (Dawn + Search & Discovery)
@@ -33,14 +33,10 @@
   empty state via the product grid; this header still renders (title, count 0).
 
   EMPTY-SLOT INSTRUMENTATION (spec: "estados vazios"). Every slot carries
-  data-ap-slot; an empty one carries data-ap-empty for auditing. Treatment
-  splits by slot kind and is intentionally inconsistent:
-    - Identity metadata (manufacturer) -> marked placeholder, visible. A
-      structured field of predictable size; its absence is useful signal.
-    - Editorial prose (editorial) -> collapses, no placeholder. A placeholder
-      where a paragraph belongs reads as a layout bug, and prose can't be
-      marked-as-missing without looking like real copy.
-  The same rule pair applies later to character-header and the Universe Rooms.
+  data-ap-slot; an empty one carries data-ap-empty for auditing (dev/QA
+  signal only — no visible placeholder text reaches the storefront, per
+  the 2026-09-15 briefing's global "no [ placeholder ] to the customer" rule).
+  Both manufacturer and editorial slots collapse entirely when blank.
 
   Enters with the shared editorial animation (ap-editorial-in, 400ms;
   neutralised under prefers-reduced-motion in tokens.css).
@@ -75,17 +71,11 @@
 
     <h1 class="ap-line-header__title type-display">{{ collection.title | escape | upcase }}</h1>
 
-    <p
-      class="ap-line-header__manufacturer type-body"
-      data-ap-slot="manufacturer"
-      {% if manufacturer == blank %}data-ap-empty{% endif %}
-    >
-      {%- if manufacturer != blank -%}
+    {%- if manufacturer != blank -%}
+      <p class="ap-line-header__manufacturer type-body" data-ap-slot="manufacturer">
         {{ manufacturer | escape }}
-      {%- else -%}
-        <span class="ap-ph">{{ 'sections.catalogue.manufacturer_placeholder' | t }}</span>
-      {%- endif -%}
-    </p>
+      </p>
+    {%- endif -%}
 
     <div
       class="ap-line-header__editorial type-body rte"

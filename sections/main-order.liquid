@@ -126,22 +126,14 @@
       </div>
     {%- endunless -%}
 
-    {%- comment -%} 4 — keep exploring [franchise] — BLOCKED, marked empty state {%- endcomment -%}
-    <div class="ap-order__card ap-order__explore">
-      {%- if oc_franchise != blank -%}
+    {%- comment -%} 4 — keep exploring [franchise] — BLOCKED, card hides entirely {%- endcomment -%}
+    {%- if oc_franchise != blank -%}
+      <div class="ap-order__card ap-order__explore">
         <p class="ap-order__label type-label">
           {{ 'sections.order_confirmation.keep_exploring_html' | t: franchise: oc_franchise }}
         </p>
-      {%- else -%}
-        <p class="ap-order__label type-label">
-          {{ 'sections.order_confirmation.keep_exploring' | t }}
-          <span class="ap-order__ph">{{ 'sections.order_confirmation.franchise_placeholder' | t }}</span>
-        </p>
-        <p class="ap-order__explore-empty type-caption">
-          {{ 'sections.order_confirmation.keep_exploring_empty' | t }}
-        </p>
-      {%- endif -%}
-    </div>
+      </div>
+    {%- endif -%}
 
     {%- comment -%} 5 — Collectors Club CTA (hidden if already a customer) {%- endcomment -%}
     {%- unless customer -%}

@@ -284,9 +284,6 @@
     "trust": {
       "label": "Why shop with us"
     },
-    "explore_universes": {
-      "placeholder_note": "Placeholder list — awaiting the Franchise/Universe field from the sync app."
-    },
     "product_rail": {
       "empty": "No products to show yet."
     },
@@ -311,10 +308,7 @@
       "cancelled_html": "Order {{ name }} was cancelled on {{ date }}.",
       "estimated_delivery": "Estimated Delivery",
       "delivery_window_html": "between {{ from }} and {{ to }}",
-      "keep_exploring": "Keep Exploring",
       "keep_exploring_html": "Keep Exploring {{ franchise }}",
-      "keep_exploring_empty": "Franchise links appear here once the Universe field is connected.",
-      "franchise_placeholder": "[ franchise ]",
       "join_club": "Create an Account & Join the Collectors Club"
     },
     "franchise_archive": {
@@ -324,8 +318,6 @@
       "breadcrumb_label": "Breadcrumb",
       "breadcrumb_root": "Legal",
       "last_updated": "Last updated {{ date }}",
-      "placeholder_intro": "[ Placeholder body copy — structure only. The legal text for this page is supplied separately before launch. ]",
-      "placeholder_note": "Legal copy pending — marked placeholder, not final wording.",
       "contact_form_heading": "Send us a message",
       "contact_subject": "Subject",
       "contact_submit": "Send Message",
@@ -360,11 +352,6 @@
         "one": "{{ count }} piece in catalog",
         "other": "{{ count }} pieces in catalog"
       },
-      "count_placeholder": "[ count — awaiting linked products ]",
-      "range_placeholder": "[ height range · years — awaiting fields ]",
-      "universe_placeholder": "[ universe ]",
-      "manufacturer_placeholder": "[ manufacturer ]",
-      "years_placeholder": "[ years ]",
       "source_placeholder": "Placeholder — products shown from a collection until the Character/Line field links them.",
       "empty_character": "No products linked to this character yet — awaiting the Character field from the sync app.",
       "empty_line": "No products linked to this line yet — awaiting the Line field from the sync app.",
@@ -431,7 +418,6 @@
       "menu": "Menu",
       "universes": "Universes",
       "universes_panel_title": "Explore Universes",
-      "universes_placeholder_note": "Placeholder list — awaiting the Franchise/Universe field from the sync app.",
       "close": "Close",
       "new_arrivals": "New Arrivals",
       "limited_editions": "Limited Editions & Exclusives",

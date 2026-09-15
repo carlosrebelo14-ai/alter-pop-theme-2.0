@@ -6,7 +6,7 @@
   Used by page.* resources via templates/page.legal.json (Cookie Policy,
   Shipping/Returns, etc.). Native /policies/* (Terms, Privacy) get the same
   look from sections/main-policy.liquid. Legal copy is merchant-supplied in
-  the page body; when empty a marked placeholder renders (structure only).
+  the page body; the body and the "last updated" line each hide when empty.
 {%- endcomment -%}
 
 <section class="ap-legal color-{{ section.settings.color_scheme }}">
@@ -22,23 +22,16 @@
 
     <h1 class="ap-legal__title type-h2">{{ page.title | escape }}</h1>
 
-    <p class="ap-legal__updated type-caption">
-      {%- if section.settings.last_updated != blank -%}
+    {%- if section.settings.last_updated != blank -%}
+      <p class="ap-legal__updated type-caption">
         {{ 'sections.legal.last_updated' | t: date: section.settings.last_updated }}
-      {%- else -%}
-        <span class="ap-legal__ph">{{ 'sections.legal.last_updated' | t: date: 'DD Month YYYY' }}</span>
-      {%- endif -%}
-    </p>
+      </p>
+    {%- endif -%}
 
     {%- if page.content != blank -%}
       <div class="ap-legal__body rte">
         {{ page.content }}
       </div>
-    {%- else -%}
-      <div class="ap-legal__body ap-legal__body--placeholder rte">
-        <p>{{ 'sections.legal.placeholder_intro' | t }}</p>
-      </div>
-      <p class="ap-legal__note type-caption" role="note">{{ 'sections.legal.placeholder_note' | t }}</p>
     {%- endif -%}
 
   </div>
@@ -66,7 +59,7 @@
       "type": "text",
       "id": "last_updated",
       "label": "Last updated date",
-      "info": "Free text, e.g. \"12 September 2025\". Shows a marked placeholder when empty."
+      "info": "Free text, e.g. \"12 September 2025\". Line is hidden when empty."
     }
   ],
   "presets": [{ "name": "Legal page" }]

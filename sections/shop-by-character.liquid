@@ -10,7 +10,7 @@
   source: collection.metafields.alterpop.characters.value, a list of
   { title, image, url }. Each character links to its Character Page (a
   separate Catalogue Experience pattern, wireframe 9a/9b — not built here).
-  Empty -> an explicit, marked empty state. NO inference of characters from
+  Empty -> the whole section is hidden. NO inference of characters from
   product titles / tags.
 {%- endcomment -%}
 
@@ -22,53 +22,36 @@
   endif
 -%}
 
+{%- if ap_characters_present -%}
 <section class="ap-shopby ap-shopby--character" aria-labelledby="ShopByCharacter-{{ section.id }}">
   <div class="ap-shopby__inner">
     <p class="ap-shopby__label type-label" id="ShopByCharacter-{{ section.id }}">
       {{ 'sections.universe_room.shop_by_character' | t }}
     </p>
 
-    {%- if ap_characters_present -%}
-      <ul class="ap-shopby__row ap-shopby__row--avatars" role="list">
-        {%- for character in ap_characters -%}
-          <li class="ap-shopby__avatar-item">
-            <a class="ap-shopby__avatar" href="{{ character.url | default: '#' }}">
-              <span class="ap-shopby__avatar-thumb">
-                {%- if character.image -%}
-                  {{
-                    character.image
-                    | image_url: width: 160
-                    | image_tag: loading: 'lazy', widths: '80, 120, 160', alt: character.title | escape
-                  }}
-                {%- else -%}
-                  <span class="ap-shopby__avatar-ph" aria-hidden="true">{{ character.title | slice: 0, 1 }}</span>
-                {%- endif -%}
-              </span>
-              <span class="ap-shopby__avatar-name type-caption">{{ character.title | escape }}</span>
-            </a>
-          </li>
-        {%- endfor -%}
-      </ul>
-    {%- else -%}
-      {%- comment -%} Explicit empty state — marked, no invented names. {%- endcomment -%}
-      <div class="ap-shopby__empty" role="note">
-        <ul class="ap-shopby__row ap-shopby__row--avatars ap-shopby__row--skeleton" role="list" aria-hidden="true">
-          {%- for i in (1..5) -%}
-            <li class="ap-shopby__avatar-item">
-              <span class="ap-shopby__avatar">
-                <span class="ap-shopby__avatar-thumb"><span class="ap-shopby__avatar-ph"></span></span>
-                <span class="ap-shopby__avatar-name type-caption">&nbsp;</span>
-              </span>
-            </li>
-          {%- endfor -%}
-        </ul>
-        <p class="ap-shopby__empty-note type-caption">
-          {{ 'sections.universe_room.shop_by_character_empty' | t }}
-        </p>
-      </div>
-    {%- endif -%}
+    <ul class="ap-shopby__row ap-shopby__row--avatars" role="list">
+      {%- for character in ap_characters -%}
+        <li class="ap-shopby__avatar-item">
+          <a class="ap-shopby__avatar" href="{{ character.url | default: '#' }}">
+            <span class="ap-shopby__avatar-thumb">
+              {%- if character.image -%}
+                {{
+                  character.image
+                  | image_url: width: 160
+                  | image_tag: loading: 'lazy', widths: '80, 120, 160', alt: character.title | escape
+                }}
+              {%- else -%}
+                <span class="ap-shopby__avatar-ph" aria-hidden="true">{{ character.title | slice: 0, 1 }}</span>
+              {%- endif -%}
+            </span>
+            <span class="ap-shopby__avatar-name type-caption">{{ character.title | escape }}</span>
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
   </div>
 </section>
+{%- endif -%}
 
 {% schema %}
 {

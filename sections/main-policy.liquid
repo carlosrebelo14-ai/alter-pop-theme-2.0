@@ -26,23 +26,16 @@
 
     <h1 class="ap-legal__title type-h2">{{ policy.title | escape }}</h1>
 
-    <p class="ap-legal__updated type-caption">
-      {%- if section.settings.last_updated != blank -%}
+    {%- if section.settings.last_updated != blank -%}
+      <p class="ap-legal__updated type-caption">
         {{ 'sections.legal.last_updated' | t: date: section.settings.last_updated }}
-      {%- else -%}
-        <span class="ap-legal__ph">{{ 'sections.legal.last_updated' | t: date: 'DD Month YYYY' }}</span>
-      {%- endif -%}
-    </p>
+      </p>
+    {%- endif -%}
 
     {%- if policy.body != blank -%}
       <div class="ap-legal__body rte">
         {{ policy.body }}
       </div>
-    {%- else -%}
-      <div class="ap-legal__body ap-legal__body--placeholder rte">
-        <p>{{ 'sections.legal.placeholder_intro' | t }}</p>
-      </div>
-      <p class="ap-legal__note type-caption" role="note">{{ 'sections.legal.placeholder_note' | t }}</p>
     {%- endif -%}
 
   </div>
@@ -70,7 +63,7 @@
       "type": "text",
       "id": "last_updated",
       "label": "Last updated date (all policies)",
-      "info": "Free text, e.g. \"12 September 2025\". Applies to every /policies/* page. Marked placeholder when empty."
+      "info": "Free text, e.g. \"12 September 2025\". Applies to every /policies/* page. Line is hidden when empty."
     }
   ]
 }

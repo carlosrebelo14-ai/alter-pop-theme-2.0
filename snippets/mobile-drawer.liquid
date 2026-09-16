@@ -88,6 +88,7 @@
                   {%- endfor -%}
                 {%- elsif ap_universes_from_collections -%}
                   {%- for collection in universe_collections -%}
+                    {%- if collection.products_count == 0 -%}{%- continue -%}{%- endif -%}
                     <li>
                       <a href="{{ collection.url }}" class="menu-drawer__universe">
                         <span class="menu-drawer__universe-thumb">
@@ -103,6 +104,7 @@
                   {%- endfor -%}
                 {%- else -%}
                   {%- for universe in ap_universes -%}
+                    {%- if universe.products_count == 0 -%}{%- continue -%}{%- endif -%}
                     <li>
                       <a href="{{ universe.url }}" class="menu-drawer__universe">
                         <span class="menu-drawer__universe-thumb">

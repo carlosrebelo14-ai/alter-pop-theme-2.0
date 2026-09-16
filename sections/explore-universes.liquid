@@ -52,6 +52,7 @@
         {%- endfor -%}
       {%- elsif ap_universes_from_collections -%}
         {%- for collection in section.settings.universe_collections -%}
+          {%- if collection.products_count == 0 -%}{%- continue -%}{%- endif -%}
           <li class="ap-doorways__item">
             <a class="ap-doorways__tile" href="{{ collection.url }}">
               {%- if collection.featured_image -%}
@@ -65,6 +66,7 @@
         {%- endfor -%}
       {%- else -%}
         {%- for universe in ap_universes -%}
+          {%- if universe.products_count == 0 -%}{%- continue -%}{%- endif -%}
           <li class="ap-doorways__item">
             <a class="ap-doorways__tile" href="{{ universe.url }}">
               {%- if universe.image -%}
@@ -93,7 +95,7 @@
       "id": "universe_collections",
       "label": "Universe collections",
       "info": "Explicit merchant curation, used until shop.metafields.alterpop.universes exists — the app-populated metafield takes over automatically once it does.",
-      "limit": 16
+      "limit": 50
     }
   ],
   "presets": [{ "name": "Explore Universes" }]

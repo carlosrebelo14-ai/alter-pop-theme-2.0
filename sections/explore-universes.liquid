@@ -30,6 +30,15 @@
   the ones cut from the row still have an entry point. `show_view_all` lets
   the merchant hide it (e.g. on the /collections instance, correction 4,
   which already shows every universe and sets show_view_all: false).
+
+  This section also powers templates/list-collections.json's "All Universes"
+  page (correction 4, 2026-09-16 review) — replacing Dawn's generic
+  main-list-collections there, which showed every collection including
+  new-arrivals and the-mandalorian Line. On that template the section gets
+  an `ap-doorways--index` modifier (keyed on template.name, not a setting —
+  it's a page-identity difference, not a per-instance choice) so the grid
+  stays multi-row at every width instead of the homepage's one-row/scroll
+  treatment.
 {%- endcomment -%}
 
 {%- liquid
@@ -63,7 +72,7 @@
 -%}
 
 {%- if ap_visible_count > 0 -%}
-<section class="ap-doorways">
+<section class="ap-doorways{% if template.name == 'list-collections' %} ap-doorways--index{% endif %}">
   <div class="ap-doorways__inner">
     <div class="ap-doorways__head">
       {%- if section.settings.heading != blank -%}

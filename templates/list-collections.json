@@ -1,13 +1,45 @@
 {
   "sections": {
     "main": {
-      "type": "main-list-collections",
+      "type": "explore-universes",
       "settings": {
-        "title": "Collections",
-        "sort": "alphabetical",
-        "image_ratio": "square",
-        "columns_desktop": 3,
-        "columns_mobile": "2"
+        "heading": "All Universes",
+        "max_tiles": 50,
+        "show_view_all": false,
+        "universe_collections": [
+          "attack-on-titan",
+          "avengers",
+          "batman",
+          "chainsaw-man",
+          "demon-slayer",
+          "dragon-ball",
+          "evangelion",
+          "frozen",
+          "gi-joe",
+          "gundam",
+          "harry-potter",
+          "jujutsu-kaisen",
+          "lord-of-the-rings",
+          "masters-of-the-universe",
+          "mickey-and-friends",
+          "my-hero-academia",
+          "naruto",
+          "one-piece",
+          "pokemon-universe",
+          "sonic",
+          "spider-man",
+          "spy-family",
+          "star-wars",
+          "stitch",
+          "stranger-things",
+          "super-mario",
+          "superman",
+          "tmnt",
+          "toystory",
+          "transformers",
+          "wednesday",
+          "x-men"
+        ]
       }
     }
   },

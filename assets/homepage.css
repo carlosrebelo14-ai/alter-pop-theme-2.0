@@ -309,6 +309,21 @@
   }
 }
 
+/* /collections "All Universes" (correction 4, templates/list-collections.json)
+   shows every universe, so it keeps a multi-row grid at every width instead
+   of the homepage's one-row/scroll treatment. */
+.ap-doorways--index .ap-doorways__list {
+  grid-auto-flow: row;
+  grid-template-columns: repeat(2, 1fr);
+  overflow-x: visible;
+}
+
+@media (min-width: 750px) {
+  .ap-doorways--index .ap-doorways__list {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
 .ap-doorways__tile {
   position: relative;
   display: block;

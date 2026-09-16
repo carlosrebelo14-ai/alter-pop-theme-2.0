@@ -5,16 +5,19 @@
   A label + a row of outline chips (.ap-btn --chip), one per collectible type
   (Pop! vinyl, resin statues, 1:1 replicas, action figures, apparel).
 
-  BLOQUEADO: no clean field. `product.type` on this store is a GENRE
-  ("Anime & Manga"), not a collectible format, and the tags are unstructured.
-  The slot reads the expected Search & Discovery filter
-  (filter.p.m.custom.collectible_type by default); until that exists a manual
-  list in the section settings is used as a MARKED placeholder. NO inference
-  from tags / titles.
+  Data: alterpop.format (2026-09-15 briefing review 3 — was wired to the
+  never-configured filter.p.m.custom.collectible_type; product.type on this
+  store is a GENRE ("Anime & Manga"), not a collectible format, and the
+  tags are unstructured, so neither is a substitute). The slot reads the
+  Search & Discovery filter for that metafield (filter.p.m.alterpop.format
+  by default, pending Carlos enabling it in admin — Filters, "Type"); until
+  it's enabled the section hides, and a manual list in the section settings
+  is the fallback if the store never gets that filter configured. NO
+  inference from tags / titles.
 {%- endcomment -%}
 
 {%- liquid
-  assign type_param = section.settings.filter_param | default: 'filter.p.m.custom.collectible_type'
+  assign type_param = section.settings.filter_param | default: 'filter.p.m.alterpop.format'
   assign type_filter = nil
   for f in collection.filters
     if f.param_name == type_param

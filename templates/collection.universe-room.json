@@ -17,7 +17,7 @@
     "shop-by-type": {
       "type": "shop-by-type",
       "settings": {
-        "filter_param": "filter.p.m.custom.collectible_type"
+        "filter_param": "filter.p.m.alterpop.format"
       }
     },
     "product-grid": {

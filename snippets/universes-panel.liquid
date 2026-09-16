@@ -14,8 +14,11 @@
      explicit merchant pick of real collections, entered in the theme
      editor. Not inference: the merchant is naming the collections
      directly, same as any other Dawn collection-list section setting.
-  3. dev placeholder list, only when neither of the above is set.
-  Same three-way source as the mobile drawer (snippets/mobile-drawer.liquid).
+  No placeholder branch (2026-09-16 review, correction 1): with neither
+  source set, or every sourced universe at 0 products, the whole trigger
+  renders nothing rather than inventing franchise names the store doesn't
+  carry.
+  Same two-way source as the mobile drawer (snippets/mobile-drawer.liquid).
 
   Accepts: universe_collections {Array<collection>} — from the header
   section's `universe_collections` setting, passed in by sections/header.liquid.
@@ -23,18 +26,28 @@
 
 {%- liquid
   assign ap_universes = shop.metafields.alterpop.universes.value
-  assign ap_universes_is_placeholder = false
   assign ap_universes_from_collections = false
-  if ap_universes == blank
-    if universe_collections.size > 0
-      assign ap_universes_from_collections = true
-    else
-      assign ap_universes_is_placeholder = true
-      assign ph_titles = 'Star Wars,Demon Slayer,One Piece,Stranger Things,The Mandalorian,Attack on Titan,Marvel' | split: ','
-    endif
+  if ap_universes == blank and universe_collections.size > 0
+    assign ap_universes_from_collections = true
+  endif
+
+  assign ap_visible_count = 0
+  if ap_universes_from_collections
+    for collection in universe_collections
+      unless collection.products_count == 0
+        assign ap_visible_count = ap_visible_count | plus: 1
+      endunless
+    endfor
+  elsif ap_universes != blank
+    for universe in ap_universes
+      unless universe.products_count == 0
+        assign ap_visible_count = ap_visible_count | plus: 1
+      endunless
+    endfor
   endif
 -%}
 
+{%- if ap_visible_count > 0 -%}
 <details class="ap-universes" id="Details-universes-strip">
   <summary class="ap-nav__link ap-universes__trigger" aria-haspopup="true">
     {{ 'sections.header.universes' | t }}
@@ -46,18 +59,7 @@
   <div class="ap-universes__strip">
     <div class="ap-universes__strip-inner page-width">
       <ul class="ap-universes__row" role="list">
-        {%- if ap_universes_is_placeholder -%}
-          {%- for title in ph_titles -%}
-            <li>
-              <a href="{{ routes.all_products_collection_url }}">
-                <span class="ap-universes__thumb">
-                  <span class="ap-universes__thumb--ph" aria-hidden="true">{{ title | slice: 0, 1 }}</span>
-                </span>
-                <span class="ap-universes__name">{{ title }}</span>
-              </a>
-            </li>
-          {%- endfor -%}
-        {%- elsif ap_universes_from_collections -%}
+        {%- if ap_universes_from_collections -%}
           {%- for collection in universe_collections -%}
             {%- if collection.products_count == 0 -%}{%- continue -%}{%- endif -%}
             <li>
@@ -94,3 +96,4 @@
     </div>
   </div>
 </details>
+{%- endif -%}

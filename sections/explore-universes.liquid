@@ -5,7 +5,10 @@
   Grid of doorways: 1:1 image with the franchise NAME OVERLAID at the bottom
   (white, on a dark gradient) — NOT below the tile. NOT brand logos, NOT
   product cards. Entrance: --motion-editorial.
-  Desktop 4-col, mobile 2-col.
+  Wireframe 1a/1b: ONE row — mobile is a horizontal scroll strip (next tile
+  peeking to signal there's more), desktop is a single 4-column row. Never a
+  multi-row grid on the homepage (2026-09-16 review, correction 3) — that's
+  what /collections (templates/list-collections.json, correction 4) is for.
 
   Source, in order of precedence (same three-way source as the header's
   universes strip / mobile drawer):
@@ -18,6 +21,15 @@
   No placeholder branch (2026-09-16 review, correction 1): with neither
   source set, or every sourced universe at 0 products, the section renders
   nothing rather than inventing franchise names the store doesn't carry.
+
+  `max_tiles` (correction 3) caps how many tiles render — universes with
+  0 products never count against it, so the limit always applies to what's
+  actually shown. When there are more visible universes than `max_tiles`,
+  the head shows "View All Universes ->" (same pattern as product-rail.liquid's
+  "Shop All", reusing the header drawer's existing view_all_universes key) so
+  the ones cut from the row still have an entry point. `show_view_all` lets
+  the merchant hide it (e.g. on the /collections instance, correction 4,
+  which already shows every universe and sets show_view_all: false).
 {%- endcomment -%}
 
 {%- liquid
@@ -26,6 +38,8 @@
   if ap_universes == blank and section.settings.universe_collections.size > 0
     assign ap_universes_from_collections = true
   endif
+
+  assign max_tiles = section.settings.max_tiles
 
   assign ap_visible_count = 0
   if ap_universes_from_collections
@@ -41,6 +55,11 @@
       endunless
     endfor
   endif
+
+  assign ap_show_view_all = false
+  if section.settings.show_view_all and ap_visible_count > max_tiles
+    assign ap_show_view_all = true
+  endif
 -%}
 
 {%- if ap_visible_count > 0 -%}
@@ -50,11 +69,19 @@
       {%- if section.settings.heading != blank -%}
         <h2 class="ap-section-heading">{{ section.settings.heading | escape }}</h2>
       {%- endif -%}
+      {%- if ap_show_view_all -%}
+        <a class="ap-btn ap-btn--ghost ap-doorways__viewall" href="{{ routes.collections_url }}">
+          {{- 'sections.header.view_all_universes' | t }}
+          <span aria-hidden="true">&rarr;</span>
+        </a>
+      {%- endif -%}
     </div>
 
     <ul class="ap-doorways__list" role="list">
       {%- if ap_universes_from_collections -%}
+        {%- assign ap_shown_count = 0 -%}
         {%- for collection in section.settings.universe_collections -%}
+          {%- if ap_shown_count >= max_tiles -%}{%- break -%}{%- endif -%}
           {%- if collection.products_count == 0 -%}{%- continue -%}{%- endif -%}
           <li class="ap-doorways__item">
             <a class="ap-doorways__tile" href="{{ collection.url }}">
@@ -66,9 +93,12 @@
               <span class="ap-doorways__name">{{ collection.title | escape }}</span>
             </a>
           </li>
+          {%- assign ap_shown_count = ap_shown_count | plus: 1 -%}
         {%- endfor -%}
       {%- else -%}
+        {%- assign ap_shown_count = 0 -%}
         {%- for universe in ap_universes -%}
+          {%- if ap_shown_count >= max_tiles -%}{%- break -%}{%- endif -%}
           {%- if universe.products_count == 0 -%}{%- continue -%}{%- endif -%}
           <li class="ap-doorways__item">
             <a class="ap-doorways__tile" href="{{ universe.url }}">
@@ -80,6 +110,7 @@
               <span class="ap-doorways__name">{{ universe.title | escape }}</span>
             </a>
           </li>
+          {%- assign ap_shown_count = ap_shown_count | plus: 1 -%}
         {%- endfor -%}
       {%- endif -%}
     </ul>
@@ -100,6 +131,19 @@
       "label": "Universe collections",
       "info": "Explicit merchant curation, used until shop.metafields.alterpop.universes exists — the app-populated metafield takes over automatically once it does.",
       "limit": 50
+    },
+    {
+      "type": "range",
+      "id": "max_tiles",
+      "min": 4, "max": 50, "step": 1, "default": 4,
+      "label": "Maximum tiles shown",
+      "info": "Universes with 0 products never count toward this limit. On the homepage this should stay a single row (4); the /collections instance sets it to show every universe."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show \"View All Universes\" link past the tile limit",
+      "default": true
     }
   ],
   "presets": [{ "name": "Explore Universes" }]

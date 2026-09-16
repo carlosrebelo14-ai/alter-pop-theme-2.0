@@ -1,9 +1,12 @@
 {%- comment -%}
-  Alterpop — resolves a product's regime. The only place that reads
-  alterpop.manufacturer_tier (2026-09-15 briefing, section 3). Four raw
-  tier values map to two PDP regimes:
-    ARTISAN / SIGNATURE -> premium
-    COLLECTOR / CORE / blank / unknown -> impulse
+  Alterpop — resolves a product's regime or visible tier label. The only
+  place that reads alterpop.manufacturer_tier (2026-09-15 briefing, section
+  3; label output added 2026-09-16 briefing, section 1). Four raw tier
+  values map to two PDP regimes and four labels:
+    ARTISAN   -> premium / "artisan"
+    SIGNATURE -> premium / "signature"
+    COLLECTOR -> impulse / "collector"
+    CORE / blank / unknown -> impulse / '' (no label)
 
   The exact literal Shopify stores ("ARTISAN" vs. "01 ARTISAN" etc.) is
   unconfirmed on the app side — this snippet accepts only the bare word.
@@ -11,18 +14,37 @@
 
   Params:
     product    (required) — the product to read the tier from.
-    force_tier (optional)  — 'impulse' or 'premium', overrides the field
-                              (dev preview only, e.g. ?view=premium).
+    force_tier (optional)  — 'impulse' or 'premium', overrides the REGIME
+                              only, never the label (dev preview only, e.g.
+                              ?view=premium).
+    output     (optional)  — 'regime' (default) or 'label'.
 
-  Outputs: 'premium' or 'impulse' (no trailing whitespace/newline).
+  Outputs ('regime'): 'premium' or 'impulse'.
+  Outputs ('label'):  'artisan' | 'signature' | 'collector' | '' (blank).
+  No trailing whitespace/newline either way.
 {%- endcomment -%}
 {%- liquid
   assign ap_raw = product.metafields.alterpop.manufacturer_tier.value | append: '' | strip | upcase
+  assign ap_label = ''
+  case ap_raw
+    when 'ARTISAN'
+      assign ap_label = 'artisan'
+    when 'SIGNATURE'
+      assign ap_label = 'signature'
+    when 'COLLECTOR'
+      assign ap_label = 'collector'
+  endcase
+
   assign ap_regime = 'impulse'
-  if ap_raw == 'ARTISAN' or ap_raw == 'SIGNATURE'
+  if ap_label == 'artisan' or ap_label == 'signature'
     assign ap_regime = 'premium'
   endif
   if force_tier == 'impulse' or force_tier == 'premium'
     assign ap_regime = force_tier
   endif
--%}{{ ap_regime }}
+
+  assign ap_result = ap_regime
+  if output == 'label'
+    assign ap_result = ap_label
+  endif
+-%}{{ ap_result }}

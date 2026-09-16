@@ -50,6 +50,11 @@
     assign is_premium = true
   endif
 
+  capture ap_tier_label
+    render 'ap-tier', product: product, output: 'label'
+  endcapture
+  assign ap_tier_label = ap_tier_label | strip
+
   assign product_form_id = 'product-form-' | append: section.id
 
   # --- Identity Block fields -------------------------------------------
@@ -119,8 +124,8 @@
         <div class="ap-pdp__info">
           <section id="ProductInfo-{{ section.id }}" class="ap-pdp__info-inner">
 
-            {%- if is_premium -%}
-              <p class="ap-pdp__badge type-label">{{ 'sections.pdp.premium_piece' | t }}</p>
+            {%- if ap_tier_label != blank -%}
+              <p class="ap-pdp__badge type-label">{{ 'sections.pdp.tier_' | append: ap_tier_label | t }}</p>
             {%- endif -%}
 
             {%- comment -%}

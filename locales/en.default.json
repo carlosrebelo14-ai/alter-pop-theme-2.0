@@ -368,7 +368,9 @@
       "compare_availability": "Availability"
     },
     "pdp": {
-      "premium_piece": "Premium Piece",
+      "tier_artisan": "Artisan",
+      "tier_signature": "Signature",
+      "tier_collector": "Collector",
       "in_stock_generic": "In stock",
       "fragile": "Fragile item — handled with care, shipped in reinforced protective packaging.",
       "tech_specs": "Tech Specs",

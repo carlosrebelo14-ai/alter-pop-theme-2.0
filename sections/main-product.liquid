@@ -55,6 +55,16 @@
   endcapture
   assign ap_tier_label = ap_tier_label | strip
 
+  assign ap_tier_text = blank
+  case ap_tier_label
+    when 'artisan'
+      assign ap_tier_text = 'sections.pdp.tier_artisan' | t
+    when 'signature'
+      assign ap_tier_text = 'sections.pdp.tier_signature' | t
+    when 'collector'
+      assign ap_tier_text = 'sections.pdp.tier_collector' | t
+  endcase
+
   assign product_form_id = 'product-form-' | append: section.id
 
   # --- Identity Block fields -------------------------------------------
@@ -124,10 +134,8 @@
         <div class="ap-pdp__info">
           <section id="ProductInfo-{{ section.id }}" class="ap-pdp__info-inner">
 
-            {%- if ap_tier_label != blank -%}
-              {% # theme-check-disable TranslationKeyExists %}
-              <p class="ap-pdp__badge type-label">{{ 'sections.pdp.tier_' | append: ap_tier_label | t }}</p>
-              {% # theme-check-enable TranslationKeyExists %}
+            {%- if ap_tier_text != blank -%}
+              <p class="ap-pdp__badge type-label">{{ ap_tier_text }}</p>
             {%- endif -%}
 
             {%- comment -%}

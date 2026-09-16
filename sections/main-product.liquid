@@ -125,7 +125,9 @@
           <section id="ProductInfo-{{ section.id }}" class="ap-pdp__info-inner">
 
             {%- if ap_tier_label != blank -%}
+              {% # theme-check-disable TranslationKeyExists %}
               <p class="ap-pdp__badge type-label">{{ 'sections.pdp.tier_' | append: ap_tier_label | t }}</p>
+              {% # theme-check-enable TranslationKeyExists %}
             {%- endif -%}
 
             {%- comment -%}

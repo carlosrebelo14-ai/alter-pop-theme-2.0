@@ -1,8 +1,14 @@
 {%- comment -%}
-  Renders an Alterpop list-or-scalar metafield (franchise / line / character)
+  Accepts list.single_line_text_field only (franchise / line / format).
+  Never pass alterpop.character (list.metaobject_reference) here — a
+  metaobject reference stringifies to "MetaobjectDrop", not its title.
+  Use snippets/ap-character-names.liquid for character.
+
+  Renders an Alterpop list-or-scalar metafield (franchise / line / format)
   as clean text. metafield.value on a list-type field returns an array —
   printing it directly stringifies to `["STAR WARS"]`. This snippet is the
-  only place that ever touches metafields.alterpop.* .value for display.
+  only place that ever touches metafields.alterpop.* .value for display,
+  other than ap-character-names for the metaobject-reference character field.
 
   Params:
     value (required) — metafield.value (array or string)

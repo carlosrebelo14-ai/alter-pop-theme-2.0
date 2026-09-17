@@ -150,9 +150,9 @@
               exists. See CLAUDE.md "PDP regime + Identity Block fields".
             {%- endcomment -%}
             <div class="ap-pdp__identity">
-              {%- if ap_character != blank -%}
+              {%- if product.metafields.alterpop.character.value.size > 0 -%}
                 <p class="ap-pdp__name type-h2">
-                  {%- render 'ap-meta-text', value: ap_character -%}
+                  {%- render 'ap-character-names', value: ap_character -%}
                 </p>
               {%- endif -%}
               <h1 class="ap-pdp__title type-product-title">{{ product.title | escape }}</h1>

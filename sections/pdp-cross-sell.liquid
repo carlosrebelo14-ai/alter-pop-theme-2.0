@@ -1,26 +1,30 @@
 {{ 'pdp.css' | asset_url | stylesheet_tag }}
 
 {%- comment -%}
-  Alterpop — PDP cross-sell. Wireframe 3a/3b: "COMPLETE THE [universe]
+  Alterpop — PDP cross-sell. Wireframe 3a/3b: "COMPLETE THE [franchise]
   COLLECTION", the free-shipping threshold line, then a rail of small cards.
   Reinforces the €50 threshold (same number as the homepage shipping bar).
 
-  Character is BLOCKED (no store definition) — the whole section hides
-  until it exists; the theme never shows "same collection" products as a
-  same-universe recommendation without the field to back that claim.
+  Source is the product's Character metaobject (alterpop.character, first
+  entry) and its `products` field — siblings that share that character. No
+  fallback to product.collections; without a character the section hides.
 {%- endcomment -%}
 
 {%- liquid
-  assign source = product.collections | first
-  assign universe = product.metafields.alterpop.universe.value
-  assign xsell_character = product.metafields.alterpop.character.value
+  assign character = product.metafields.alterpop.character.value | first
+  assign siblings = character.products.value
+
+  capture franchise_name
+    render 'ap-meta-text', value: product.metafields.alterpop.franchise.value
+  endcapture
+  assign franchise_name = franchise_name | strip
 -%}
 
-{%- if xsell_character != blank and source != blank and source.products.size > 1 -%}
+{%- if character != blank and siblings.size > 1 -%}
   <section class="ap-xsell page-width" aria-labelledby="XSell-{{ section.id }}">
     <p class="ap-xsell__label type-label" id="XSell-{{ section.id }}">
-      {%- if universe != blank -%}
-        {{ 'sections.pdp.xsell_heading' | t: name: universe }}
+      {%- if franchise_name != blank -%}
+        {{ 'sections.pdp.xsell_heading' | t: name: franchise_name }}
       {%- else -%}
         {{ 'sections.pdp.xsell_heading_generic' | t }}
       {%- endif -%}
@@ -34,20 +38,24 @@
 
     <ul class="ap-xsell__row" role="list">
       {%- assign shown = 0 -%}
-      {%- for item in source.products -%}
-        {%- if item.id != product.id and shown < 4 -%}
+      {%- for pass in (1..2) -%}
+        {%- for sibling in siblings -%}
+          {%- if sibling.id == product.id -%}{%- continue -%}{%- endif -%}
+          {%- if pass == 1 and sibling.available == false -%}{%- continue -%}{%- endif -%}
+          {%- if pass == 2 and sibling.available -%}{%- continue -%}{%- endif -%}
+          {%- if shown >= 4 -%}{%- break -%}{%- endif -%}
           {%- assign xsell_skip_styles = true -%}
           {%- if shown == 0 -%}{%- assign xsell_skip_styles = false -%}{%- endif -%}
           <li class="ap-xsell__item">
             {% render 'product-card',
-              card_product: item,
+              card_product: sibling,
               compact: true,
               lazy_load: true,
               skip_styles: xsell_skip_styles
             %}
           </li>
           {%- assign shown = shown | plus: 1 -%}
-        {%- endif -%}
+        {%- endfor -%}
       {%- endfor -%}
     </ul>
   </section>

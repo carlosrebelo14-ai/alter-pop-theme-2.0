@@ -482,6 +482,12 @@ uploaded copy is stale until a restart + re-verify says otherwise.
   seal — all impossible on Basic / native checkout), and the Protective
   Shipping delivery-customisation approach.
 - **Order confirmation page (4b) — built as a STANDALONE order template.**
+  **STATUS: INACTIVE IN PRODUCTION (2026-09-17)** — this shop is on Shopify's
+  new hosted Customer Accounts (`shop.customerAccountsV2.customerAccountsVersion
+  = NEW_CUSTOMER_ACCOUNTS`, confirmed via Admin API). Order status/detail is
+  served by `account.alterpop.store`, not this section; it never renders for
+  a real customer today. Marked inactive, not deleted — remove vs. restore is
+  a decision for after a Customer Accounts audit, with data in front of it.
   `templates/customers/order.liquid` (`{% section 'main-order' %}`) +
   `sections/main-order.liquid` + `assets/customer-order.css`. Wireframe 4b:
   emerald seal + "Order {name} Confirmed", "we sent the details to {email}",

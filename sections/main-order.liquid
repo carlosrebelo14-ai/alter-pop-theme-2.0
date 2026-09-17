@@ -1,6 +1,15 @@
 {%- comment -%}
   Alterpop — Order confirmation / order detail (wireframe 4b).
 
+  STATUS: INACTIVE IN PRODUCTION (2026-09-17). This shop's customer accounts
+  are on Shopify's new hosted Customer Accounts (shop.customerAccountsV2.
+  customerAccountsVersion = NEW_CUSTOMER_ACCOUNTS, confirmed via Admin API).
+  Order status / order detail is served entirely by account.alterpop.store,
+  not by this section — customers.order.liquid / main-order.liquid never
+  renders for a real customer today. Do not assume this section is live;
+  do not delete it either — whether to remove or restore it depends on a
+  Customer Accounts audit that hasn't happened yet. See CLAUDE.md.
+
   Standalone customer.order template. This theme has no customer-account area
   yet (dead /account links in header + footer — see CLAUDE.md pending item),
   so this page is reached only via the order-status "View order details" link

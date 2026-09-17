@@ -1,6 +1,15 @@
 {%- comment -%}
   Alterpop — Order confirmation / order detail (wireframe 4b).
 
+  STATUS: INACTIVE IN PRODUCTION (2026-09-17). This shop's customer accounts
+  are on Shopify's new hosted Customer Accounts (shop.customerAccountsV2.
+  customerAccountsVersion = NEW_CUSTOMER_ACCOUNTS, confirmed via Admin API).
+  Order status / order detail is served entirely by account.alterpop.store,
+  not by this section — customers.order.liquid / main-order.liquid never
+  renders for a real customer today. Do not assume this section is live;
+  do not delete it either — whether to remove or restore it depends on a
+  Customer Accounts audit that hasn't happened yet. See CLAUDE.md.
+
   Standalone customer.order template. This theme has no customer-account area
   yet (dead /account links in header + footer — see CLAUDE.md pending item),
   so this page is reached only via the order-status "View order details" link
@@ -10,8 +19,10 @@
   Data:
   - order.name / order.email / order.created_at ....... live
   - line item Height (ociostock.dimensions) .......... live
-  - line item Character (alterpop.character) ......... BLOCKED -> falls back to
-    the product title (honest, not inference), same rule as the PDP
+  - line item Character (alterpop.character) ......... BLOCKED -> slot omitted
+    entirely (label, separator, line), same rule as every other catalog slot
+    in the theme. Never falls back to product.title — see PLANO_IMPLEMENTACAO.md
+    "Character deduzido do título do produto" ban.
   - Franchise (alterpop.franchise) .................. BLOCKED -> slot omitted;
     "Keep Exploring [franchise]" heading + grid render a marked empty state
   - Estimated-delivery window is derived from order.created_at as a calendar
@@ -72,20 +83,19 @@
     <ul class="ap-order__card ap-order__items" role="list">
       {%- for li in order.line_items -%}
         {%- liquid
+          assign li_char = ''
           assign li_char_raw = li.product.metafields.alterpop.character.value
           if li_char_raw != blank
             capture li_char
-              render 'ap-meta-text', value: li_char_raw
+              render 'ap-character-names', value: li_char_raw
             endcapture
-          endif
-          if li_char == blank
-            assign li_char = li.product.title
-          endif
-          if li_char == blank
-            assign li_char = li.title
           endif
           assign li_fr = li.product.metafields.alterpop.franchise.value
           assign li_dim = li.product.metafields.ociostock.dimensions.value
+          assign li_meta_shown = false
+          if li.product.metafields.alterpop.character.value.size > 0
+            assign li_meta_shown = true
+          endif
         -%}
         <li class="ap-order__item">
           {%- if li.image -%}
@@ -102,9 +112,16 @@
           {%- endif -%}
           <div class="ap-order__item-body">
             <p class="ap-order__item-meta">
-              <span class="ap-order__item-name">{{ li_char | escape }}</span>
-              {%- if li_fr != blank -%}<span class="ap-order__dot"> &middot; </span>{%- render 'ap-meta-text', value: li_fr -%}{%- endif -%}
-              {%- if li_dim != blank -%}<span class="ap-order__dot"> &middot; </span>{{ li_dim | escape }}{%- endif -%}
+              {%- if li.product.metafields.alterpop.character.value.size > 0 -%}<span class="ap-order__item-name">{{ li_char | escape }}</span>{%- endif -%}
+              {%- if li_fr != blank -%}
+                {%- if li_meta_shown -%}<span class="ap-order__dot"> &middot; </span>{%- endif -%}
+                {%- render 'ap-meta-text', value: li_fr -%}
+                {%- assign li_meta_shown = true -%}
+              {%- endif -%}
+              {%- if li_dim != blank -%}
+                {%- if li_meta_shown -%}<span class="ap-order__dot"> &middot; </span>{%- endif -%}
+                {{ li_dim | escape }}
+              {%- endif -%}
             </p>
             {%- if li.quantity > 1 -%}
               <p class="ap-order__qty type-caption">{{ 'customer.order.quantity' | t }}: {{ li.quantity }}</p>

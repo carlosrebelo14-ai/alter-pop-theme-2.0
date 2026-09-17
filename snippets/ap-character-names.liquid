@@ -1,0 +1,33 @@
+{%- comment -%}
+  ap-character-names
+  Único ponto de conversão de alterpop.character (list.metaobject_reference) para texto.
+  Lê title.value de cada referência. Não usar com campos list.single_line_text_field.
+
+  {% render 'ap-character-names', value: product.metafields.alterpop.character %}
+  {% render 'ap-character-names', value: product.metafields.alterpop.character, as: 'span', class: 'ap-identity__value' %}
+{%- endcomment -%}
+
+{%- liquid
+  assign ap_sep = separator | default: ' / '
+  assign ap_render_as = as | default: 'text'
+  assign ap_entries = value
+  if value.type
+    assign ap_entries = value.value
+  endif
+  assign ap_names = ''
+-%}
+{%- if ap_entries != blank -%}
+  {%- for ap_entry in ap_entries -%}
+    {%- assign ap_name = ap_entry.title.value | strip -%}
+    {%- if ap_name != blank -%}
+      {%- if ap_names == blank -%}
+        {%- assign ap_names = ap_name -%}
+      {%- else -%}
+        {%- assign ap_names = ap_names | append: ap_sep | append: ap_name -%}
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+{%- if ap_names != blank -%}
+  {%- if ap_render_as == 'span' -%}<span class="{{ class }}">{{ ap_names }}</span>{%- else -%}{{ ap_names }}{%- endif -%}
+{%- endif -%}

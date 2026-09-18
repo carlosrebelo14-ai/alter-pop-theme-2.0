@@ -48,15 +48,25 @@ Registo de drift — 18/09/2026
   rollback duplica o live atual.
 
 QA de personagens — pre-requisitos (scripts/qa-characters.mjs)
-- Custom app no Admin, so de leitura, criada pelo Carlos. Scopes:
+- App "Alterpop QA Read" no Dev Dashboard (org Alterpop), so de leitura, criada
+  e instalada em 18/09/2026. Versao ativa alterpop-qa-read-2. Scopes:
   read_metaobjects, read_products, read_online_store_pages.
+- NAO existe token estatico de Admin API. A Shopify fechou a criacao de
+  admin-created custom apps; apps novas autenticam por client credentials
+  grant. O script troca client id/secret por um token de 24h em
+  POST https://<shop>/admin/oauth/access_token (grant_type=client_credentials)
+  e so depois chama a Admin API. Nada de longa duracao fica em disco.
+  A loja tem de estar na mesma organizacao que a app — alterpop.store esta.
 - Ficheiro `.env` local na raiz do repo, nunca commitado (`.env*` esta no .gitignore):
-      SHOPIFY_ADMIN_TOKEN=<token da custom app>
+      SHOPIFY_CLIENT_ID=<client id da app>
+      SHOPIFY_CLIENT_SECRET=<chave secreta da app>
       SHOPIFY_SHOP_DOMAIN=jyr17t-wr.myshopify.com
   O dominio permanente e jyr17t-wr.myshopify.com; alterpop.myshopify.com
   devolve 404 e nao e esta loja.
-- Sem SHOPIFY_ADMIN_TOKEN o script sai com 1. Nunca degrada para modo publico:
-  um gate que passa por falta de credencial e pior do que nenhum.
+- Falta qualquer uma das tres chaves e o script sai com 1. Nunca degrada para
+  modo publico: um gate que passa por falta de credencial e pior do que nenhum.
+- Revogar o acesso e desinstalar a app da loja, ou rodar a chave secreta em
+  Dev Dashboard > Alterpop QA Read > Definicoes da app.
 - `--host` e obrigatorio, sem valor por defeito. `staging` e o mesmo dominio
   publico com o cookie preview_theme_id=207846408522 (ver "Verificacao de HTML
   servido" abaixo); o script confirma pelo header server-timing que o tema
@@ -65,6 +75,14 @@ QA de personagens — pre-requisitos (scripts/qa-characters.mjs)
   ou ative Characters (o importer escreve os metaobjects; o tema nao os valida).
 - Rota de metaobject: /pages/<urlHandle>/<handle>. O URL gera-se sempre por
   `system.url`, nunca a mao. Regra completa e historico em CLAUDE.md.
+- Assercoes: por entrada ACTIVE — title/universe/products preenchidos, entrada
+  presente no alterpop.characters de pelo menos um dos seus universos (orfa),
+  200 na rota, H1 e <title> com o nome, zero Liquid error, cards servidos iguais
+  aos produtos visiveis no Admin, meta line igual aos cards. Globais — qa-dead-ref
+  nunca ACTIVE, /characters/<handle> a 404, e varrimento estatico do repo por
+  hrefs /characters/ sem /pages/. O 404 sozinho nao prova nada (a Shopify devolve
+  404 nessa rota de qualquer forma); o varrimento e que apanha a regressao.
+- Sai com 1 a primeira assercao falhada, imprimindo o progresso N/M ate ai.
 
 Drift check (repo vs. live, via staging logo apos duplicar)
 - shopify theme pull --theme=207846408522 --path=/tmp/staging-snapshot

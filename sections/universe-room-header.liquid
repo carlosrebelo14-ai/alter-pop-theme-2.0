@@ -11,7 +11,10 @@
 
   Data: the collection this template is applied to. `heading` / `subheading` /
   `image` in the section override the collection's own title / description /
-  image. No Franchise/Universe field is needed here — the collection IS the
+  image. Image fallback is three levels: section image, then the
+  `alterpop.hero_image` metafield (wide, curated for this header), then
+  `collection.image` (square, shared with the Explore Universes / mega-menu
+  tiles). No Franchise/Universe field is needed here — the collection IS the
   universe.
 {%- endcomment -%}
 
@@ -24,7 +27,7 @@
     assign uroom_text = collection.description | strip_html | truncate: 160
   endif
 
-  assign uroom_image = section.settings.image | default: collection.image
+  assign uroom_image = section.settings.image | default: collection.metafields.alterpop.hero_image | default: collection.image
 -%}
 
 <section

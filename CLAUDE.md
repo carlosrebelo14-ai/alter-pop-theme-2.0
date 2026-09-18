@@ -122,6 +122,21 @@ doesn't error — it just silently renders blank, since the entries have no
 this wrong pairing; caught before merge. Check the metafield's Admin type
 before wiring a new display call, don't assume from the field name.
 
+## Metaobject page URLs — `/pages/<urlHandle>/<handle>`, always via `system.url` (hard rule — hit 18/09/2026)
+
+Online Store metaobject pages are served under `/pages/`. The `character`
+definition (`urlHandle: characters`) resolves at
+`/pages/characters/luke-skywalker`; `/characters/luke-skywalker` is a 404
+whatever the theme contains. Generate the link only with
+`{{ entry.system.url }}` (see `sections/shop-by-character.liquid`), never by
+hand, and never write the route without the `/pages/` prefix in docs.
+
+A briefing (18/09/2026) read that 404 as "missing
+`templates/metaobject/character.json`" and proposed recreating it — the
+template was already live since `bc87ace`; the test had used the URL without
+`/pages/`. Before diagnosing a metaobject 404, read the href that
+`system.url` already emits on a live page and test that.
+
 ## Dawn `.grid` inside an Alterpop layout (hard rule — hit three times)
 
 Dawn's `.grid` is a **flexbox**. `.grid__item` carries
@@ -276,8 +291,8 @@ uploaded copy is stale until a restart + re-verify says otherwise.
   does not resolve. Set in `shopify.theme.toml`.
 - Development theme id: `206791704906`. Dev server: `http://127.0.0.1:9292`.
 - Live theme id: `207355216202` (name "ALTERPOP 2.0").
-- Current rollback snapshot: `ROLLBACK pre-briefing — 17/09/2026`, id
-  `207823765834`. One snapshot at a time — name it `ROLLBACK <reason> —
+- Current rollback snapshot: `ROLLBACK pre-character-page — 18/09/2026`, id
+  `207859253578` (`docs/DEPLOY.md` is the live record of this id). One snapshot at a time — name it `ROLLBACK <reason> —
   DD/MM/YYYY` and delete the previous one it supersedes once the new one is
   verified (see gotcha below).
 - **`shopify theme duplicate` is not atomic — hard rule, hit 17/09/2026.**

@@ -189,11 +189,14 @@ if (target === "live") {
     }
   });
 
-  check("QA de personagens contra o staging (scripts/qa-characters.mjs)", () => {
-    if (dryRun) return "não corrido em dry-run";
-    const r = spawnSync("node", ["scripts/qa-characters.mjs", "--host", "staging"], { stdio: "inherit" });
-    if (r.status !== 0) throw new Error("o QA de staging não saiu verde");
-  });
+  if (dryRun) {
+    console.log("  ○ QA de personagens contra o staging — NÃO corrido em dry-run (corre no deploy real)");
+  } else {
+    check("QA de personagens contra o staging (scripts/qa-characters.mjs)", () => {
+      const r = spawnSync("node", ["scripts/qa-characters.mjs", "--host", "staging"], { stdio: "inherit" });
+      if (r.status !== 0) throw new Error("o QA de staging não saiu verde");
+    });
+  }
 }
 
 if (dryRun) {

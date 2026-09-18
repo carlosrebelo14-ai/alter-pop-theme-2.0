@@ -44,10 +44,11 @@
   # Luffy entry (universe: One Piece) on 18/09/2026. The `first` FILTER
   # works. Use the filter form for any metaobject list-reference field.
   assign ap_universe = metaobject.universe.value | first
-  # Count what the grid can render, not array entries: .size also counts dead
-  # (blank) references, and "13 figures" over 12 cards is a visible lie.
-  # Same rule as the loops in character-grid.liquid; a `render` would isolate
-  # scope, so the few lines are repeated on purpose rather than shared.
+  # Count what the grid can render (non-blank entries), the same rule as the
+  # loops in character-grid.liquid. Measured 18/09/2026: Shopify already drops
+  # references to products the storefront can't see (DRAFT tested), so this
+  # equals .size today; it stays so header and grid can never disagree. A
+  # `render` would isolate scope, so the few lines are repeated on purpose.
   assign ap_figure_count = 0
   for product in metaobject.products.value
     if product == blank

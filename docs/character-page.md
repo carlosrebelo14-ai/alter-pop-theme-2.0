@@ -50,9 +50,13 @@ quer dizer que ela sobreviva ao proximo ciclo.
 
 ## Regras de renderizacao
 
-- Uma referencia em `products` pode desaparecer (produto apagado ou despublicado depois
-  de escrita). O grid e o header ignoram entradas `blank`; a contagem "N figures" e a de
-  cards renderizaveis, nunca `products.value.size`.
+- Referencia morta, medido a 18/09/2026: uma referencia a um produto que o storefront nao
+  ve (testado com um produto `DRAFT` numa entrada descartavel `qa-dead-ref`) **nao chega
+  ao Liquid** — o Shopify tira-a do array antes. `size` e `count` deram 1 sobre 2
+  referencias, e ate o codigo sem guarda mostrou 1 card e "1 figure". Nao foram testados
+  um produto apagado nem um ACTIVE so despublicado do Online Store. Grid e header saltam
+  entradas `blank` como rede para uma forma nao observada; hoje a contagem de renderizaveis
+  e igual a `products.value.size`.
 - Zero cards renderizaveis: o grid nao renderiza nada (sem wrapper, sem mensagem, sem
   placeholder). O header mantem-se, sem meta line; o breadcrumb ja liga ao universo.
 - `metaobject.universe.value.first` (accessor) devolve `null` nesta drop; usar o filtro

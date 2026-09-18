@@ -31,14 +31,18 @@
   markup) per the corrected briefing: "Com zero produtos o template renderiza
   header sem meta line e sem grid."
 
-  DEAD REFERENCES (18/09/2026 hardening): an entry of metaobject.products.value
-  can come back `blank` (product deleted / unpublished after the reference was
-  written). Every loop below skips blanks, and the wrapper is gated on
-  ap_visible (non-blank count), not .size — otherwise a list made only of
-  dead references would still print the empty grid wrapper. Without the skip
-  in the second pass a blank would fall into `unless product.available` and
-  render a card for nothing. The "no products" rule above is unchanged: zero
-  visible cards -> nothing rendered, no message, no placeholder.
+  DEAD REFERENCES (18/09/2026, measured — not assumed): a reference to a
+  product the storefront can't see is NOT delivered as a blank entry. Tested
+  with a DRAFT product on a throwaway entry (`qa-dead-ref`, 2 references):
+  Shopify drops it from metaobject.products.value before Liquid runs — .size
+  and .count both came back 1, and even the un-guarded code rendered 1 card
+  and "1 figure". So today ap_visible == .size. The `blank` skips below are a
+  safety net for a shape that was NOT observed (a deleted product, or an
+  ACTIVE one merely unpublished from the Online Store, were not tested); they
+  cost nothing, and without the skip in the second pass a blank would fall
+  into `unless product.available` and render an empty card. ap_visible gates
+  the wrapper. "No products" rule unchanged: zero visible cards -> nothing
+  rendered, no message, no placeholder.
 
   CARD: reuses snippets/product-card.liquid unmodified (the actual shared
   component — "Product Card standard, sem variante"), plus the existing

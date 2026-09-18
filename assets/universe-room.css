@@ -221,6 +221,12 @@
   text-underline-offset: 2px;
 }
 
+[data-template-suffix="universe-room"] .ap-shopby__avatar--disabled {
+  opacity: 0.45;
+  cursor: default;
+  pointer-events: none;
+}
+
 /* empty / placeholder state */
 [data-template-suffix="universe-room"] .ap-shopby__row--skeleton .ap-shopby__avatar-thumb {
   background: var(--color-surface);

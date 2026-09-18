@@ -32,7 +32,11 @@
     <ul class="ap-shopby__row ap-shopby__row--avatars" role="list">
       {%- for character in ap_characters -%}
         <li class="ap-shopby__avatar-item">
-          <a class="ap-shopby__avatar" href="{{ character.url | default: '#' }}">
+          {%- if character.system.url != blank -%}
+          <a class="ap-shopby__avatar" href="{{ character.system.url }}">
+          {%- else -%}
+          <div class="ap-shopby__avatar ap-shopby__avatar--disabled">
+          {%- endif -%}
             <span class="ap-shopby__avatar-thumb">
               {%- if character.image -%}
                 {{
@@ -45,7 +49,11 @@
               {%- endif -%}
             </span>
             <span class="ap-shopby__avatar-name type-caption">{{ character.title | escape }}</span>
+          {%- if character.system.url != blank -%}
           </a>
+          {%- else -%}
+          </div>
+          {%- endif -%}
         </li>
       {%- endfor -%}
     </ul>

@@ -1,0 +1,166 @@
+{{ 'character-page.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'product-card.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'ap-character-cuts.js' | asset_url }}" defer="defer"></script>
+
+{%- comment -%}
+  Alterpop — Character grid. Source of truth: Wireframe 9a (Character Page).
+  Renders on templates/metaobject/character.json, alongside character-header.
+
+  Data source: metaobject.products.value — a list.product_reference field,
+  confirmed on the live `character` metaobject definition (17/09/2026). Max
+  128 references, no native pagination/sort/filters (it's a metaobject field,
+  not a Shopify collection) — the whole array renders on one page, same as
+  the wireframe's "full grid shows immediately, no filter chosen first."
+
+  Zero products -> the section renders nothing (no empty-state copy, no grid
+  markup) per the corrected briefing: "Com zero produtos o template renderiza
+  header sem meta line e sem grid."
+
+  CARD: reuses snippets/product-card.liquid unmodified (the actual shared
+  component — "Product Card standard, sem variante"), plus the existing
+  `hide_franchise` param (same reasoning as Universe Room: the page is
+  already scoped to one character/universe, so FRANCHISE on every card is
+  redundant with the header) and a new opt-in `show_tier` param (added here,
+  see snippets/product-card.liquid) for "tier label from COLLECTOR up."
+
+  GRID WRAPPER: intentionally NOT sections/main-collection-product-grid.liquid.
+  That section is deeply bound to a Shopify `collection` object — paginate,
+  collection.filters, collection.sort_options, <collection-component
+  data-collection-id="{{ collection.id }}">. None of that exists for a
+  metaobject's product-reference array, so "reusing the Line grid" means
+  reusing its two genuinely portable parts instead of the whole section:
+  snippets/product-card.liquid (the card) and the sold-out-last two-pass
+  sort pattern from main-collection-product-grid.liquid (used there for
+  Universe Room). Each grid item is a plain <div class="grid__item"> (not
+  Dawn's <li> from snippets/product-card-grid-item.liquid) so it can carry
+  the cuts engine's data-line/-height/-year attributes and sit as a direct
+  sibling of the cluster-heading <div> that assets/ap-character-cuts.js
+  injects when a cut is active — <div> siblings inside a <ul> would be
+  invalid list content.
+
+  SORT: available products first, then sold-out (visible, marked, pushed to
+  the end), each group keeping the metaobject array's own order — identical
+  rule to main-collection-product-grid.liquid's Universe Room pass, just
+  over an in-memory array instead of a paginated collection (no paginate.pages
+  gate needed: the array is never paginated in the first place).
+
+  CUTS: EXPLORE BY renders all three chips (Line / Height / Year) — the DOM
+  contract in assets/ap-character-cuts.js already disables a chip with no
+  live data anywhere in the grid (see tests/fixtures/character-grid.html,
+  Instance B). Line is wired to product.metafields.alterpop.line (exists on
+  the definition, currently null on every sampled product — chip renders
+  disabled until the sync app populates it). Height and Year carry NO
+  data-height/data-year attribute at all: there is no year field on Product,
+  and ociostock.dimensions is a full package L×W×H string, not a single
+  comparable height — parsing it to fake a bucket would be inference. Both
+  chips are therefore permanently dead today, exactly as the fixture's
+  Instance B exercises, and need no separate Liquid-side disabling logic.
+
+  The whole EXPLORE BY bar is server-side gated on ap_any_line (18/09/2026
+  briefing): with Height/Year permanently dead and Line currently empty on
+  every product, rendering the bar at all would mean a labelled container
+  holding three JS-disabled buttons and nothing to explore — worse than no
+  bar. `ap-character-cuts.js` only disables per-chip client-side (it can't
+  decide "hide the whole bar", and doing that in JS would flash the full bar
+  before disabling); Liquid decides visibility here from the same data the
+  JS itself reads. NOTE: this check only inspects alterpop.line — the one
+  field actually wired to data-* today. If Height or Year is ever wired
+  (their own field lands, code starts emitting data-height/data-year), this
+  condition needs to grow to match, or the bar will hide even though one of
+  those newly-live cuts has data.
+{%- endcomment -%}
+
+{%- liquid
+  assign ap_products = metaobject.products.value
+
+  assign ap_any_line = false
+  for product in ap_products
+    if product.metafields.alterpop.line.value != blank
+      assign ap_any_line = true
+      break
+    endif
+  endfor
+-%}
+
+{%- if ap_products.size > 0 -%}
+  <div class="ap-character-grid section-{{ section.id }}-padding page-width">
+    {%- if ap_any_line -%}
+      <div class="ap-character-cuts" data-ap-cut-bar>
+        <span class="ap-character-cuts__label type-label">{{ 'sections.catalogue.explore_by' | t }}</span>
+        <button type="button" class="ap-btn ap-btn--chip" data-ap-cut-chip="line" aria-pressed="false">
+          {{- 'sections.catalogue.cut_line' | t -}}
+        </button>
+        <button type="button" class="ap-btn ap-btn--chip" data-ap-cut-chip="height" aria-pressed="false">
+          {{- 'sections.catalogue.cut_height' | t -}}
+        </button>
+        <button type="button" class="ap-btn ap-btn--chip" data-ap-cut-chip="year" aria-pressed="false">
+          {{- 'sections.catalogue.cut_year' | t -}}
+        </button>
+      </div>
+    {%- endif -%}
+
+    <div
+      class="grid ap-character-grid__items"
+      data-ap-grid
+      data-ap-cut-grid
+      data-ap-cut=""
+      id="CharacterGrid-{{ section.id }}"
+    >
+      {%- liquid
+        assign ap_index = 0
+        for product in ap_products
+          if product.available
+            assign ap_index = ap_index | plus: 1
+            assign ap_line = product.metafields.alterpop.line.value | join: ', '
+            assign ap_skip_styles = false
+            unless ap_index == 1
+              assign ap_skip_styles = true
+            endunless
+            render 'character-grid-item', product: product, index: ap_index, section: section, skip_styles: ap_skip_styles, line: ap_line
+          endif
+        endfor
+        for product in ap_products
+          unless product.available
+            assign ap_index = ap_index | plus: 1
+            assign ap_line = product.metafields.alterpop.line.value | join: ', '
+            render 'character-grid-item', product: product, index: ap_index, section: section, skip_styles: true, line: ap_line
+          endunless
+        endfor
+      -%}
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Character grid",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 48
+    }
+  ],
+  "enabled_on": {
+    "templates": ["metaobject"]
+  }
+}
+{% endschema %}

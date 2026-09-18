@@ -38,6 +38,14 @@
                              Compare Drawer). Entry point EXCLUSIVE to the
                              Character / Line pages — never passed elsewhere.
                              Default: false.
+  - show_tier:     {Boolean} Render the tier label (snippets/ap-tier.liquid,
+                             output: 'label') when non-blank — i.e. Artisan /
+                             Signature / Collector; CORE/blank never shows
+                             one. Opt-in per caller (Character Page briefing,
+                             18/09/2026) rather than on by default, same
+                             pattern as `compare` — keeps this the one card
+                             component with conditional logic, not a new
+                             variant. Default: false.
 
   Presentation state is derived from a stock NUMBER already provided by the sync
   app (allowed client-side calc). Sync runs ~45 min so the number can be stale;
@@ -109,6 +117,22 @@
     # array-or-scalar text, capped to 2 values here (card is tight on width).
 
     assign title_id = 'ap-card-title-' | append: uid | append: '-' | append: card_product.id
+
+    assign tier_text = ''
+    if show_tier
+      capture ap_tier_label
+        render 'ap-tier', product: card_product, output: 'label'
+      endcapture
+      assign ap_tier_label = ap_tier_label | strip
+      case ap_tier_label
+        when 'artisan'
+          assign tier_text = 'sections.pdp.tier_artisan' | t
+        when 'signature'
+          assign tier_text = 'sections.pdp.tier_signature' | t
+        when 'collector'
+          assign tier_text = 'sections.pdp.tier_collector' | t
+      endcase
+    endif
   -%}
 
   <div class="ap-card ap-card--{{ state }}{% if compact %} ap-card--compact{% endif %}">
@@ -141,6 +165,10 @@
             <span class="ap-card__soldout">{{ 'products.card.sold_out' | t }}</span>
           {%- endif -%}
         </span>
+
+        {%- if tier_text != blank -%}
+          <p class="ap-card__tier type-label">{{ tier_text }}</p>
+        {%- endif -%}
 
         {%- if franchise != blank or line != blank -%}
           <p class="ap-card__meta">

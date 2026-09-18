@@ -1,0 +1,16 @@
+{
+  "sections": {
+    "character-header": {
+      "type": "character-header",
+      "settings": {}
+    },
+    "character-grid": {
+      "type": "character-grid",
+      "settings": {
+        "padding_top": 24,
+        "padding_bottom": 48
+      }
+    }
+  },
+  "order": ["character-header", "character-grid"]
+}

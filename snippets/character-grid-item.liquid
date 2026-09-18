@@ -1,0 +1,26 @@
+{%- comment -%}
+  One grid item in sections/character-grid.liquid. Sibling of
+  snippets/product-card-grid-item.liquid, but a <div> (not <li>) so it can
+  sit next to the <div data-ap-cut-group> cluster headings that
+  assets/ap-character-cuts.js injects when a cut is active — a <div> sibling
+  inside a <ul> would be invalid list content.
+
+  Params: product, index (1-based, across both available/sold-out passes),
+  section, skip_styles, line (pre-joined string for data-line; blank when
+  the product carries no alterpop.line value).
+
+  data-height / data-year are intentionally never rendered — see
+  character-grid.liquid's header comment. assets/ap-character-cuts.js reads
+  their absence as "no live data" and disables those two chips on its own.
+{%- endcomment -%}
+<div class="grid__item" data-line="{{ line | escape }}">
+  {% render 'product-card',
+    card_product: product,
+    section_id: section.id,
+    lazy_load: index > 2,
+    skip_styles: skip_styles,
+    hide_franchise: true,
+    show_tier: true,
+    product_view_context: 'collection'
+  %}
+</div>

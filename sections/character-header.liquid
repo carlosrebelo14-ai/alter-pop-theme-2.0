@@ -1,0 +1,85 @@
+{{ 'character-page.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  Alterpop — Character header. Source of truth: Wireframe 9a (Character Page).
+  Renders on templates/metaobject/character.json — the `character` metaobject's
+  own storefront template. Current entry is the `metaobject` global.
+
+  Decalque of sections/line-header.liquid (Phase 5 rework of the Line page),
+  same structure, swapped for the metaobject fields resolved 17/09/2026:
+    H1                  -> metaobject.title.value
+    subtitle (universe)  -> metaobject.universe.value | first -> .title
+    piece count          -> metaobject.products.value.size
+
+  Only 4 fields exist on the `character` metaobject definition today: title,
+  image, universe (list.collection_reference), products
+  (list.product_reference). No artwork/franchise/description/related_characters
+  field exists — do not invent one. `image` is confirmed unused by 9a and is
+  intentionally not read here (see character-grid.liquid's "Pendente a
+  reportar" note).
+
+  Breadcrumb "Home / {Universe} / {Character}" — Universe is
+  metaobject.universe (list.collection_reference); its first entry's .url/.title
+  come straight off the referenced Collection. No Universe reference on this
+  character -> that crumb collapses (Home / Character), never a placeholder.
+
+  Meta line is figure count ONLY. The wireframe's "N figures · min–maxcm ·
+  minYear–maxYear" is NOT reproduced: there is no year field anywhere on
+  Product, and ociostock.dimensions is a full package L×W×H string (e.g.
+  "20 × 18 × 18 cm"), not a single comparable height — aggregating a min/max
+  range from it would mean guessing which of the three numbers is height.
+  Reported, not built. Count uses the existing 'sections.catalogue.count_figures'
+  locale key (matches wireframe wording "N figures in catalog"), pluralised.
+
+  Enters with the shared editorial animation (ap-editorial-in, 400ms;
+  neutralised under prefers-reduced-motion in tokens.css) — same as
+  line-header.
+{%- endcomment -%}
+
+{%- liquid
+  # `.first` (property accessor) returns null on this metaobject
+  # list.collection_reference drop, even though the field genuinely holds a
+  # value and `| json` shows a proper array — confirmed against the live
+  # Luffy entry (universe: One Piece) on 18/09/2026. The `first` FILTER
+  # works. Use the filter form for any metaobject list-reference field.
+  assign ap_universe = metaobject.universe.value | first
+  assign ap_figure_count = metaobject.products.value.size
+-%}
+
+<section class="ap-character-header" aria-label="{{ metaobject.title.value | escape }}">
+  <div class="ap-character-header__inner page-width">
+    <nav class="ap-character-header__crumbs type-caption" aria-label="Breadcrumb">
+      <a href="{{ routes.root_url }}">{{ 'sections.catalogue.home' | t }}</a>
+      {%- if ap_universe != blank -%}
+        <span aria-hidden="true">&rsaquo;</span>
+        <a href="{{ ap_universe.url }}">{{ ap_universe.title | escape }}</a>
+      {%- endif -%}
+      <span aria-hidden="true">&rsaquo;</span>
+      <span aria-current="page">{{ metaobject.title.value | escape }}</span>
+    </nav>
+
+    <h1 class="ap-character-header__title type-display">{{ metaobject.title.value | escape | upcase }}</h1>
+
+    {%- if ap_universe != blank -%}
+      <p class="ap-character-header__universe type-body">{{ ap_universe.title | escape }}</p>
+    {%- endif -%}
+
+    {%- if ap_figure_count > 0 -%}
+      <p class="ap-character-header__meta type-caption" data-ap-slot="figures-count">
+        {{ 'sections.catalogue.count_figures' | t: count: ap_figure_count }}
+      </p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Character header",
+  "tag": "section",
+  "class": "section",
+  "settings": [],
+  "enabled_on": {
+    "templates": ["metaobject"]
+  }
+}
+{% endschema %}

@@ -73,3 +73,14 @@ Reconciliacao inicial (18/09/2026)
   e outra parte drift de admin ao mesmo tempo (foi o caso do
   header-group.json). A partir daqui git e o unico escritor e esta
   excecao deixa de ser necessaria.
+
+Nota — validacao de settings
+Settings de seccao validam contra {% schema %} da seccao.
+Settings de bloco validam contra o schema do bloco do seu proprio type.
+Blocos nao herdam o schema da seccao-mae.
+Ao diagnosticar chaves orfas, verificar o escopo certo antes de remover.
+
+Nota — drift check
+A comparacao valida e sobre JSON normalizado.
+shopify theme pull reindenta e acrescenta comentario, gerando falsos positivos.
+Caso conhecido e inofensivo — "settings": {} no live vs. chave ausente no repo.

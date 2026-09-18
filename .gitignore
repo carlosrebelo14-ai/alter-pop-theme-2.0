@@ -12,3 +12,8 @@ node_modules
 *.zip
 .push-report.json
 .claude/
+
+# Local secrets (scripts/qa-characters.mjs reads SHOPIFY_ADMIN_TOKEN from here) #
+################################################################################
+.env
+.env.*

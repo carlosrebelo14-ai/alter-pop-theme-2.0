@@ -9,7 +9,8 @@
   same structure, swapped for the metaobject fields resolved 17/09/2026:
     H1                  -> metaobject.title.value
     subtitle (universe)  -> metaobject.universe.value | first -> .title
-    piece count          -> metaobject.products.value.size
+    piece count          -> non-blank entries of metaobject.products.value
+                            (0 -> the meta line is not rendered)
 
   Only 4 fields exist on the `character` metaobject definition today: title,
   image, universe (list.collection_reference), products
@@ -43,7 +44,17 @@
   # Luffy entry (universe: One Piece) on 18/09/2026. The `first` FILTER
   # works. Use the filter form for any metaobject list-reference field.
   assign ap_universe = metaobject.universe.value | first
-  assign ap_figure_count = metaobject.products.value.size
+  # Count what the grid can render, not array entries: .size also counts dead
+  # (blank) references, and "13 figures" over 12 cards is a visible lie.
+  # Same rule as the loops in character-grid.liquid; a `render` would isolate
+  # scope, so the few lines are repeated on purpose rather than shared.
+  assign ap_figure_count = 0
+  for product in metaobject.products.value
+    if product == blank
+      continue
+    endif
+    assign ap_figure_count = ap_figure_count | plus: 1
+  endfor
   # `title` is required on the definition, so this fallback should never fire;
   # it is a net so a blank title can't leave an empty H1 / breadcrumb / aria-label.
   assign ap_title = metaobject.title.value | default: metaobject.system.handle

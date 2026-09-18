@@ -1,20 +1,70 @@
 LIVE_THEME_ID       = 207355216202   ALTERPOP 2.0
 STAGING_THEME_ID    = 207846408522   ALTERPOP 2.0 - Tema de Testes
-ROLLBACK_ACTIVE     = 207859253578   ROLLBACK pre-character-page — 18/09/2026 (snapshot do live pre-deploy)
-STAGING_SYNCED_AT   = bc87ace (18/09/2026)
-LIVE_DEPLOYED_AT    = bc87ace (18/09/2026)
+ROLLBACK_ACTIVE     = 207859253578   ROLLBACK pre-character-page — 18/09/2026 (INVALIDADO: anterior a 27183d6/425a06f; substituir no proximo deploy)
+STAGING_SYNCED_AT   = 7fb6f9a (18/09/2026)
+LIVE_DEPLOYED_AT    = 425a06f (18/09/2026)
 
 Regras
 - Nenhum push direto ao live.
 - Live recebe git, nunca uma copia de tema.
 - Um rollback ativo, sempre o mais recente.
+- Todo o push ao staging e ao live passa por scripts/deploy-theme.mjs. O comando
+  escreve o registo (STAGING_SYNCED_AT / LIVE_DEPLOYED_AT / ROLLBACK_ACTIVE) no
+  mesmo passo do push e commita-o: se o push falha nao se regista nada, se passa
+  o registo fica logo feito. O registo deixa de depender de ninguem se lembrar.
+- Limite: um `shopify theme push` feito a mao continua tecnicamente possivel. E
+  um desvio, e o deploy seguinte apanha-o — o drift check do comando compara o
+  live com o commit em LIVE_DEPLOYED_AT e recusa avancar se divergirem.
 
 Sequencia de deploy
-1. commit em origin/main, registar SHA
-2. shopify theme push --theme=207846408522
-3. duplicar live no admin como ROLLBACK - <data>, apagar o anterior
-4. verificar HTML servido do staging com ?preview_theme_id=207846408522&nocache=1
-5. shopify theme push --theme=207355216202 do mesmo SHA do passo 2
+1. commit num ramo, registar SHA (main so recebe depois do QA de staging verde)
+2. node scripts/deploy-theme.mjs staging
+      push ao staging + regista STAGING_SYNCED_AT + commit do registo
+3. verificar HTML servido do staging com ?preview_theme_id=207846408522&nocache=1
+3b. QA de personagens contra o staging (gate — tem de sair verde):
+      node scripts/qa-characters.mjs --host staging
+4. fast-forward do ramo para main, git push origin main
+5. duplicar live no admin como ROLLBACK - <data>; verificar o rollback (ver
+   CLAUDE.md, "theme duplicate is not atomic"); so depois apagar o anterior
+6. node scripts/deploy-theme.mjs live --rollback <id do rollback novo> --dry-run
+      lista os pre-requisitos com ✓/✗ e nao empurra nada. Com tudo ✓, repetir
+      sem --dry-run. Pre-requisitos: main == origin/main, tema em HEAD igual ao
+      do staging, rollback novo (nao o ja registado), drift live == LIVE_DEPLOYED_AT,
+      QA de staging verde. Depois do push regista LIVE_DEPLOYED_AT e ROLLBACK_ACTIVE.
+7. git push origin main (o registo commitado) e QA contra o live, colar a saida:
+      node scripts/qa-characters.mjs --host live
+
+Registo de drift — 18/09/2026
+- O live estava dois commits a frente do registo: 27183d6 (feat: hero_image
+  fallback no Universe Room, 15:29) e 425a06f (fix: sizes do hero, 15:48) ja
+  estavam no live, com LIVE_DEPLOYED_AT ainda em bc87ace.
+- Verificacao: pull do live inteiro (393 ficheiros) contra git@425a06f, JSON
+  normalizado. Unica diferenca: "settings": {} em trust_badges no index.json, o
+  falso positivo ja documentado abaixo. Live == 425a06f.
+- Causa: push ao live fora da sequencia registada; o registo era escrito a mao
+  e nao foi. Correcao: o comando de deploy escreve o registo (regra acima).
+- Consequencia: o rollback 207859253578 e anterior a essa alteracao. Repor esse
+  tema desfaria tambem o hero do Universe Room. Fica invalidado; o proximo
+  rollback duplica o live atual.
+
+QA de personagens — pre-requisitos (scripts/qa-characters.mjs)
+- Custom app no Admin, so de leitura, criada pelo Carlos. Scopes:
+  read_metaobjects, read_products, read_online_store_pages.
+- Ficheiro `.env` local na raiz do repo, nunca commitado (`.env*` esta no .gitignore):
+      SHOPIFY_ADMIN_TOKEN=<token da custom app>
+      SHOPIFY_SHOP_DOMAIN=jyr17t-wr.myshopify.com
+  O dominio permanente e jyr17t-wr.myshopify.com; alterpop.myshopify.com
+  devolve 404 e nao e esta loja.
+- Sem SHOPIFY_ADMIN_TOKEN o script sai com 1. Nunca degrada para modo publico:
+  um gate que passa por falta de credencial e pior do que nenhum.
+- `--host` e obrigatorio, sem valor por defeito. `staging` e o mesmo dominio
+  publico com o cookie preview_theme_id=207846408522 (ver "Verificacao de HTML
+  servido" abaixo); o script confirma pelo header server-timing que o tema
+  servido e mesmo o pedido, para um teste a staging nunca passar a bater no live.
+- Corre antes de cada push ao live e depois de cada sync de catalogo que crie
+  ou ative Characters (o importer escreve os metaobjects; o tema nao os valida).
+- Rota de metaobject: /pages/<urlHandle>/<handle>. O URL gera-se sempre por
+  `system.url`, nunca a mao. Regra completa e historico em CLAUDE.md.
 
 Drift check (repo vs. live, via staging logo apos duplicar)
 - shopify theme pull --theme=207846408522 --path=/tmp/staging-snapshot

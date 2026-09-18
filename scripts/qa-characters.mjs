@@ -141,14 +141,19 @@ async function fetchProductVisibility(token, ids) {
   const query = `
     query($ids: [ID!]!) {
       nodes(ids: $ids) {
-        ... on Product { id status publishedOnCurrentPublication }
+        ... on Product { id status publishedAt onlineStoreUrl }
       }
     }`;
   const map = new Map();
   for (let i = 0; i < ids.length; i += 200) {
     const data = await admin(token, query, { ids: ids.slice(i, i + 200) });
     for (const n of data.nodes) {
-      if (n && n.id) map.set(n.id, n.status === "ACTIVE" && n.publishedOnCurrentPublication);
+      // onlineStoreUrl is non-null only when the Online Store can actually serve
+      // the product — the same condition Shopify uses to drop a reference from
+      // metaobject.products.value before Liquid runs (measured 18/09/2026).
+      // publishedOnCurrentPublication would need read_product_listings, a scope
+      // this read-only app deliberately does not carry.
+      if (n && n.id) map.set(n.id, n.status === "ACTIVE" && !!n.onlineStoreUrl && !!n.publishedAt);
     }
   }
   return map;

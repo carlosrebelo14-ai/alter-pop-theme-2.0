@@ -106,6 +106,22 @@ primitive and the scale.**
   750px`; the rest are fixed. Every uppercase label/eyebrow/metadata uses
   `--tracking-label` (0.04em). No `clamp()` fluid headings.
 
+## `alterpop.*` metafield display — two snippets, not interchangeable (hard rule — hit 17/09/2026)
+
+`alterpop.character` is `list.metaobject_reference` — a metaobject has no
+usable string form, and reading `.title.value` off each entry is the only
+correct conversion. Use `render 'ap-character-names', value: <metafield>`.
+
+`alterpop.franchise` / `.line` / `.format` are `list.single_line_text_field`
+— plain strings, not metaobject references. Use
+`render 'ap-meta-text', value: <metafield>.value`.
+
+Passing `franchise` (or `.line`/`.format`) through `ap-character-names`
+doesn't error — it just silently renders blank, since the entries have no
+`.title` field. The PDP cross-sell briefing (17/09/2026) specified exactly
+this wrong pairing; caught before merge. Check the metafield's Admin type
+before wiring a new display call, don't assume from the field name.
+
 ## Dawn `.grid` inside an Alterpop layout (hard rule — hit three times)
 
 Dawn's `.grid` is a **flexbox**. `.grid__item` carries
@@ -259,6 +275,25 @@ uploaded copy is stale until a restart + re-verify says otherwise.
 - Store handle: **`jyr17t-wr.myshopify.com`** (permanent domain). `alterpop-store`
   does not resolve. Set in `shopify.theme.toml`.
 - Development theme id: `206791704906`. Dev server: `http://127.0.0.1:9292`.
+- Live theme id: `207355216202` (name "ALTERPOP 2.0").
+- Current rollback snapshot: `ROLLBACK pre-briefing — 17/09/2026`, id
+  `207823765834`. One snapshot at a time — name it `ROLLBACK <reason> —
+  DD/MM/YYYY` and delete the previous one it supersedes once the new one is
+  verified (see gotcha below).
+- **`shopify theme duplicate` is not atomic — hard rule, hit 17/09/2026.**
+  A `theme duplicate --theme <live>` immediately followed by a
+  `theme push --theme <live> --allow-live` can race: the duplicate's async
+  copy job can land *after* the push, so the "rollback" silently ends up
+  identical to the new deploy instead of the pre-deploy state. `theme list
+  --json` reporting `"processing": false` does NOT catch this — it only
+  means the copy finished, not when relative to a later push. Always verify
+  a fresh rollback by pulling one changed file from it
+  (`shopify theme pull --theme <id> --only "<file>" --nodelete`) and diffing
+  against the pre-deploy git commit, before trusting it enough to delete
+  whatever it replaces. If a duplicate lands wrong, don't discard it —
+  rebuild it correctly with `shopify theme push --theme <id>` from a git
+  worktree checked out at the pre-deploy commit (no `--allow-live` needed,
+  the rollback theme is unpublished).
 
 ## Branch workflow
 
@@ -604,6 +639,31 @@ uploaded copy is stale until a restart + re-verify says otherwise.
   near-zero-change path; an auto-collection model means moving the templates
   to `collection.character.json` / `collection.line.json` and swapping
   `page.*` for `collection.*` in the two sections.
+  - **RESOLVED 17/09/2026**: metaobject with a product reference list.
+    `character` metaobject definition: `title` (single_line_text_field),
+    `image` (file_reference), `universe` (list.collection_reference),
+    `products` (list.product_reference). Read as
+    `product.metafields.alterpop.character.value | first` then
+    `character.products.value` for the sibling list. `templates/metaobject/
+    character.json` (the metaobject's own storefront template) is still
+    missing — not blocking `pdp-cross-sell` or the Identity Block, which
+    both read the field off a *product*, but needed if the character page
+    itself is ever supposed to render.
+
+## Open TODOs / unverified assumptions (continued, 17/09/2026)
+
+- **`threshold_amount` has no single source of truth** — two hardcoded
+  `50` values (`cart-drawer.liquid`, `main-cart-items.liquid`) plus three
+  independent section-settings defaults (`pdp-cross-sell`, `shipping-bar`),
+  all gated by the one real switch `settings.show_free_shipping`. Tracked,
+  not implemented: [issue #4](https://github.com/carlosrebelo14-ai/alter-pop-theme-2.0/issues/4).
+- **PDP Identity Block briefing has the same `ap-character-names`/
+  `franchise` mismatch** as the cross-sell briefing did (see the hard rule
+  above) — fix before implementing, not after.
+- **`settings.show_free_shipping` has never been turned on in a preview**
+  to confirm the free-shipping line actually renders correctly end to end
+  (PDP cross-sell, cart drawer, cart items, shipping bar) — it's been off
+  store-wide through every verification pass so far, including this one.
 
 ## Decisions taken in the absence of a wireframe page
 

@@ -31,6 +31,15 @@
   markup) per the corrected briefing: "Com zero produtos o template renderiza
   header sem meta line e sem grid."
 
+  DEAD REFERENCES (18/09/2026 hardening): an entry of metaobject.products.value
+  can come back `blank` (product deleted / unpublished after the reference was
+  written). Every loop below skips blanks, and the wrapper is gated on
+  ap_visible (non-blank count), not .size — otherwise a list made only of
+  dead references would still print the empty grid wrapper. Without the skip
+  in the second pass a blank would fall into `unless product.available` and
+  render a card for nothing. The "no products" rule above is unchanged: zero
+  visible cards -> nothing rendered, no message, no placeholder.
+
   CARD: reuses snippets/product-card.liquid unmodified (the actual shared
   component — "Product Card standard, sem variante"), plus the existing
   `hide_franchise` param (same reasoning as Universe Room: the page is
@@ -88,16 +97,20 @@
 {%- liquid
   assign ap_products = metaobject.products.value
 
+  assign ap_visible = 0
   assign ap_any_line = false
   for product in ap_products
+    if product == blank
+      continue
+    endif
+    assign ap_visible = ap_visible | plus: 1
     if product.metafields.alterpop.line.value != blank
       assign ap_any_line = true
-      break
     endif
   endfor
 -%}
 
-{%- if ap_products.size > 0 -%}
+{%- if ap_visible > 0 -%}
   <div class="ap-character-grid section-{{ section.id }}-padding page-width">
     {%- if ap_any_line -%}
       <div class="ap-character-cuts" data-ap-cut-bar>
@@ -124,6 +137,9 @@
       {%- liquid
         assign ap_index = 0
         for product in ap_products
+          if product == blank
+            continue
+          endif
           if product.available
             assign ap_index = ap_index | plus: 1
             assign ap_line = product.metafields.alterpop.line.value | join: ', '
@@ -135,6 +151,9 @@
           endif
         endfor
         for product in ap_products
+          if product == blank
+            continue
+          endif
           unless product.available
             assign ap_index = ap_index | plus: 1
             assign ap_line = product.metafields.alterpop.line.value | join: ', '

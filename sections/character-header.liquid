@@ -44,9 +44,12 @@
   # works. Use the filter form for any metaobject list-reference field.
   assign ap_universe = metaobject.universe.value | first
   assign ap_figure_count = metaobject.products.value.size
+  # `title` is required on the definition, so this fallback should never fire;
+  # it is a net so a blank title can't leave an empty H1 / breadcrumb / aria-label.
+  assign ap_title = metaobject.title.value | default: metaobject.system.handle
 -%}
 
-<section class="ap-character-header" aria-label="{{ metaobject.title.value | escape }}">
+<section class="ap-character-header" aria-label="{{ ap_title | escape }}">
   <div class="ap-character-header__inner page-width">
     <nav class="ap-character-header__crumbs type-caption" aria-label="Breadcrumb">
       <a href="{{ routes.root_url }}">{{ 'sections.catalogue.home' | t }}</a>
@@ -55,10 +58,10 @@
         <a href="{{ ap_universe.url }}">{{ ap_universe.title | escape }}</a>
       {%- endif -%}
       <span aria-hidden="true">&rsaquo;</span>
-      <span aria-current="page">{{ metaobject.title.value | escape }}</span>
+      <span aria-current="page">{{ ap_title | escape }}</span>
     </nav>
 
-    <h1 class="ap-character-header__title type-display">{{ metaobject.title.value | escape | upcase }}</h1>
+    <h1 class="ap-character-header__title type-display">{{ ap_title | escape | upcase }}</h1>
 
     {%- if ap_universe != blank -%}
       <p class="ap-character-header__universe type-body">{{ ap_universe.title | escape }}</p>

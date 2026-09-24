@@ -312,13 +312,32 @@ the store isn't considered launch-ready with them until both gates close.
 **What's built vs. blocked, as of 24/09/2026:** the Liquid render + CSS in
 `universe-room-header.liquid` / `universe-room.css` is done and verified,
 both the empty state (H1 visible, no mark-band) and the populated state (H1
-visually-hidden, logo visible, credit line) — the latter first with a
-temporary test file (removed after), now with real Commons-sourced logos
-via the bulk import (`logos/manifest.json` has the current per-handle
-status). `custom.universe_logo` / `.universe_credit` / `.universe_logo_mono`
-/ `.universe_logo_source` metafield definitions exist on the store. NOT
-done: the footer disclaimer + attribution copy (blocked on counsel, gate 2
-above), and the human review pass (gate 1 above).
+visually-hidden, logo visible, credit line). 32 of 35 universes have a real
+logo imported (`logos/manifest.json` is the audit trail); `evangelion` /
+`gundam` / `one-piece` are the deliberate fallback handles (no real logo
+sourced yet, empty-state renders correctly for them). `custom.universe_logo`
+/ `.universe_credit` / `.universe_logo_mono` / `.universe_logo_source`
+metafield definitions exist on the store. NOT done: the footer disclaimer +
+attribution copy (blocked on counsel, gate 2 above), and the human review
+pass (gate 1 above) — **nothing here should be treated as launch-ready
+until gate 1 has actually run**, see the cover-image finding right below.
+
+**Cover-image mismatch, found auditing (not fixing) `alterpop-*-cover.png`
+files, 24/09/2026 — needs a human pass across the whole library, not just
+the 3 found here.** At least three collections' cover-image FILES contain
+the wrong franchise's artwork despite being correctly named for their own
+collection: `attack-on-titan`'s cover file is One Piece artwork,
+`my-hero-academia`'s is Spy x Family artwork, `naruto`'s is Evangelion
+artwork (confirmed by fetching the raw CDN bytes and viewing them, not by
+filename). This is a pre-existing content-management issue in the cover
+image library, unrelated to the logo feature — logo mark itself renders
+correctly regardless of which photo is behind it, since the mark's
+position/size don't depend on the photo's content. `one-piece`'s own cover
+file is also oddly named `unnamed.png` rather than the `alterpop-*-cover.png`
+convention the others follow (content is correct, just the filename is an
+outlier) — worth a quick admin cleanup pass, not urgent. Don't assume the
+other ~15 cover images not spot-checked here are clean; this was a sampled
+audit of the files bound to the 32 imported handles, not an exhaustive one.
 
 **§2.3 addendum (24/09/2026) — mono logo reversal.** Single-colour logos
 only (one flat colour, no gradients) may render reversed white on the dark
@@ -334,6 +353,26 @@ same behaviour, just consistent with the block's existing BEM prefix.
 Verified both states (mono on -> white, mono off -> `filter: none`,
 confirmed via computed style, not just visually) on both breakpoints with
 a temporary black test SVG on the One Piece collection, then removed.
+
+**Logo aspect ratio varies a lot across the 32 real files — `object-fit:
+contain` handles it correctly, but "legible" isn't guaranteed for every
+shape.** The slot is a fixed 280x64 (4.375:1) box; real logos range from
+~9:1 (`chainsaw-man`, fills the full width at ~20px tall) to ~1.27:1
+(`lord-of-the-rings`, only ~81px wide at full 64px tall — the ring-shaped
+mark is nearly square, nothing like the wide wordmarks the box was sized
+around). Both are legible on inspection, no distortion in either direction
+— `object-fit: contain` is doing its job — but a "tall" logo like LOTR
+renders noticeably smaller/narrower than a "wide" one. Not a bug to fix;
+a real design constraint to keep in mind if the slot dimensions ever
+change, and worth the designer eyeballing the odder aspect ratios once
+gate 1 (human review) runs.
+
+**Wikimedia Commons rate-limits `Special:FilePath` under back-to-back
+requests.** Firing 29 downloads with no spacing got a 429 partway through
+("please contact noc@wikimedia.org... or use thumbnail images") on about
+half of them. Retried the failures with ~5s between requests and all
+succeeded — do this for any future Commons batch (space it out; a future
+session hitting this again should not just retry-loop into more 429s).
 
 **Mobile layout gotcha already hit once:** the mark must be in-flow (a
 normal child of `.ap-uroom-header__inner`, after `__body`), not

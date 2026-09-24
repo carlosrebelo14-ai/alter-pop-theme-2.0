@@ -476,6 +476,23 @@ details[open] > .menu-drawer {
   visibility: visible;
 }
 
+/* Dawn's own stock stacking (base.css) gives the header's outer section
+   wrapper z-index: 3 while OTHER header-group siblings (e.g. the
+   announcement bar) sit at z-index: 4 — intentional, needed for Dawn's
+   sticky-header reveal-on-scroll trick. But every fixed-position piece of
+   this drawer (.menu-drawer, .menu-drawer__overlay, its open-state
+   X-close icon) lives inside the header, so no z-index set on them (even
+   94-96) can out-rank a sibling section at the top level: z-index only
+   competes within the nearest ancestor stacking context, and
+   position: fixed does not escape it. At scroll position 0 the
+   still-unscrolled announcement bar painted over the open drawer and its
+   close button, leaving both unreachable. Bump the header's own wrapper
+   above every header-group sibling while the drawer is open, restoring
+   the drawer's actual 94-96 band. */
+.section-header.shopify-section-group-header-group:has(.menu-drawer-container[open]) {
+  z-index: 97;
+}
+
 .menu-drawer__inner-container {
   min-height: 100%;
 }

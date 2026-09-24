@@ -42,20 +42,21 @@
     assign uroom_logo_class = uroom_logo_class | append: ' ap-uroom-header__logo--mono'
   endif
   # uroom_show_logo gates the H1's .visually-hidden (one visible name per
-  # cover): it must require uroom_image too, not just uroom_logo — a
-  # collection can have the logo metafield set but no cover image bound
-  # (real case: Avengers), in which case the mark-band never renders and
-  # hiding the H1 would leave zero visible names. Hit in the 24/09/2026
-  # bulk import; caught by testing against real, varied collection data
-  # instead of only the one always-has-an-image test collection.
+  # cover) and the mark-band. 24/09/2026 revision: the mark must NOT depend
+  # on uroom_image — the cover's dark base layer (band + name/logo) always
+  # exists, the photo is optional (see universe-room.css --no-image). An
+  # earlier version required uroom_image here too, which correctly avoided
+  # hiding the H1 with nothing shown (real case: Avengers, no cover image)
+  # but wrongly hid the LOGO ITSELF too whenever there was no photo — fixed
+  # by dropping the uroom_image requirement rather than re-adding it.
   assign uroom_show_logo = false
-  if uroom_image != blank and uroom_logo != blank
+  if uroom_logo != blank
     assign uroom_show_logo = true
   endif
   assign uroom_show_mark = false
   if uroom_show_logo
     assign uroom_show_mark = true
-  elsif uroom_image != blank and uroom_credit != blank
+  elsif uroom_credit != blank
     assign uroom_show_mark = true
   endif
 -%}

@@ -106,23 +106,18 @@
   }
 }
 
-/* No image bound yet: a compact band, not a wall of black (same collapse as
-   the homepage hero). */
-.ap-uroom-header--no-image {
-  min-height: 0;
-  align-items: flex-start;
-}
-
-.ap-uroom-header--no-image .ap-uroom-header__inner {
-  padding-block: var(--space-3xl);
-}
-
+/* No image bound yet (24/09/2026 revision): the cover's dark base layer —
+   full band height, eyebrow/heading/text, and the logo mark — always
+   exists; the photo is an optional decorative layer on top of it, not a
+   precondition for the mark. Previously this compacted to a short
+   top-aligned band and suppressed the mark entirely (same collapse as the
+   homepage hero) — that made the logo depend on a cover image being bound,
+   which the franchise mark must not do. Same height/alignment as the
+   with-image state; `.ap-uroom-header__media`'s gradient (above) supplies
+   the dark background in place of a photo. Only the desktop body width
+   changes: no image on the right to leave room for, so text can use the
+   same width the mobile layout already gives it. */
 @media (min-width: 990px) {
-  .ap-uroom-header--no-image {
-    min-height: 0;
-    align-items: flex-start;
-  }
-
   .ap-uroom-header--no-image .ap-uroom-header__body {
     max-width: 540px;
   }

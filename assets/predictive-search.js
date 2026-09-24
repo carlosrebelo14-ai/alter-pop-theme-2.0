@@ -18,6 +18,18 @@ class PredictiveSearch extends SearchForm {
     this.addEventListener('focusout', this.onFocusOut.bind(this));
     this.addEventListener('keyup', this.onKeyup.bind(this));
     this.addEventListener('keydown', this.onKeydown.bind(this));
+    // Delegated (not bound directly to the button): #predictive-search-option-search-keywords
+    // is inside the results panel, whose innerHTML gets replaced on every
+    // renderSearchResults() call, so a direct listener would be lost after
+    // the first search. The button itself has no form/type/href — clicking
+    // it did nothing before this.
+    this.addEventListener('click', this.onSearchForClick.bind(this));
+  }
+
+  onSearchForClick(event) {
+    if (!event.target.closest('#predictive-search-option-search-keywords')) return;
+    event.preventDefault();
+    if (this.getQuery().length) this.input.form.requestSubmit();
   }
 
   getQuery() {
@@ -164,7 +176,16 @@ class PredictiveSearch extends SearchForm {
   selectOption() {
     const selectedOption = this.querySelector('[aria-selected="true"] a, button[aria-selected="true"]');
 
-    if (selectedOption) selectedOption.click();
+    if (selectedOption) {
+      selectedOption.click();
+    } else if (this.getQuery().length) {
+      // Nothing arrow-selected (the common case: type, hit Enter). onKeyup()
+      // always preventDefault()s the keyup, which blocks the browser's own
+      // implicit-submit-on-Enter, so without this the keystroke just does
+      // nothing. requestSubmit() (not submit()) so the 'submit' listener /
+      // onFormSubmit() still runs, same as a real native submission.
+      this.input.form.requestSubmit();
+    }
   }
 
   getSearchResults(searchTerm) {

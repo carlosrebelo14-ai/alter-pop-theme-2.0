@@ -306,6 +306,21 @@ logo (TMDB or Brandfetch), the footer disclaimer + TMDB attribution copy
 (needs counsel sign-off per the handoff's own section 0.2), and
 `manifest.json`.
 
+**§2.3 addendum (24/09/2026) — mono logo reversal.** Single-colour logos
+only (one flat colour, no gradients) may render reversed white on the dark
+cover; multi-colour logos are never recoloured — this is per-collection
+opt-in, never automatic. `custom.universe_logo_mono` (boolean) metafield
+definition exists on the store. When true, the logo `<img>` (both the
+`media_type == 'image'` and `generic_file` render branches) gets an added
+`ap-uroom-header__logo--mono` class -> `filter: brightness(0) invert(1)`
+in `universe-room.css`. Note the addendum's own text named the class
+`universe-room__logo--mono`; implemented as `ap-uroom-header__logo--mono`
+instead to match every other class in this component — same selector,
+same behaviour, just consistent with the block's existing BEM prefix.
+Verified both states (mono on -> white, mono off -> `filter: none`,
+confirmed via computed style, not just visually) on both breakpoints with
+a temporary black test SVG on the One Piece collection, then removed.
+
 **Mobile layout gotcha already hit once:** the mark must be in-flow (a
 normal child of `.ap-uroom-header__inner`, after `__body`), not
 `position: absolute` at every breakpoint. `.ap-uroom-header` is bottom-

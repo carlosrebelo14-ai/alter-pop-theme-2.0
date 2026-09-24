@@ -34,6 +34,13 @@
   # yet, so uroom_show_mark is false everywhere today.
   assign uroom_logo = collection.metafields.custom.universe_logo.value
   assign uroom_credit = collection.metafields.custom.universe_credit.value
+  # §2.3 addendum (24/09/2026) — single-colour logos only, reversed white on
+  # the dark cover via CSS filter. Never set on a multi-colour logo.
+  assign uroom_logo_mono = collection.metafields.custom.universe_logo_mono.value
+  assign uroom_logo_class = 'ap-uroom-header__logo'
+  if uroom_logo_mono
+    assign uroom_logo_class = uroom_logo_class | append: ' ap-uroom-header__logo--mono'
+  endif
   assign uroom_show_mark = false
   if uroom_image != blank and uroom_logo != blank
     assign uroom_show_mark = true
@@ -101,7 +108,7 @@
                 uroom_logo
                 | image_url: height: 256
                 | image_tag:
-                  class: 'ap-uroom-header__logo',
+                  class: uroom_logo_class,
                   alt: collection.title,
                   loading: 'lazy',
                   widths: '160, 280, 360, 560'
@@ -121,7 +128,7 @@
               <img
                 src="{{ uroom_logo.url }}"
                 alt="{{ collection.title | escape }}"
-                class="ap-uroom-header__logo"
+                class="{{ uroom_logo_class }}"
                 loading="lazy"
                 width="280"
                 height="64"

@@ -158,6 +158,14 @@
   object-position: left bottom;
 }
 
+/* §2.3 addendum (24/09/2026) — single-colour logos only (one flat colour,
+   no gradients), reversed white so they read on the dark cover.
+   Multi-colour logos are never recoloured: this class is opt-in per
+   collection via custom.universe_logo_mono (boolean), not automatic. */
+.ap-uroom-header__logo--mono {
+  filter: brightness(0) invert(1);
+}
+
 .ap-uroom-header__credit {
   margin: var(--space-sm) 0 0;
   color: var(--color-canvas);

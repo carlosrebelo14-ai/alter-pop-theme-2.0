@@ -1,0 +1,39 @@
+{
+  "_comment": "Audit trail for Universe Room cover logos. Source: Wikimedia Commons (Special:FilePath), PD-textlogo / below threshold-of-originality per handoff addendum 24/09/2026. Trademark still applies -- mitigated by referential use + universe_credit + footer disclaimer, not by this file. Pending pre-promotion gates (see CLAUDE.md): Carlos's per-universe review, and counsel sign-off on the footer/attribution copy. file_id is the Shopify Files GID currently set on custom.universe_logo for that collection.",
+  "imported_at": "2026-09-24",
+  "logos": [
+    {
+      "handle": "attack-on-titan",
+      "source": "commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Attack_on_Titan_%28international_anglophone%29_logo.svg",
+      "shopify_filename": "universe-logo-attack-on-titan.svg",
+      "file_id": "gid://shopify/GenericFile/72080811819338",
+      "colour": "single-colour grey",
+      "mono": true,
+      "status": "ok"
+    },
+    {
+      "handle": "avengers",
+      "source": "commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:The_Avengers_Logo_Black.svg",
+      "shopify_filename": "universe-logo-avengers.svg",
+      "file_id": "gid://shopify/GenericFile/72080811852106",
+      "colour": "single-colour black",
+      "mono": true,
+      "status": "needs review",
+      "note": "Metafields set correctly and verified, but this collection has no cover image (collection.image blank, no alterpop.hero_image) so the mark-band never renders on the storefront -- logo is set but invisible until a cover image is bound. H1 correctly stays visible (fixed a real bug where it was hiding with nothing shown)."
+    },
+    {
+      "handle": "batman",
+      "source": "commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:The_Batman_2022_film_logo.png",
+      "shopify_filename": "universe-logo-batman.png",
+      "file_id": "gid://shopify/MediaImage/72080811786570",
+      "colour": "colour",
+      "mono": false,
+      "status": "ok"
+    }
+  ],
+  "fallback_no_logo": ["evangelion", "gundam", "one-piece"],
+  "pending": "29 more handles -- CSV was truncated mid-row at chainsaw-man; waiting on the rest from the user."
+}

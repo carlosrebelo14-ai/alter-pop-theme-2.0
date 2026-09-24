@@ -262,6 +262,62 @@ nothing, check computed `::before`/`::after` on its ancestors too — grep
 for other Dawn pseudo-elements combining `position: absolute` with
 `width: 100%` before assuming a "decorative" stripe is cosmetic.
 
+## Universe Logos (franchise covers) — locked spec, blocked on licensing (hard rule — added 24/09/2026)
+
+Full spec: designer handoff "ALTERPOP — Handoff: Universe Logos" + a same-day
+addendum replacing its §2.5 (both pasted into a session 24/09/2026, not
+committed to the repo as files — ask the user for them again if needed and
+not in scratchpad). Franchise logo, bottom-left of the Universe Room cover
+only (`sections/universe-room-header.liquid`) — never on cards, avatars,
+nav, or filters. Locked rules: fixed logo-slot box (64px/280px desktop,
+40px/180px mobile, `object-fit: contain`, bottom-left); an always-rendered
+credit line sourced from `collection.metafields.custom.universe_credit`
+(copied verbatim from the supplier's licence line — never invented); and,
+per the addendum, **one visible franchise name per cover, no text-wordmark
+stand-in**: logo set -> the H1 (`.ap-uroom-header__heading`) gets
+`.visually-hidden` (stays in the DOM/AT tree, just not painted) and the logo
+carries the real `alt="{{ collection.title }}"`; logo absent -> H1 stays
+visible as normal and the mark-band, if it renders at all, is the credit
+line alone.
+
+**Never call the TMDB API, or fetch/handle any TMDB response or downloaded
+logo, from this session or any AI coding tool.** TMDB's terms forbid
+AI-based-application use of the API/content; the handoff's own blocking
+prerequisites (section 0) require the fetch script (section 4 of the
+handoff) to run manually, outside Claude Code / any AI tool, only after a
+commercial TMDB licence is signed (Carlos) and the footer/legal copy has
+counsel sign-off. If asked to source, fetch, or download franchise logos —
+TMDB or otherwise — stop and point back to this rule rather than proceeding.
+Brandfetch (5 of the 35 universes: Harry Potter, Pokémon, Spy x Family, Star
+Wars, Zelda) isn't TMDB-gated by ToS, but is still part of the same locked,
+human-reviewed-per-universe sourcing process (handoff section 5) — don't
+auto-fetch those either without being asked.
+
+**What's built vs. blocked, as of 24/09/2026:** the Liquid render + CSS in
+`universe-room-header.liquid` / `universe-room.css` is done and verified,
+both the empty state (H1 visible, no mark-band) and, with a temporary test
+file attached and removed afterward, the populated state (H1
+visually-hidden, logo visible, credit line). `custom.universe_logo` /
+`.universe_credit` / `.universe_logo_source` metafield definitions exist on
+the store (schema only, created 24/09/2026 per the addendum) — no
+collection has real values yet, so every real collection still hits the
+empty-state path today. NOT done, and blocked on the items above: any real
+logo (TMDB or Brandfetch), the footer disclaimer + TMDB attribution copy
+(needs counsel sign-off per the handoff's own section 0.2), and
+`manifest.json`.
+
+**Mobile layout gotcha already hit once:** the mark must be in-flow (a
+normal child of `.ap-uroom-header__inner`, after `__body`), not
+`position: absolute` at every breakpoint. `.ap-uroom-header` is bottom-
+aligned on mobile with a variable-length editorial line right above the
+mark's slot — a mark absolutely pinned to the band's bottom edge at all
+sizes overlaps that text as soon as the line runs long enough (hit on
+`/collections/one-piece?view=universe-room` in the verification pass that
+added this). Fixed by keeping the mark in normal flow (mobile default —
+pushes the text up instead of covering it) and only switching to
+`position: absolute` pinned to the header's own bottom edge at `>=990px`,
+where the centered body already has real headroom below it.
+
 ## Verification (also a hard rule)
 
 **Render verification is always against the served HTML from the dev server,

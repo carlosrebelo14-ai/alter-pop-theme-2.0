@@ -28,6 +28,18 @@
   endif
 
   assign uroom_image = section.settings.image | default: collection.metafields.alterpop.hero_image | default: collection.image
+
+  # Universe Logos handoff (24/09/2026) + addendum — real logos BLOCKED on
+  # the TMDB commercial licence, see CLAUDE.md. No collection has these set
+  # yet, so uroom_show_mark is false everywhere today.
+  assign uroom_logo = collection.metafields.custom.universe_logo.value
+  assign uroom_credit = collection.metafields.custom.universe_credit.value
+  assign uroom_show_mark = false
+  if uroom_image != blank and uroom_logo != blank
+    assign uroom_show_mark = true
+  elsif uroom_image != blank and uroom_credit != blank
+    assign uroom_show_mark = true
+  endif
 -%}
 
 <section
@@ -55,11 +67,73 @@
   <div class="ap-uroom-header__inner">
     <div class="ap-uroom-header__body">
       <p class="ap-uroom-header__eyebrow type-label">{{ uroom_eyebrow | escape }}</p>
-      <h1 class="ap-uroom-header__heading type-display">{{ uroom_heading | escape }}</h1>
+      <h1 class="ap-uroom-header__heading type-display{% if uroom_logo != blank %} visually-hidden{% endif %}">{{ uroom_heading | escape }}</h1>
       {%- if uroom_text != blank -%}
         <p class="ap-uroom-header__text type-body">{{ uroom_text | escape }}</p>
       {%- endif -%}
     </div>
+
+    {%- if uroom_show_mark -%}
+      {%- comment -%}
+        Franchise mark — bottom-left of the cover, per the Universe Logos
+        handoff (24/09/2026) + its 24/09/2026 addendum. One visible franchise
+        name per cover: when a logo is set, the H1 above goes
+        `.visually-hidden` (still in the DOM/AT tree, just not painted) and
+        the logo itself carries the real alt text — no text-wordmark
+        fallback. With no logo, the H1 stays visible as normal and this band
+        renders the credit line alone, if set.
+
+        Mobile: a normal in-flow block after the text (`__inner` is
+        bottom-aligned in the band, so it still lands flush with the true
+        bottom edge) — kept in-flow on purpose so a long editorial line
+        pushes the mark down instead of the mark overlapping the text.
+        Desktop (>=990px, centered body with real headroom below it):
+        switched to position:absolute, pinned to the header's own bottom edge
+        independent of body height, matching "Same" position in the handoff's
+        desktop/mobile table. Suppressed with no cover image — nothing for a
+        corner mark to anchor to in the compact "no image" band.
+      {%- endcomment -%}
+      <div class="ap-uroom-header__mark-band">
+        {%- if uroom_logo != blank -%}
+          <div class="ap-uroom-header__logo-slot">
+            {%- if uroom_logo.media_type == 'image' -%}
+              {{
+                uroom_logo
+                | image_url: height: 256
+                | image_tag:
+                  class: 'ap-uroom-header__logo',
+                  alt: collection.title,
+                  loading: 'lazy',
+                  widths: '160, 280, 360, 560'
+              }}
+            {%- else -%}
+              {%- comment -%}
+                generic_file: SVG and other non-transformable uploads.
+                Shopify doesn't run these through the image CDN pipeline, so
+                render the stored file directly per the handoff (section 7).
+                width/height are the logo-slot's own max box (280x64) as a
+                static CLS hint, not the file's real dimensions — GenericFile
+                exposes neither in Liquid. The actual render is entirely
+                CSS-governed (.logo-slot height + object-fit: contain here),
+                so a same-aspect-ratio placeholder size is the correct hint
+                regardless of the uploaded SVG's own viewBox.
+              {%- endcomment -%}
+              <img
+                src="{{ uroom_logo.url }}"
+                alt="{{ collection.title | escape }}"
+                class="ap-uroom-header__logo"
+                loading="lazy"
+                width="280"
+                height="64"
+              >
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+        {%- if uroom_credit != blank -%}
+          <p class="ap-uroom-header__credit type-microcopy">{{ uroom_credit | escape }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
   </div>
 </section>
 

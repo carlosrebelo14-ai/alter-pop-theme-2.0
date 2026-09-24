@@ -133,6 +133,55 @@
 }
 
 /* ============================================================================
+   Universe cover — franchise logo mark (Universe Logos handoff, 24/09/2026,
+   + its 24/09/2026 addendum). custom.universe_logo / .universe_credit are
+   BLOCKED — no collection has them set (blocked on the TMDB commercial
+   licence, see CLAUDE.md). One visible franchise name per cover: with no
+   logo, the H1 in the section stays visible and this band (if rendered at
+   all) is the credit line alone — no text-wordmark stand-in for the logo.
+   ============================================================================ */
+.ap-uroom-header__mark-band {
+  margin-top: var(--space-lg);
+}
+
+.ap-uroom-header__logo-slot {
+  display: block;
+  height: 40px;
+  max-width: 180px;
+}
+
+.ap-uroom-header__logo {
+  display: block;
+  height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: left bottom;
+}
+
+.ap-uroom-header__credit {
+  margin: var(--space-sm) 0 0;
+  color: var(--color-canvas);
+  opacity: 0.64;
+}
+
+@media (min-width: 990px) {
+  .ap-uroom-header__mark-band {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0 auto;
+    max-width: var(--page-width, 1400px);
+    padding: 0 var(--space-xl) var(--space-2xl);
+  }
+
+  .ap-uroom-header__logo-slot {
+    height: 64px;
+    max-width: 280px;
+  }
+}
+
+/* ============================================================================
    Shop by Character / Brand / Type — label + a scrolling row
    ============================================================================ */
 [data-template-suffix="universe-room"] .ap-shopby {

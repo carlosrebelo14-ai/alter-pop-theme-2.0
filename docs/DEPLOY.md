@@ -1,8 +1,8 @@
 LIVE_THEME_ID       = 207355216202   ALTERPOP 2.0
 STAGING_THEME_ID    = 207846408522   ALTERPOP 2.0 - Tema de Testes
 ROLLBACK_ACTIVE     = 207885467978   ROLLBACK pre-character-hardening — 18/09/2026 (snapshot do live pre-deploy)
-STAGING_SYNCED_AT   = 1edaeff (18/09/2026)
-LIVE_DEPLOYED_AT    = 110d0a7 (18/09/2026)
+STAGING_SYNCED_AT   = cfb1993 (24/09/2026)
+LIVE_DEPLOYED_AT    = cfb1993 (24/09/2026)
 
 Regras
 - Nenhum push direto ao live.
@@ -33,6 +33,28 @@ Sequencia de deploy
       QA de staging verde. Depois do push regista LIVE_DEPLOYED_AT e ROLLBACK_ACTIVE.
 7. git push origin main (o registo commitado) e QA contra o live, colar a saida:
       node scripts/qa-characters.mjs --host live
+
+Registo de drift — 24/09/2026
+- Push direto ao live (5 ficheiros: sections/main-product.liquid,
+  assets/header.css, assets/predictive-search.js,
+  assets/universe-room.css, sections/header.liquid) via
+  `shopify theme push --allow-live`, fora da sequencia de
+  scripts/deploy-theme.mjs — feito por um agente Claude Code a pedido
+  do Carlos, sem duplicar um rollback novo antes do push e sem correr
+  scripts/qa-characters.mjs --host live antes ou depois.
+- Verificado por browser real (nao so grep ao DOM servido) em live: PDP
+  zoom, fecho da menu-drawer mobile, submit da pesquisa (Enter +
+  "Search for"), scrim do universe-room-header, chip "Frozen" no
+  popular_searches — todos confirmados a funcionar em
+  https://alterpop.store apos o push.
+- Live == cfb1993. Staging tambem == cfb1993 (mesmos ficheiros ja
+  tinham sido testados la primeiro, mesma sequencia de pushes).
+- Consequencia: o rollback ativo (207885467978, pre-character-
+  hardening, 18/09/2026) e anterior a estas correcoes — repor esse tema
+  desfaria tambem estas 5 correcoes. Nao invalidado (serve para
+  reverter tudo desde 18/09 se necessario), mas o proximo rollback
+  antes do proximo deploy deve duplicar o live atual (cfb1993), nao o
+  207885467978.
 
 Registo de drift — 18/09/2026
 - O live estava dois commits a frente do registo: 27183d6 (feat: hero_image

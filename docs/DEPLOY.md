@@ -16,6 +16,21 @@ Regras
   um desvio, e o deploy seguinte apanha-o — o drift check do comando compara o
   live com o commit em LIVE_DEPLOYED_AT e recusa avancar se divergirem.
 
+Licoes — push ao vivo 24/09/2026 (universes auto-source)
+- `shopify theme push` ao live precisa de `--allow-live` quando corrido sem
+  TTY (agente, CI). Sem a flag, o comando falha a pedir confirmacao
+  interativa em vez de simplesmente recusar — o erro nao diz isto
+  claramente, so `shopify theme push --help` mostra a flag.
+- Ordem do rollback: duplicar o live como rollback novo → fazer o deploy →
+  verificar em produção → so depois apagar o rollback anterior. Nunca
+  apagar um rollback antes de o novo deploy estar confirmado a funcionar.
+- JSON de editor (`config/settings_data.json`, `templates/*.json`,
+  `sections/*-group.json`) fica sempre fora do `shopify theme push` de
+  codigo (via `--ignore`). Uma alteracao de setting (ex.: esvaziar
+  `universe_collections`) passa por: `theme pull --only <ficheiro>` →
+  editar so a chave visada → mostrar o diff (tem de conter so essa chave)
+  → `theme push --only <ficheiro>` desses ficheiros, nunca um push geral.
+
 Sequencia de deploy
 1. commit num ramo, registar SHA (main so recebe depois do QA de staging verde)
 2. node scripts/deploy-theme.mjs staging

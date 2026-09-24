@@ -27,6 +27,11 @@
      ever exceeds that, this source silently misses the overflow — revisit
      with a paginated `collections_query` or keep the metafield/manual
      sources current if the catalog grows past it.
+     ACTIVE SOURCE (2026-09-24): this is the source currently serving both
+     live and staging — `universe_collections` is deliberately empty in
+     all three instances (header, homepage, /collections) and the
+     metafield doesn't exist yet. Populating either source 1 or source 2
+     again takes back precedence automatically; no code change needed.
   No placeholder branch (2026-09-16 review, correction 1): with neither
   source set, or every sourced universe at 0 products, the section renders
   nothing rather than inventing franchise names the store doesn't carry.

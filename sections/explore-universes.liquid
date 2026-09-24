@@ -13,11 +13,20 @@
   Source, in order of precedence (same three-way source as the header's
   universes strip / mobile drawer):
   1. shop.metafields.alterpop.universes.value — the app-populated list,
-     each item { title, url, image }. BLOQUEADO: app dependency, not live.
+     each item { title, url, image }. Written by the sync app after each
+     collectionCreate; takes over automatically once populated.
   2. section setting `universe_collections` (collection_list) — an
      explicit merchant pick of real collections. Not inference: the
      merchant names the collections directly in the theme editor, same as
      any other Dawn collection-list section setting.
+  3. collections | where: 'template_suffix', 'universe-room' — every
+     collection using the universe-room template, auto-discovered when
+     neither of the above is set. Reads the contract each universe is
+     already tagged with (templateSuffix), not inference. NOTE: the global
+     `collections` object is capped at 50 items by Liquid; if the store
+     ever exceeds that, this source silently misses the overflow — revisit
+     with a paginated `collections_query` or keep the metafield/manual
+     sources current if the catalog grows past it.
   No placeholder branch (2026-09-16 review, correction 1): with neither
   source set, or every sourced universe at 0 products, the section renders
   nothing rather than inventing franchise names the store doesn't carry.
@@ -44,15 +53,23 @@
 {%- liquid
   assign ap_universes = shop.metafields.alterpop.universes.value
   assign ap_universes_from_collections = false
+
   if ap_universes == blank and section.settings.universe_collections.size > 0
     assign ap_universes_from_collections = true
+    assign ap_collections_list = section.settings.universe_collections
+  elsif ap_universes == blank
+    assign ap_auto = collections | where: 'template_suffix', 'universe-room' | sort: 'title'
+    if ap_auto.size > 0
+      assign ap_universes_from_collections = true
+      assign ap_collections_list = ap_auto
+    endif
   endif
 
   assign max_tiles = section.settings.max_tiles
 
   assign ap_visible_count = 0
   if ap_universes_from_collections
-    for collection in section.settings.universe_collections
+    for collection in ap_collections_list
       unless collection.products_count == 0
         assign ap_visible_count = ap_visible_count | plus: 1
       endunless
@@ -89,7 +106,7 @@
     <ul class="ap-doorways__list" role="list">
       {%- if ap_universes_from_collections -%}
         {%- assign ap_shown_count = 0 -%}
-        {%- for collection in section.settings.universe_collections -%}
+        {%- for collection in ap_collections_list -%}
           {%- if ap_shown_count >= max_tiles -%}{%- break -%}{%- endif -%}
           {%- if collection.products_count == 0 -%}{%- continue -%}{%- endif -%}
           <li class="ap-doorways__item">

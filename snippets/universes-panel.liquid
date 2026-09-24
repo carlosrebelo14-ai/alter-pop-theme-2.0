@@ -9,16 +9,22 @@
 
   Source, in order of precedence:
   1. shop.metafields.alterpop.universes.value — the app-populated list
-     ({ title, url, image } per item). BLOQUEADO: app dependency, not live.
+     ({ title, url, image } per item). Written by the sync app; takes
+     over automatically once populated.
   2. header section setting `universe_collections` (collection_list) — an
      explicit merchant pick of real collections, entered in the theme
      editor. Not inference: the merchant is naming the collections
      directly, same as any other Dawn collection-list section setting.
+  3. collections | where: 'template_suffix', 'universe-room' — every
+     collection using the universe-room template, auto-discovered when
+     neither of the above is set. NOTE: the global `collections` object
+     is capped at 50 items by Liquid — revisit if the catalog grows
+     past it.
   No placeholder branch (2026-09-16 review, correction 1): with neither
   source set, or every sourced universe at 0 products, the whole trigger
   renders nothing rather than inventing franchise names the store doesn't
   carry.
-  Same two-way source as the mobile drawer (snippets/mobile-drawer.liquid).
+  Same three-way source as the mobile drawer (snippets/mobile-drawer.liquid).
 
   Accepts: universe_collections {Array<collection>} — from the header
   section's `universe_collections` setting, passed in by sections/header.liquid.
@@ -27,13 +33,21 @@
 {%- liquid
   assign ap_universes = shop.metafields.alterpop.universes.value
   assign ap_universes_from_collections = false
+
   if ap_universes == blank and universe_collections.size > 0
     assign ap_universes_from_collections = true
+    assign ap_collections_list = universe_collections
+  elsif ap_universes == blank
+    assign ap_auto = collections | where: 'template_suffix', 'universe-room' | sort: 'title'
+    if ap_auto.size > 0
+      assign ap_universes_from_collections = true
+      assign ap_collections_list = ap_auto
+    endif
   endif
 
   assign ap_visible_count = 0
   if ap_universes_from_collections
-    for collection in universe_collections
+    for collection in ap_collections_list
       unless collection.products_count == 0
         assign ap_visible_count = ap_visible_count | plus: 1
       endunless
@@ -60,7 +74,7 @@
     <div class="ap-universes__strip-inner page-width">
       <ul class="ap-universes__row" role="list">
         {%- if ap_universes_from_collections -%}
-          {%- for collection in universe_collections -%}
+          {%- for collection in ap_collections_list -%}
             {%- if collection.products_count == 0 -%}{%- continue -%}{%- endif -%}
             <li>
               <a href="{{ collection.url }}">

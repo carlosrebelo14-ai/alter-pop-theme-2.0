@@ -280,31 +280,45 @@ carries the real `alt="{{ collection.title }}"`; logo absent -> H1 stays
 visible as normal and the mark-band, if it renders at all, is the credit
 line alone.
 
-**Never call the TMDB API, or fetch/handle any TMDB response or downloaded
-logo, from this session or any AI coding tool.** TMDB's terms forbid
-AI-based-application use of the API/content; the handoff's own blocking
-prerequisites (section 0) require the fetch script (section 4 of the
-handoff) to run manually, outside Claude Code / any AI tool, only after a
-commercial TMDB licence is signed (Carlos) and the footer/legal copy has
-counsel sign-off. If asked to source, fetch, or download franchise logos —
-TMDB or otherwise — stop and point back to this rule rather than proceeding.
-Brandfetch (5 of the 35 universes: Harry Potter, Pokémon, Spy x Family, Star
-Wars, Zelda) isn't TMDB-gated by ToS, but is still part of the same locked,
-human-reviewed-per-universe sourcing process (handoff section 5) — don't
-auto-fetch those either without being asked.
+**TMDB is retired as a source (24/09/2026 clarification) — §0.1/§0.3 of the
+original handoff no longer apply.** Do not call the TMDB API or fetch TMDB
+content for this theme; there is no live dependency on it. If an older
+memory or note says otherwise, this entry wins.
+
+**Real sourcing (current): Wikimedia Commons, not en.wikipedia, not TMDB,
+not Brandfetch.** Commons hosts these as `Special:FilePath` redirects,
+tagged Public domain / CC0 as text-logos below the threshold of
+originality — that clears the *copyright* question for hosting the file at
+all. It does **not** clear *trademark* — these are still the franchises'
+registered marks. The mitigation is referential/nominative use (identifying
+genuine licensed products the store actually sells) plus the always-on
+credit line (`custom.universe_credit`) plus the footer disclaimer — the
+same structure the original handoff already specified, just with Commons
+in place of TMDB/Brandfetch as the file source. Before importing a file,
+check its own Commons file page for a free-licence tag rather than trusting
+a CSV's claim about it — don't import anything that doesn't check out.
+
+**Two pre-promotion gates, still open — log status here as they close:**
+1. Carlos reviews every imported universe (logo legibility, correct
+   franchise, not mis-tagged) before the store is promoted live with real
+   logos showing.
+2. Counsel sign-off on the footer disclaimer + attribution copy (was
+   handoff §0.2, now scoped to Commons/trademark language rather than a
+   TMDB attribution line).
+Bulk import running ahead of both is a deliberate, explicit choice — logos
+land in metafields now (audit trail: `logos/manifest.json`, committed) but
+the store isn't considered launch-ready with them until both gates close.
 
 **What's built vs. blocked, as of 24/09/2026:** the Liquid render + CSS in
 `universe-room-header.liquid` / `universe-room.css` is done and verified,
-both the empty state (H1 visible, no mark-band) and, with a temporary test
-file attached and removed afterward, the populated state (H1
-visually-hidden, logo visible, credit line). `custom.universe_logo` /
-`.universe_credit` / `.universe_logo_source` metafield definitions exist on
-the store (schema only, created 24/09/2026 per the addendum) — no
-collection has real values yet, so every real collection still hits the
-empty-state path today. NOT done, and blocked on the items above: any real
-logo (TMDB or Brandfetch), the footer disclaimer + TMDB attribution copy
-(needs counsel sign-off per the handoff's own section 0.2), and
-`manifest.json`.
+both the empty state (H1 visible, no mark-band) and the populated state (H1
+visually-hidden, logo visible, credit line) — the latter first with a
+temporary test file (removed after), now with real Commons-sourced logos
+via the bulk import (`logos/manifest.json` has the current per-handle
+status). `custom.universe_logo` / `.universe_credit` / `.universe_logo_mono`
+/ `.universe_logo_source` metafield definitions exist on the store. NOT
+done: the footer disclaimer + attribution copy (blocked on counsel, gate 2
+above), and the human review pass (gate 1 above).
 
 **§2.3 addendum (24/09/2026) — mono logo reversal.** Single-colour logos
 only (one flat colour, no gradients) may render reversed white on the dark

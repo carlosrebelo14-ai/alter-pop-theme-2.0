@@ -1,5 +1,5 @@
 {
-  "_comment": "Audit trail for Universe Room cover logos. Source: Wikimedia Commons (Special:FilePath), PD-textlogo / below threshold-of-originality per handoff addendum 24/09/2026. Trademark still applies -- mitigated by referential use + universe_credit + footer disclaimer, not by this file. Pending pre-promotion gates (see CLAUDE.md): Carlos's per-universe review, and counsel sign-off on the footer/attribution copy. file_id is the Shopify Files GID currently set on custom.universe_logo for that collection.",
+  "_comment": "Audit trail for Universe Room cover logos. Sources: Wikimedia Commons (Special:FilePath, PD-textlogo / below threshold-of-originality) and one official rightsholder site (demon-slayer). Trademark still applies regardless of source -- mitigated by referential use + universe_credit + footer disclaimer, not by this file. Pending pre-promotion gates (see CLAUDE.md): Carlos's per-universe review, and counsel sign-off on the footer/attribution copy. file_id is the Shopify Files GID currently set on custom.universe_logo for that collection.",
   "imported_at": "2026-09-24",
   "logos": [
     {
@@ -20,8 +20,8 @@
       "file_id": "gid://shopify/GenericFile/72080811852106",
       "colour": "single-colour black",
       "mono": true,
-      "status": "needs review",
-      "note": "Metafields set correctly and verified, but this collection has no cover image (collection.image blank, no alterpop.hero_image) so the mark-band never renders on the storefront -- logo is set but invisible until a cover image is bound. H1 correctly stays visible (fixed a real bug where it was hiding with nothing shown)."
+      "status": "ok",
+      "note": "Initially flagged needs-review: this collection has no cover image, and the mark used to depend on one being bound. Fixed (follow-up A, 24/09/2026) -- the mark no longer requires a cover image; verified rendering correctly with the dark band background."
     },
     {
       "handle": "batman",
@@ -32,8 +32,271 @@
       "colour": "colour",
       "mono": false,
       "status": "ok"
+    },
+    {
+      "handle": "chainsaw-man",
+      "source": "commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Chainsaw_Man_English_anime_logo.svg",
+      "shopify_filename": "universe-logo-chainsaw-man.svg",
+      "file_id": "gid://shopify/GenericFile/72080871653706",
+      "mono": true,
+      "status": "ok"
+    },
+    {
+      "handle": "demon-slayer",
+      "source": "official",
+      "source_page": "https://demonslayer-anime.com/",
+      "shopify_filename": "universe-logo-demon-slayer.png",
+      "file_id": "gid://shopify/MediaImage/72080871326026",
+      "mono": false,
+      "status": "ok",
+      "note": "Sourced directly from the official rightsholder site per the user, not Wikimedia Commons -- flagged in the report as a different source category from the rest of the batch."
+    },
+    {
+      "handle": "dragon-ball",
+      "source": "commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Dragon_Ball_Logo.png",
+      "shopify_filename": "universe-logo-dragon-ball.png",
+      "file_id": "gid://shopify/MediaImage/72080871358794",
+      "mono": false,
+      "status": "ok"
+    },
+    {
+      "handle": "frozen",
+      "source": "commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Frozen_Logo_Black.svg",
+      "shopify_filename": "universe-logo-frozen.svg",
+      "file_id": "gid://shopify/GenericFile/72080871686474",
+      "mono": true,
+      "status": "ok"
+    },
+    {
+      "handle": "gi-joe",
+      "source": "commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Gi_joe_franchise_logo.png",
+      "shopify_filename": "universe-logo-gi-joe.png",
+      "file_id": "gid://shopify/MediaImage/72080871391562",
+      "mono": true,
+      "status": "ok"
+    },
+    {
+      "handle": "harry-potter",
+      "source": "commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Harry_Potter_logo.svg",
+      "shopify_filename": "universe-logo-harry-potter.svg",
+      "file_id": "gid://shopify/GenericFile/72080871719242",
+      "mono": true,
+      "status": "ok"
+    },
+    {
+      "handle": "jujutsu-kaisen",
+      "source": "commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Jujutsu_Kaisen_logo.svg",
+      "shopify_filename": "universe-logo-jujutsu-kaisen.svg",
+      "file_id": "gid://shopify/GenericFile/72080871752010",
+      "mono": false,
+      "status": "ok"
+    },
+    {
+      "handle": "masters-of-the-universe",
+      "source": "commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Masters_of_the_universe_franchise_logo.png",
+      "shopify_filename": "universe-logo-masters-of-the-universe.png",
+      "file_id": "gid://shopify/MediaImage/72080871424330",
+      "mono": false,
+      "status": "ok"
+    },
+    {
+      "handle": "mickey-and-friends",
+      "source": "commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Mickey_Mouse_%26_Friends_logo.png",
+      "shopify_filename": "universe-logo-mickey-and-friends.png",
+      "file_id": "gid://shopify/MediaImage/72080871457098",
+      "mono": false,
+      "status": "ok"
+    },
+    {
+      "handle": "my-hero-academia",
+      "source": "commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:My_Hero_Academia_-_international_logo.png",
+      "shopify_filename": "universe-logo-my-hero-academia.png",
+      "file_id": "gid://shopify/MediaImage/72080871489866",
+      "mono": false,
+      "status": "ok"
+    },
+    {
+      "handle": "naruto",
+      "source": "commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Naruto_logo.svg",
+      "shopify_filename": "universe-logo-naruto.svg",
+      "file_id": "gid://shopify/GenericFile/72080871784778",
+      "mono": false,
+      "status": "ok"
+    },
+    {
+      "handle": "pokemon-universe",
+      "source": "commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:International_Pok%C3%A9mon_logo.svg",
+      "shopify_filename": "universe-logo-pokemon-universe.svg",
+      "file_id": "gid://shopify/GenericFile/72080871817546",
+      "mono": false,
+      "status": "ok"
+    },
+    {
+      "handle": "sonic",
+      "source": "commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Sonic_the_Hedgehog_logo.png",
+      "shopify_filename": "universe-logo-sonic.png",
+      "file_id": "gid://shopify/MediaImage/72080871522634",
+      "mono": false,
+      "status": "ok"
+    },
+    {
+      "handle": "spider-man",
+      "source": "commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Spider-Man_video_game_series_logo.png",
+      "shopify_filename": "universe-logo-spider-man.png",
+      "file_id": "gid://shopify/MediaImage/72080871555402",
+      "mono": false,
+      "status": "ok"
+    },
+    {
+      "handle": "spy-family",
+      "source": "commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Spy_%C3%97_Family_logo.svg",
+      "shopify_filename": "universe-logo-spy-family.svg",
+      "file_id": "gid://shopify/GenericFile/72080871850314",
+      "mono": true,
+      "status": "ok"
+    },
+    {
+      "handle": "star-wars",
+      "source": "commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Star_Wars_Yellow_Logo.svg",
+      "shopify_filename": "universe-logo-star-wars.svg",
+      "file_id": "gid://shopify/GenericFile/72080871883082",
+      "mono": false,
+      "status": "ok"
+    },
+    {
+      "handle": "stitch",
+      "source": "commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Disney%27s_Lilo_%26_Stitch_logo.svg",
+      "shopify_filename": "universe-logo-stitch.svg",
+      "file_id": "gid://shopify/GenericFile/72080871915850",
+      "mono": false,
+      "status": "ok"
+    },
+    {
+      "handle": "stranger-things",
+      "source": "commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Stranger_Things_logo.svg",
+      "shopify_filename": "universe-logo-stranger-things.svg",
+      "file_id": "gid://shopify/GenericFile/72080871948618",
+      "mono": false,
+      "status": "ok"
+    },
+    {
+      "handle": "studio-ghibli",
+      "source": "commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Studio_Ghibli_wordmark.svg",
+      "shopify_filename": "universe-logo-studio-ghibli.svg",
+      "file_id": "gid://shopify/GenericFile/72080871981386",
+      "mono": true,
+      "status": "ok"
+    },
+    {
+      "handle": "super-mario",
+      "source": "commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Super_Mario_logo.svg",
+      "shopify_filename": "universe-logo-super-mario.svg",
+      "file_id": "gid://shopify/GenericFile/72080872014154",
+      "mono": false,
+      "status": "ok"
+    },
+    {
+      "handle": "superman",
+      "source": "commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Superman_2025_film_logo_%28inverted%29.png",
+      "shopify_filename": "universe-logo-superman.png",
+      "file_id": "gid://shopify/MediaImage/72080871588170",
+      "colour": "colour (already white)",
+      "mono": false,
+      "status": "ok"
+    },
+    {
+      "handle": "zelda",
+      "source": "commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Zelda_Logo.svg",
+      "shopify_filename": "universe-logo-zelda.svg",
+      "file_id": "gid://shopify/GenericFile/72080872046922",
+      "mono": false,
+      "status": "ok"
+    },
+    {
+      "handle": "lord-of-the-rings",
+      "source": "commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:The_Lord_of_the_Rings_logo.svg",
+      "shopify_filename": "universe-logo-lord-of-the-rings.svg",
+      "file_id": "gid://shopify/GenericFile/72080872079690",
+      "mono": true,
+      "status": "ok"
+    },
+    {
+      "handle": "the-mandalorian",
+      "source": "commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:The_Mandalorian_logo_black.svg",
+      "shopify_filename": "universe-logo-the-mandalorian.svg",
+      "file_id": "gid://shopify/GenericFile/72080872112458",
+      "mono": true,
+      "status": "ok"
+    },
+    {
+      "handle": "tmnt",
+      "source": "commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Teenage_Mutant_Ninja_Turtles_2022_franchise_logo.png",
+      "shopify_filename": "universe-logo-tmnt.png",
+      "file_id": "gid://shopify/MediaImage/72080871620938",
+      "mono": false,
+      "status": "ok"
+    },
+    {
+      "handle": "toystory",
+      "source": "commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Toy_Story_logo.svg",
+      "shopify_filename": "universe-logo-toystory.svg",
+      "file_id": "gid://shopify/GenericFile/72080872145226",
+      "mono": false,
+      "status": "ok"
+    },
+    {
+      "handle": "transformers",
+      "source": "commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Transformers_layered_text_logo.svg",
+      "shopify_filename": "universe-logo-transformers.svg",
+      "file_id": "gid://shopify/GenericFile/72080872177994",
+      "mono": true,
+      "status": "ok"
+    },
+    {
+      "handle": "wednesday",
+      "source": "commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Wednesday_%28Netflix_TV_series%29_logo.svg",
+      "shopify_filename": "universe-logo-wednesday.svg",
+      "file_id": "gid://shopify/GenericFile/72080872210762",
+      "mono": true,
+      "status": "ok"
+    },
+    {
+      "handle": "x-men",
+      "source": "commons",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Logo_X-Men_films.svg",
+      "shopify_filename": "universe-logo-x-men.svg",
+      "file_id": "gid://shopify/GenericFile/72080872243530",
+      "mono": true,
+      "status": "ok"
     }
   ],
   "fallback_no_logo": ["evangelion", "gundam", "one-piece"],
-  "pending": "29 more handles -- CSV was truncated mid-row at chainsaw-man; waiting on the rest from the user."
+  "not_yet_run": ["masters-of-the-universe cover-image audit (task B) results are in CLAUDE.md / the chat report, not duplicated here"]
 }

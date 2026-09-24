@@ -128,6 +128,7 @@
         <div class="ap-pdp__media product product--thumbnail product--large" data-ap-grid>
           {%- assign variant_images = product.images | where: 'attached_to_variant?', true | map: 'src' -%}
           {% render 'product-media-gallery', variant_images: variant_images %}
+          {% render 'product-media-modal', product: product, variant_images: variant_images %}
         </div>
 
         {%- comment -%} ---- Info column ---- {%- endcomment -%}

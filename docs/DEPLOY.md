@@ -2,7 +2,7 @@ LIVE_THEME_ID       = 207355216202   ALTERPOP 2.0
 STAGING_THEME_ID    = 207846408522   ALTERPOP 2.0 - Tema de Testes
 ROLLBACK_ACTIVE     = 207885467978   ROLLBACK pre-character-hardening — 18/09/2026 (snapshot do live pre-deploy)
 STAGING_SYNCED_AT   = cfb1993 (24/09/2026)
-LIVE_DEPLOYED_AT    = cfb1993 (24/09/2026)
+LIVE_DEPLOYED_AT    = 0601ab9 (24/09/2026)
 
 Regras
 - Nenhum push direto ao live.
@@ -70,6 +70,29 @@ Registo de drift — 24/09/2026
   reverter tudo desde 18/09 se necessario), mas o proximo rollback
   antes do proximo deploy deve duplicar o live atual (cfb1993), nao o
   207885467978.
+
+Registo de drift — 24/09/2026 (universes auto-source)
+- Live (207355216202) recebeu codigo de origin/main (commit de merge do
+  PR #5, 0601ab9) via `shopify theme push --allow-live`, fora da
+  sequencia de scripts/deploy-theme.mjs — feito por um agente Claude Code
+  a pedido do Carlos.
+- JSON de editor editado por pull direcionado → editar → push --only, nos
+  tres ficheiros header-group.json, templates/index.json e
+  templates/list-collections.json (`universe_collections` → `[]` nos
+  tres, mesma tecnica ja usada no staging).
+- Rollback 208259023178 ("ROLLBACK pre-universes-auto — 24/09/2026")
+  criado antes do push de codigo; rollback anterior (207885467978,
+  pre-character-hardening, 18/09/2026) apagado so depois de verificar o
+  deploy em https://www.alterpop.store (homepage, /collections, header
+  strip, mobile drawer — ordem correta, zero erros de consola).
+- Causa: a orientacao recebida (briefing do arquiteto) nao mencionou
+  scripts/deploy-theme.mjs em nenhum momento da sequencia — nem para o
+  push de codigo, nem para o registo, nem para o QA de personagens. Esta
+  entrada existe precisamente porque o comando nao rodou; ver "Regra"
+  adicionada abaixo.
+- scripts/qa-characters.mjs --host live nao foi corrido nem antes nem
+  depois deste push (ver resultado colado na descricao do PR #6 para o
+  primeiro run feito, a posteriori, no fecho desta entrada).
 
 Registo de drift — 18/09/2026
 - O live estava dois commits a frente do registo: 27183d6 (feat: hero_image

@@ -50,6 +50,18 @@
   background: linear-gradient(180deg, rgba(18, 16, 20, 0) 30%, rgba(18, 16, 20, 0.8) 100%);
 }
 
+/* base.css hides every empty <div> (`div:empty { display: none }`, specificity
+   0,1,1 — a type selector + pseudo-class actually outranks a lone class rule
+   like .ap-uroom-header__scrim's own 0,1,0), and this scrim has no children
+   by design. Same collision already patched for .menu-drawer__overlay /
+   .cart-drawer__overlay (see CLAUDE.md "z-index bands") — matching that
+   fix: add :empty here too so this rule's specificity (0,2,0) wins outright.
+   Without it the gradient above never painted, so the heading/description
+   over busy hero art had no contrast treatment. */
+.ap-uroom-header__scrim:empty {
+  display: block;
+}
+
 .ap-uroom-header__inner {
   width: 100%;
   max-width: var(--page-width, 1400px);

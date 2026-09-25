@@ -322,22 +322,58 @@ attribution copy (blocked on counsel, gate 2 above), and the human review
 pass (gate 1 above) — **nothing here should be treated as launch-ready
 until gate 1 has actually run**, see the cover-image finding right below.
 
-**Cover-image mismatch, found auditing (not fixing) `alterpop-*-cover.png`
-files, 24/09/2026 — needs a human pass across the whole library, not just
-the 3 found here.** At least three collections' cover-image FILES contain
-the wrong franchise's artwork despite being correctly named for their own
-collection: `attack-on-titan`'s cover file is One Piece artwork,
-`my-hero-academia`'s is Spy x Family artwork, `naruto`'s is Evangelion
-artwork (confirmed by fetching the raw CDN bytes and viewing them, not by
-filename). This is a pre-existing content-management issue in the cover
-image library, unrelated to the logo feature — logo mark itself renders
-correctly regardless of which photo is behind it, since the mark's
-position/size don't depend on the photo's content. `one-piece`'s own cover
-file is also oddly named `unnamed.png` rather than the `alterpop-*-cover.png`
-convention the others follow (content is correct, just the filename is an
-outlier) — worth a quick admin cleanup pass, not urgent. Don't assume the
-other ~15 cover images not spot-checked here are clean; this was a sampled
-audit of the files bound to the 32 imported handles, not an exhaustive one.
+**Cover-image mismatch — audit COMPLETE as of 25/09/2026, needs a human
+data-recovery pass, not a theme fix.** Verified via Shopify's `files` search
+(`filename:alterpop-*-cover*`, `hasNextPage: false`) that exactly 22 such
+files exist — this is the full set, not a sample. All 22 fetched as raw CDN
+bytes and viewed (not judged by filename). **4 confirmed mismatches**, each
+a collection whose OWN correctly-named cover file contains a DIFFERENT
+franchise's artwork:
+- `attack-on-titan`'s cover file → One Piece artwork
+- `my-hero-academia`'s cover file → Spy x Family artwork
+- `naruto`'s cover file → Evangelion artwork
+- `evangelion`'s cover file → Attack on Titan artwork
+Note the chain-like shape (naruto has evangelion's art, evangelion has
+attack-on-titan's art) — this reads as a scrambled mapping from a bulk
+upload, not isolated one-off mistakes; likely more images than these 4 are
+displaced, just not landing on another *tracked* handle where a mismatch is
+obvious. A human needs to trace where each franchise's genuine artwork
+actually ended up, not just swap these 4 back pairwise. Separately (not a
+mismatch, just untidy): `one-piece` renders correctly from a file named
+`unnamed.png`, while a SECOND, correctly-named, correct-content
+`alterpop-one-piece-cover.png` sits unused in Files — safe cleanup either
+way. This is a pre-existing content-management issue in the cover image
+library, unrelated to the logo feature — the logo mark renders correctly
+regardless of which photo is behind it, position/size never depend on the
+photo's content.
+
+**Baked-in franchise title, audited across all 22 cover images
+(25/09/2026).** 21 of 22 have the franchise name/wordmark baked directly
+into the cover artwork as a title-card graphic (`chainsaw-man` was the
+example given, but it's the norm, not the exception — includes the 4
+mismatched files above, since the mismatch is about which franchise's
+title is baked in, not whether one is). Only `batman`'s cover is a pure
+symbol (the bat-signal, no text at all). Matters for this feature
+specifically: a cover with its own large baked-in title sitting behind the
+small corner logo mark is inherent visual redundancy by design (two
+renderings of the franchise name), and on busy/high-contrast art it can
+make the *description paragraph* text hard to read too (hit on
+chainsaw-man — see the mobile layout gotcha below; that one turned out to
+be an unrelated legibility issue with the photo itself, not a mark-overlap
+bug, but the same busy-art root cause applies here). Worth the designer
+weighing in at gate 1 on whether the corner mark should suppress when a
+cover's baked-in title is already doing that job.
+
+**One contact sheet exists (not in the repo — sent to the user directly,
+25/09/2026): all 35 universe-room covers, desktop, cropped to the band.**
+Composited from the real uploaded logo files + cover photos + the actual
+CSS layout values (shape boxes, mono filter, scrim, marigold eyebrow) —
+the Browser pane screenshot tool has no way to save a screenshot to disk
+in this environment, so a live-page screenshot montage wasn't possible;
+this is pixel-sourced from the same real assets the live page renders,
+not a hand-drawn mockup. Regenerate from `render.py`-style logic (not
+committed — scratchpad-only) if this needs refreshing after the cover
+library gets fixed.
 
 **§2.3 addendum (24/09/2026) — mono logo reversal.** Single-colour logos
 only (one flat colour, no gradients) may render reversed white on the dark

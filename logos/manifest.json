@@ -1,5 +1,5 @@
 {
-  "_comment": "Audit trail for Universe Room cover logos. Sources: Wikimedia Commons (Special:FilePath, PD-textlogo / below threshold-of-originality) and one official rightsholder site (demon-slayer). Trademark still applies regardless of source -- mitigated by referential use + universe_credit + footer disclaimer, not by this file. Pending pre-promotion gates (see CLAUDE.md): Carlos's per-universe review, and counsel sign-off on the footer/attribution copy. file_id is the Shopify Files GID currently set on custom.universe_logo for that collection. shape/shape_ratio added 25/09/2026 (optical sizing follow-up): wide >=4, normal 2-4, tall <2, computed from each logo file's own aspect ratio.",
+  "_comment": "Audit trail for Universe Room cover logos. Sources: Wikimedia Commons (Special:FilePath, PD-textlogo / below threshold-of-originality) and one official rightsholder site (demon-slayer). Trademark still applies regardless of source -- mitigated by referential use + universe_credit + footer disclaimer, not by this file. Pending pre-promotion gates (see CLAUDE.md): Carlos's per-universe review, and counsel sign-off on the footer/attribution copy. file_id is the Shopify Files GID currently set on custom.universe_logo for that collection. shape/shape_ratio added 25/09/2026 (optical sizing follow-up): wide >=4, normal 2-4, tall <2, computed from each logo file's own aspect ratio. cover_has_title added 25/09/2026: true when the bound cover photo already bakes the franchise title into the art (21 of 22 imaged collections; batman is the one exception) -- when true, custom.universe_cover_has_title suppresses the corner logo mark on the storefront (H1 stays hidden, the art carries the name).",
   "imported_at": "2026-09-24",
   "logos": [
     {
@@ -12,7 +12,8 @@
       "mono": true,
       "status": "ok",
       "shape": "normal",
-      "shape_ratio": 2.201
+      "shape_ratio": 2.201,
+      "cover_has_title": true
     },
     {
       "handle": "avengers",
@@ -25,7 +26,8 @@
       "status": "ok",
       "note": "Initially flagged needs-review: this collection has no cover image, and the mark used to depend on one being bound. Fixed (follow-up A, 24/09/2026) -- the mark no longer requires a cover image; verified rendering correctly with the dark band background.",
       "shape": "normal",
-      "shape_ratio": 3.213
+      "shape_ratio": 3.213,
+      "cover_has_title": false
     },
     {
       "handle": "batman",
@@ -37,7 +39,8 @@
       "mono": false,
       "status": "ok",
       "shape": "normal",
-      "shape_ratio": 2.222
+      "shape_ratio": 2.222,
+      "cover_has_title": false
     },
     {
       "handle": "chainsaw-man",
@@ -48,7 +51,8 @@
       "mono": true,
       "status": "ok",
       "shape": "wide",
-      "shape_ratio": 9.01
+      "shape_ratio": 9.01,
+      "cover_has_title": true
     },
     {
       "handle": "demon-slayer",
@@ -60,7 +64,8 @@
       "status": "ok",
       "note": "Sourced directly from the official rightsholder site per the user, not Wikimedia Commons -- flagged in the report as a different source category from the rest of the batch.",
       "shape": "tall",
-      "shape_ratio": 1.22
+      "shape_ratio": 1.22,
+      "cover_has_title": true
     },
     {
       "handle": "dragon-ball",
@@ -71,7 +76,8 @@
       "mono": false,
       "status": "ok",
       "shape": "tall",
-      "shape_ratio": 1.389
+      "shape_ratio": 1.389,
+      "cover_has_title": true
     },
     {
       "handle": "frozen",
@@ -82,7 +88,8 @@
       "mono": true,
       "status": "ok",
       "shape": "normal",
-      "shape_ratio": 2.79
+      "shape_ratio": 2.79,
+      "cover_has_title": false
     },
     {
       "handle": "gi-joe",
@@ -93,7 +100,8 @@
       "mono": true,
       "status": "ok",
       "shape": "normal",
-      "shape_ratio": 3.99
+      "shape_ratio": 3.99,
+      "cover_has_title": false
     },
     {
       "handle": "harry-potter",
@@ -104,7 +112,8 @@
       "mono": true,
       "status": "ok",
       "shape": "normal",
-      "shape_ratio": 2.76
+      "shape_ratio": 2.76,
+      "cover_has_title": true
     },
     {
       "handle": "jujutsu-kaisen",
@@ -115,7 +124,8 @@
       "mono": false,
       "status": "ok",
       "shape": "wide",
-      "shape_ratio": 4.541
+      "shape_ratio": 4.541,
+      "cover_has_title": true
     },
     {
       "handle": "masters-of-the-universe",
@@ -126,7 +136,8 @@
       "mono": false,
       "status": "ok",
       "shape": "normal",
-      "shape_ratio": 2.885
+      "shape_ratio": 2.885,
+      "cover_has_title": false
     },
     {
       "handle": "mickey-and-friends",
@@ -137,7 +148,8 @@
       "mono": false,
       "status": "ok",
       "shape": "tall",
-      "shape_ratio": 1.485
+      "shape_ratio": 1.485,
+      "cover_has_title": false
     },
     {
       "handle": "my-hero-academia",
@@ -148,7 +160,8 @@
       "mono": false,
       "status": "ok",
       "shape": "normal",
-      "shape_ratio": 3.0
+      "shape_ratio": 3.0,
+      "cover_has_title": true
     },
     {
       "handle": "naruto",
@@ -159,7 +172,8 @@
       "mono": false,
       "status": "ok",
       "shape": "normal",
-      "shape_ratio": 2.347
+      "shape_ratio": 2.347,
+      "cover_has_title": true
     },
     {
       "handle": "pokemon-universe",
@@ -170,7 +184,8 @@
       "mono": false,
       "status": "ok",
       "shape": "normal",
-      "shape_ratio": 2.725
+      "shape_ratio": 2.725,
+      "cover_has_title": true
     },
     {
       "handle": "sonic",
@@ -181,7 +196,8 @@
       "mono": false,
       "status": "ok",
       "shape": "normal",
-      "shape_ratio": 2.586
+      "shape_ratio": 2.586,
+      "cover_has_title": false
     },
     {
       "handle": "spider-man",
@@ -192,7 +208,8 @@
       "mono": false,
       "status": "ok",
       "shape": "normal",
-      "shape_ratio": 2.5
+      "shape_ratio": 2.5,
+      "cover_has_title": true
     },
     {
       "handle": "spy-family",
@@ -203,7 +220,8 @@
       "mono": true,
       "status": "ok",
       "shape": "normal",
-      "shape_ratio": 3.086
+      "shape_ratio": 3.086,
+      "cover_has_title": true
     },
     {
       "handle": "star-wars",
@@ -214,7 +232,8 @@
       "mono": false,
       "status": "ok",
       "shape": "normal",
-      "shape_ratio": 2.337
+      "shape_ratio": 2.337,
+      "cover_has_title": true
     },
     {
       "handle": "stitch",
@@ -225,7 +244,8 @@
       "mono": false,
       "status": "ok",
       "shape": "normal",
-      "shape_ratio": 3.196
+      "shape_ratio": 3.196,
+      "cover_has_title": false
     },
     {
       "handle": "stranger-things",
@@ -236,7 +256,8 @@
       "mono": false,
       "status": "ok",
       "shape": "normal",
-      "shape_ratio": 2.754
+      "shape_ratio": 2.754,
+      "cover_has_title": true
     },
     {
       "handle": "studio-ghibli",
@@ -247,7 +268,8 @@
       "mono": true,
       "status": "ok",
       "shape": "normal",
-      "shape_ratio": 3.242
+      "shape_ratio": 3.242,
+      "cover_has_title": true
     },
     {
       "handle": "super-mario",
@@ -258,7 +280,8 @@
       "mono": false,
       "status": "ok",
       "shape": "normal",
-      "shape_ratio": 2.136
+      "shape_ratio": 2.136,
+      "cover_has_title": true
     },
     {
       "handle": "superman",
@@ -270,7 +293,8 @@
       "mono": false,
       "status": "ok",
       "shape": "normal",
-      "shape_ratio": 3.512
+      "shape_ratio": 3.512,
+      "cover_has_title": false
     },
     {
       "handle": "zelda",
@@ -281,7 +305,8 @@
       "mono": false,
       "status": "ok",
       "shape": "normal",
-      "shape_ratio": 2.45
+      "shape_ratio": 2.45,
+      "cover_has_title": true
     },
     {
       "handle": "lord-of-the-rings",
@@ -292,7 +317,8 @@
       "mono": true,
       "status": "ok",
       "shape": "tall",
-      "shape_ratio": 1.267
+      "shape_ratio": 1.267,
+      "cover_has_title": true
     },
     {
       "handle": "the-mandalorian",
@@ -303,7 +329,8 @@
       "mono": true,
       "status": "ok",
       "shape": "normal",
-      "shape_ratio": 3.269
+      "shape_ratio": 3.269,
+      "cover_has_title": false
     },
     {
       "handle": "tmnt",
@@ -314,7 +341,8 @@
       "mono": false,
       "status": "ok",
       "shape": "wide",
-      "shape_ratio": 4.522
+      "shape_ratio": 4.522,
+      "cover_has_title": false
     },
     {
       "handle": "toystory",
@@ -325,7 +353,8 @@
       "mono": false,
       "status": "ok",
       "shape": "tall",
-      "shape_ratio": 1.369
+      "shape_ratio": 1.369,
+      "cover_has_title": false
     },
     {
       "handle": "transformers",
@@ -336,7 +365,8 @@
       "mono": true,
       "status": "ok",
       "shape": "normal",
-      "shape_ratio": 3.871
+      "shape_ratio": 3.871,
+      "cover_has_title": true
     },
     {
       "handle": "wednesday",
@@ -347,7 +377,8 @@
       "mono": true,
       "status": "ok",
       "shape": "normal",
-      "shape_ratio": 3.846
+      "shape_ratio": 3.846,
+      "cover_has_title": false
     },
     {
       "handle": "x-men",
@@ -358,7 +389,8 @@
       "mono": true,
       "status": "ok",
       "shape": "wide",
-      "shape_ratio": 5.895
+      "shape_ratio": 5.895,
+      "cover_has_title": false
     }
   ],
   "fallback_no_logo": [

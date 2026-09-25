@@ -340,29 +340,35 @@ displaced, just not landing on another *tracked* handle where a mismatch is
 obvious. A human needs to trace where each franchise's genuine artwork
 actually ended up, not just swap these 4 back pairwise. Separately (not a
 mismatch, just untidy): `one-piece` renders correctly from a file named
-`unnamed.png`, while a SECOND, correctly-named, correct-content
-`alterpop-one-piece-cover.png` sits unused in Files — safe cleanup either
-way. This is a pre-existing content-management issue in the cover image
-library, unrelated to the logo feature — the logo mark renders correctly
-regardless of which photo is behind it, position/size never depend on the
-photo's content.
+`unnamed.png`, while a SECOND, correctly-named `alterpop-one-piece-cover.png`
+sits unused in Files — checked 25/09/2026: correct franchise, but it also
+has the "ONE PIECE" wordmark baked in like every other title-card cover, so
+it's a duplicate, not a clean textless mark to reach for later. Not bound
+anywhere; safe to delete or leave, merchant's call. This is a pre-existing
+content-management issue in the cover image library, unrelated to the logo
+feature — the logo mark renders correctly regardless of which photo is
+behind it, position/size never depend on the photo's content.
 
-**Baked-in franchise title, audited across all 22 cover images
-(25/09/2026).** 21 of 22 have the franchise name/wordmark baked directly
-into the cover artwork as a title-card graphic (`chainsaw-man` was the
-example given, but it's the norm, not the exception — includes the 4
-mismatched files above, since the mismatch is about which franchise's
-title is baked in, not whether one is). Only `batman`'s cover is a pure
-symbol (the bat-signal, no text at all). Matters for this feature
-specifically: a cover with its own large baked-in title sitting behind the
-small corner logo mark is inherent visual redundancy by design (two
-renderings of the franchise name), and on busy/high-contrast art it can
-make the *description paragraph* text hard to read too (hit on
-chainsaw-man — see the mobile layout gotcha below; that one turned out to
-be an unrelated legibility issue with the photo itself, not a mark-overlap
-bug, but the same busy-art root cause applies here). Worth the designer
-weighing in at gate 1 on whether the corner mark should suppress when a
-cover's baked-in title is already doing that job.
+**Baked-in franchise title, audited across all 22 cover images (25/09/2026)
+— now drives the render, not just a design note.** 21 of 22 have the
+franchise name/wordmark baked directly into the cover artwork as a
+title-card graphic (`chainsaw-man` was the example given, but it's the
+norm, not the exception — includes the 4 mismatched files above, since the
+mismatch is about which franchise's title is baked in, not whether one is).
+Only `batman`'s cover is a pure symbol (the bat-signal, no text at all).
+`custom.universe_cover_has_title` (boolean) is set `true` on those 21
+collections. In `universe-room-header.liquid`: when true AND a cover photo
+is bound, the corner logo mark is suppressed entirely (`uroom_suppress_logo`
+-> `uroom_render_logo` false) — the photo's own title already does the
+job, so the small mark was pure redundancy. The credit line still renders
+independently if set. The H1 stays `.visually-hidden` even when the logo
+is suppressed (`uroom_hide_h1` is a separate variable from
+`uroom_render_logo` now, precisely for this case) — the art carries the
+name, so the H1 would just be a third redundant copy. With no cover photo
+bound, the flag is inert and the logo renders as it otherwise would.
+Verified: chainsaw-man (flag true) now shows no corner mark on either
+breakpoint; batman (flag false, the one exception) is unaffected, its
+logo still renders as before.
 
 **One contact sheet exists (not in the repo — sent to the user directly,
 25/09/2026): all 35 universe-room covers, desktop, cropped to the band.**

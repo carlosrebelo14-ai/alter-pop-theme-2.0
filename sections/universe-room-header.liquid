@@ -63,20 +63,50 @@
   if uroom_logo_mono
     assign uroom_logo_class = uroom_logo_class | append: ' ap-uroom-header__logo--mono'
   endif
-  # uroom_show_logo gates the H1's .visually-hidden (one visible name per
-  # cover) and the mark-band. 24/09/2026 revision: the mark must NOT depend
-  # on uroom_image — the cover's dark base layer (band + name/logo) always
-  # exists, the photo is optional (see universe-room.css --no-image). An
-  # earlier version required uroom_image here too, which correctly avoided
-  # hiding the H1 with nothing shown (real case: Avengers, no cover image)
-  # but wrongly hid the LOGO ITSELF too whenever there was no photo — fixed
-  # by dropping the uroom_image requirement rather than re-adding it.
-  assign uroom_show_logo = false
-  if uroom_logo != blank
-    assign uroom_show_logo = true
+  # Baked-in cover title (25/09/2026 follow-up) — the audit found 21 of 22
+  # cover photos already carry the franchise name as a title card in the
+  # art itself (chainsaw-man is the flagged example, but it's the norm).
+  # When that's true AND a photo is actually bound, the small corner logo
+  # is pure redundancy against the photo's own title — suppress it. With
+  # no photo bound the flag means nothing (nothing for it to duplicate),
+  # so the logo renders as it would otherwise.
+  assign uroom_cover_has_title = collection.metafields.custom.universe_cover_has_title.value
+  assign uroom_suppress_logo = false
+  if uroom_cover_has_title and uroom_image != blank
+    assign uroom_suppress_logo = true
   endif
+
+  # uroom_render_logo gates the actual <img>; uroom_hide_h1 gates the H1's
+  # .visually-hidden (one visible name per cover) — the two used to be the
+  # same condition, but suppressing the logo for a title-card cover still
+  # needs the H1 hidden (the art already carries the name, same reasoning
+  # as when the small logo itself carries it).
+  assign uroom_render_logo = false
+  if uroom_logo != blank
+    assign uroom_render_logo = true
+  endif
+  if uroom_suppress_logo
+    assign uroom_render_logo = false
+  endif
+
+  assign uroom_hide_h1 = false
+  if uroom_render_logo
+    assign uroom_hide_h1 = true
+  endif
+  if uroom_suppress_logo
+    assign uroom_hide_h1 = true
+  endif
+
+  # uroom_show_mark gates the whole mark-band. 24/09/2026 revision: must NOT
+  # depend on uroom_image — the cover's dark base layer (band + name/logo)
+  # always exists, the photo is optional (see universe-room.css
+  # --no-image). An earlier version required uroom_image here too, which
+  # correctly avoided hiding the H1 with nothing shown (real case:
+  # Avengers, no cover image) but wrongly hid the LOGO ITSELF too whenever
+  # there was no photo — fixed by dropping the uroom_image requirement
+  # rather than re-adding it.
   assign uroom_show_mark = false
-  if uroom_show_logo
+  if uroom_render_logo
     assign uroom_show_mark = true
   elsif uroom_credit != blank
     assign uroom_show_mark = true
@@ -108,7 +138,7 @@
   <div class="ap-uroom-header__inner">
     <div class="ap-uroom-header__body">
       <p class="ap-uroom-header__eyebrow type-label">{{ uroom_eyebrow | escape }}</p>
-      <h1 class="ap-uroom-header__heading type-display{% if uroom_show_logo %} visually-hidden{% endif %}">{{ uroom_heading | escape }}</h1>
+      <h1 class="ap-uroom-header__heading type-display{% if uroom_hide_h1 %} visually-hidden{% endif %}">{{ uroom_heading | escape }}</h1>
       {%- if uroom_text != blank -%}
         <p class="ap-uroom-header__text type-body">{{ uroom_text | escape }}</p>
       {%- endif -%}
@@ -117,11 +147,15 @@
     {%- if uroom_show_mark -%}
       {%- comment -%}
         Franchise mark — bottom-left of the cover, per the Universe Logos
-        handoff (24/09/2026) + its 24/09/2026 addendum. One visible franchise
-        name per cover: when a logo is set, the H1 above goes
-        `.visually-hidden` (still in the DOM/AT tree, just not painted) and
-        the logo itself carries the real alt text — no text-wordmark
-        fallback. With no logo, the H1 stays visible as normal and this band
+        handoff (24/09/2026) + addenda through 25/09/2026. One visible
+        franchise name per cover: when the logo actually renders, the H1
+        above goes `.visually-hidden` (still in the DOM/AT tree, just not
+        painted) and the logo carries the real alt text — no text-wordmark
+        fallback. The logo is also suppressed (H1 still hidden) when the
+        bound cover photo already has the franchise title baked into the
+        art (custom.universe_cover_has_title) — the corner mark would just
+        duplicate it. With neither a rendered logo nor a suppressing
+        title-card photo, the H1 stays visible as normal and this band
         renders the credit line alone, if set.
 
         Mobile: a normal in-flow block after the text (`__inner` is
@@ -131,11 +165,12 @@
         Desktop (>=990px, centered body with real headroom below it):
         switched to position:absolute, pinned to the header's own bottom edge
         independent of body height, matching "Same" position in the handoff's
-        desktop/mobile table. Suppressed with no cover image — nothing for a
-        corner mark to anchor to in the compact "no image" band.
+        desktop/mobile table. The band itself no longer depends on a cover
+        image being bound (follow-up A, 24/09/2026) — only the logo's
+        title-card suppression above does.
       {%- endcomment -%}
       <div class="ap-uroom-header__mark-band">
-        {%- if uroom_logo != blank -%}
+        {%- if uroom_render_logo -%}
           <div class="ap-uroom-header__logo-slot">
             {%- if uroom_logo.media_type == 'image' -%}
               {{

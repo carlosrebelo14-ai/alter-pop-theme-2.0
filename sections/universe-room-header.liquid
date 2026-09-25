@@ -29,15 +29,37 @@
 
   assign uroom_image = section.settings.image | default: collection.metafields.alterpop.hero_image | default: collection.image
 
-  # Universe Logos handoff (24/09/2026) + addendum — real logos BLOCKED on
-  # the TMDB commercial licence, see CLAUDE.md. No collection has these set
-  # yet, so uroom_show_mark is false everywhere today.
+  # Universe Logos handoff (24/09/2026) + addenda — see CLAUDE.md. 32 of 35
+  # universes have a real logo (logos/manifest.json); evangelion/gundam/
+  # one-piece are deliberate fallback handles (uroom_show_mark false).
   assign uroom_logo = collection.metafields.custom.universe_logo.value
   assign uroom_credit = collection.metafields.custom.universe_credit.value
   # §2.3 addendum (24/09/2026) — single-colour logos only, reversed white on
   # the dark cover via CSS filter. Never set on a multi-colour logo.
   assign uroom_logo_mono = collection.metafields.custom.universe_logo_mono.value
-  assign uroom_logo_class = 'ap-uroom-header__logo'
+
+  # Optical logo sizing (24/09/2026 follow-up) — one fixed box made tall
+  # logos tiny (lord-of-the-rings rendered at 81x64 of a 280x64 slot) and
+  # let wide ones dominate. Three shape buckets, computed offline from each
+  # logo file's own aspect ratio and stored per collection since Liquid
+  # can't read image dimensions off a generic_file (SVG). Unset/unrecognised
+  # -> normal, per spec.
+  assign uroom_logo_shape = collection.metafields.custom.universe_logo_shape.value
+  case uroom_logo_shape
+    when 'wide'
+      assign uroom_logo_hint_w = 280
+      assign uroom_logo_hint_h = 48
+    when 'tall'
+      assign uroom_logo_shape = 'tall'
+      assign uroom_logo_hint_w = 128
+      assign uroom_logo_hint_h = 96
+    else
+      assign uroom_logo_shape = 'normal'
+      assign uroom_logo_hint_w = 240
+      assign uroom_logo_hint_h = 64
+  endcase
+
+  assign uroom_logo_class = 'ap-uroom-header__logo ap-uroom-header__logo--' | append: uroom_logo_shape
   if uroom_logo_mono
     assign uroom_logo_class = uroom_logo_class | append: ' ap-uroom-header__logo--mono'
   endif
@@ -130,20 +152,20 @@
                 generic_file: SVG and other non-transformable uploads.
                 Shopify doesn't run these through the image CDN pipeline, so
                 render the stored file directly per the handoff (section 7).
-                width/height are the logo-slot's own max box (280x64) as a
+                width/height are the shape bucket's own desktop max box, as a
                 static CLS hint, not the file's real dimensions — GenericFile
                 exposes neither in Liquid. The actual render is entirely
-                CSS-governed (.logo-slot height + object-fit: contain here),
-                so a same-aspect-ratio placeholder size is the correct hint
-                regardless of the uploaded SVG's own viewBox.
+                CSS-governed (.logo--{shape} height/max-width + object-fit:
+                contain here), so a same-shape placeholder is the correct
+                hint regardless of the uploaded SVG's own viewBox.
               {%- endcomment -%}
               <img
                 src="{{ uroom_logo.url }}"
                 alt="{{ collection.title | escape }}"
                 class="{{ uroom_logo_class }}"
                 loading="lazy"
-                width="280"
-                height="64"
+                width="{{ uroom_logo_hint_w }}"
+                height="{{ uroom_logo_hint_h }}"
               >
             {%- endif -%}
           </div>

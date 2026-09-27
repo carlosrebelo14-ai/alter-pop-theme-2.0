@@ -3,7 +3,7 @@
 {%- comment -%}
   Alterpop — PDP cross-sell. Wireframe 3a/3b: "COMPLETE THE [franchise]
   COLLECTION", the free-shipping threshold line, then a rail of small cards.
-  Reinforces the €50 threshold (same number as the homepage shipping bar).
+  Reinforces the free-shipping threshold (settings.ap_free_shipping_threshold).
 
   Source is the product's Character metaobject (alterpop.character, first
   entry) and its `products` field — siblings that share that character. No
@@ -32,7 +32,7 @@
 
     {%- if settings.show_free_shipping -%}
       <p class="ap-xsell__threshold type-caption">
-        {%- render 'free-shipping-line', threshold_amount: section.settings.threshold_amount -%}
+        {%- render 'free-shipping-line' -%}
       </p>
     {%- endif -%}
 
@@ -66,15 +66,7 @@
   "name": "PDP cross-sell",
   "tag": "section",
   "class": "section",
-  "settings": [
-    {
-      "type": "number",
-      "id": "threshold_amount",
-      "label": "Free-shipping threshold",
-      "default": 50,
-      "info": "Match the homepage shipping bar."
-    }
-  ],
+  "settings": [],
   "enabled_on": { "templates": ["product"] }
 }
 {% endschema %}

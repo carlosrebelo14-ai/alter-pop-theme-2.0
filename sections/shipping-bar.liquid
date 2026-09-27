@@ -12,7 +12,7 @@
 {%- liquid
   # The text line comes from the shared free-shipping-line snippet; here we
   # only need the numbers for the fill bar + data attributes.
-  assign threshold = section.settings.threshold_amount | times: 100
+  assign threshold = settings.ap_free_shipping_threshold | default: 50 | times: 100
   assign current = cart.total_price
   assign pct = 0
   if threshold > 0
@@ -33,10 +33,7 @@
 >
   <div class="ap-shipbar__inner page-width">
     <p class="ap-shipbar__text" data-shipbar-text>
-      {%- render 'free-shipping-line',
-        threshold_amount: section.settings.threshold_amount,
-        reached_text: section.settings.reached_text
-      -%}
+      {%- render 'free-shipping-line', reached_text: section.settings.reached_text -%}
     </p>
     <div class="ap-shipbar__track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ pct_now }}">
       <span class="ap-shipbar__fill" data-shipbar-fill style="width: {{ pct_now }}%;"></span>
@@ -87,7 +84,6 @@
   "tag": "section",
   "class": "section-shipping-bar",
   "settings": [
-    { "type": "number", "id": "threshold_amount", "label": "Free-shipping threshold", "default": 50, "info": "In your store currency (e.g. 50 = €50)." },
     { "type": "text", "id": "reached_text", "label": "Text when reached", "default": "You've unlocked free shipping" }
   ],
   "presets": [{ "name": "Free-shipping bar" }]

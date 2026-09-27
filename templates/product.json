@@ -17,7 +17,7 @@
     },
     "cross-sell": {
       "type": "pdp-cross-sell",
-      "settings": { "threshold_amount": 50 }
+      "settings": {}
     },
     "reviews": {
       "type": "pdp-reviews",

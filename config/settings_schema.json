@@ -1411,6 +1411,28 @@
         "id": "show_free_shipping",
         "label": "Show free-shipping progress lines",
         "default": false
+      },
+      {
+        "type": "number",
+        "id": "ap_free_shipping_threshold",
+        "label": "Free-shipping threshold",
+        "default": 50,
+        "info": "In your store currency (e.g. 50 = €50). The ONLY source for every free-shipping line: announcement bar, homepage bar, cart drawer, cart page, PDP cross-sell. Confirm it matches the checkout shipping rule before turning the lines on."
+      }
+    ]
+  },
+  {
+    "name": "Universe Room",
+    "settings": [
+      {
+        "type": "range",
+        "id": "ap_universe_min_products",
+        "label": "Universe in progress — minimum products",
+        "min": 0,
+        "max": 24,
+        "step": 1,
+        "default": 12,
+        "info": "Below this many products a Universe Room adds the \"More pieces on the way\" Collectors Club sign-up after the grid (tagged universe-<handle>). 0 turns it off."
       }
     ]
   },

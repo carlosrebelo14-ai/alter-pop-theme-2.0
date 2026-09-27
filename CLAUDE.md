@@ -428,6 +428,59 @@ pushes the text up instead of covering it) and only switching to
 `position: absolute` pinned to the header's own bottom edge at `>=990px`,
 where the centered body already has real headroom below it.
 
+**Review pass on the contact sheet, 25/09/2026 — data fixes, not code.**
+1. The 4 mismatched cover images (attack-on-titan, naruto,
+   my-hero-academia, evangelion) had their `collection.image` UNBOUND
+   (`collectionUpdate(input: {id, image: null})` — confirmed this
+   actually clears it, not just a no-op null) — the files stay in Files,
+   nothing deleted. `custom.universe_cover_has_title` set `false` on all
+   4 to match. attack-on-titan / naruto / my-hero-academia have real
+   logos, so they now correctly show the dark band + logo, H1 hidden.
+   evangelion has no logo (fallback handle) — dark band, **H1 visible**
+   ("Evangelion"), matches the addendum's own predicted outcome exactly.
+2. `studio-ghibli`: cover (Totoro + clouds) confirmed to have no baked
+   title — `cover_has_title` corrected to `false`. Its logo SVG's
+   garbled contact-sheet render ("スタンオシフ J作 S UDOG B") is a
+   **PyMuPDF rendering bug in the audit tool**, not a real defect —
+   confirmed by (a) the source SVG has zero `<text>` elements, pure
+   paths, no font dependency, and (b) navigating a real browser
+   straight to the file's CDN URL renders it perfectly. Reproduced the
+   garbling in isolation outside the contact-sheet compositing code
+   too (same broken output at multiple DPI/matrix settings) — this is
+   a `fitz`/MuPDF SVG-rasterizer limitation on this file's structure
+   (70 `<clipPath>`/`<mask>`/`<filter>` elements), not fixable via
+   render parameters. Left the logo as-is; `render_contact_sheet.py`'s
+   docstring should get a note that this cell's sheet render can't be
+   trusted and needs a live-browser spot-check instead (not yet added
+   — do this before the next regeneration if it recurs on other files).
+3. `pokemon-universe`: same story — the "solid black box" in the sheet
+   was the same PyMuPDF clip-path rendering bug (its SVG has 70
+   `<clipPath>`/`<mask>`/`<filter>` elements too), confirmed clean via
+   direct browser render of the CDN URL. No site-facing issue — the
+   corner logo is separately suppressed anyway (`cover_has_title` was
+   already `true` here), so this cell doesn't render on the live site
+   regardless.
+4. `superman`: logo cleared entirely. The uploaded PNG
+   (`Superman_2025_film_logo_(inverted).png`) has an opaque black
+   background (confirmed via the PNG's own pixel alpha — 255 at every
+   sampled point including the center, not transparent). Checked the
+   suggested Commons alternate (`Superman_(2025)_text_logo.svg`) by
+   downloading and rendering it directly, not by description — it
+   includes the DC Studios roundel + "STUDIOS" mark above the Superman
+   shield/wordmark, so it fails the "wordmark only" bar. Per the
+   addendum's own fallback instruction: `custom.universe_logo` /
+   `.universe_logo_mono` / `.universe_logo_shape` / `.universe_logo_source`
+   all deleted. superman is now equivalent to frozen/gi-joe/etc — H1
+   visible, no image, no logo. Removed from `logos/manifest.json`'s
+   `logos` array (it's no longer an active import), logged under a new
+   `cleared` key with the reason.
+5. `.ap-uroom-header__eyebrow`'s colour: was `var(--color-marigold)`,
+   a real violation of the DS's own marigold-is-purchase-CTA-only rule
+   (pre-existing since Phase 3, not introduced by the logo work — first
+   caught in this review pass). Changed to the same muted treatment as
+   `.ap-uroom-header__credit` (`color: var(--color-canvas); opacity:
+   0.64`) in `universe-room.css`.
+
 ## Verification (also a hard rule)
 
 **Render verification is always against the served HTML from the dev server,

@@ -74,9 +74,15 @@
   max-width: 540px;
 }
 
+/* Marigold is exclusively for purchase-commitment CTAs (Add to Cart,
+   Checkout, Shop the Universe) per the DS — "UNIVERSE" is a category
+   label, not a CTA, so it was never a legitimate use of the token
+   (pre-existing since Phase 3, not introduced by the logo work; fixed
+   25/09/2026). Same muted treatment as the credit line below it. */
 .ap-uroom-header__eyebrow {
   margin: 0 0 var(--space-sm);
-  color: var(--color-marigold);
+  color: var(--color-canvas);
+  opacity: 0.64;
 }
 
 .ap-uroom-header__heading {

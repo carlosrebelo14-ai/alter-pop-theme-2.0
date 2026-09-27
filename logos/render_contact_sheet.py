@@ -58,6 +58,20 @@ Nothing here reaches Shopify itself; this script only draws. Data
 collection is a separate step you run first (matching how the sheet was
 actually built: batched GraphQL queries + curl, documented in CLAUDE.md
 under "Universe Logos").
+
+KNOWN LIMITATION (found 25/09/2026, unresolved): PyMuPDF's own SVG
+rasterizer garbles some files that have many <clipPath>/<mask>/<filter>
+elements -- confirmed on studio-ghibli's and pokemon-universe's logos
+(both ~70 such elements), reproduced in isolation outside this script's
+compositing code, at multiple dpi/matrix settings, so it's not something
+tunable here. Both files are actually fine -- verified by navigating a
+real browser straight to the file's own CDN URL. If a cell in the sheet
+looks wrong (garbled text, a solid-colour box where a logo should be,
+anything that doesn't match the live site), don't trust the sheet for
+that cell -- open the logo file's URL directly in a browser instead
+before concluding there's a real content problem. No known fix; a PR to
+PyMuPDF or swapping the SVG for a lower-complexity export would both
+work, neither attempted here.
 """
 import argparse
 import json
@@ -76,8 +90,10 @@ COLS = 4
 GAP = 6
 
 INK_900 = (0x12 / 255, 0x10 / 255, 0x14 / 255)
-MARIGOLD = (255 / 255, 184 / 255, 0 / 255)
 CANVAS = (247 / 255, 246 / 255, 242 / 255)
+EYEBROW_OPACITY = 0.64  # matches .ap-uroom-header__eyebrow (25/09/2026: no
+                         # longer marigold -- that token is purchase-CTA-only
+                         # per the DS, same muted treatment as the credit line)
 
 SCALE = CW / 1280.0
 # desktop max box per shape bucket (universe-room.css @ >=990px), scaled to cell size
@@ -203,7 +219,7 @@ def make_cell(cell_doc, handle, entry, assets_dir):
     render_logo = bool(entry["has_logo"]) and not suppress_logo
     hide_heading = render_logo or suppress_logo
 
-    page.insert_text((left, top + 4), "UNIVERSE", fontsize=7, color=MARIGOLD, fontname="hebo")
+    page.insert_text((left, top + 4), "UNIVERSE", fontsize=7, color=CANVAS, fill_opacity=EYEBROW_OPACITY, fontname="hebo")
 
     if render_logo:
         bw, bh = SHAPE_BOX[entry["shape"]]

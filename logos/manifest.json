@@ -1,5 +1,5 @@
 {
-  "_comment": "Audit trail for Universe Room cover logos. Sources: Wikimedia Commons (Special:FilePath, PD-textlogo / below threshold-of-originality) and one official rightsholder site (demon-slayer). Trademark still applies regardless of source -- mitigated by referential use + universe_credit + footer disclaimer, not by this file. Pending pre-promotion gates (see CLAUDE.md): Carlos's per-universe review, and counsel sign-off on the footer/attribution copy. file_id is the Shopify Files GID currently set on custom.universe_logo for that collection. shape/shape_ratio added 25/09/2026 (optical sizing follow-up): wide >=4, normal 2-4, tall <2, computed from each logo file's own aspect ratio. cover_has_title added 25/09/2026: true when the bound cover photo already bakes the franchise title into the art (21 of 22 imaged collections; batman is the one exception) -- when true, custom.universe_cover_has_title suppresses the corner logo mark on the storefront (H1 stays hidden, the art carries the name).",
+  "_comment": "Audit trail for Universe Room cover logos. Sources: Wikimedia Commons (Special:FilePath, PD-textlogo / below threshold-of-originality) and one official rightsholder site (demon-slayer). Trademark still applies regardless of source -- mitigated by referential use + universe_credit + footer disclaimer, not by this file. Pending pre-promotion gates (see CLAUDE.md): Carlos's per-universe review, and counsel sign-off on the footer/attribution copy. file_id is the Shopify Files GID currently set on custom.universe_logo for that collection. shape/shape_ratio added 25/09/2026 (optical sizing follow-up): wide >=4, normal 2-4, tall <2, computed from each logo file's own aspect ratio. cover_has_title added 25/09/2026: true when the bound cover photo already bakes the franchise title into the art (21 of 22 imaged collections; batman is the one exception) -- when true, custom.universe_cover_has_title suppresses the corner logo mark on the storefront (H1 stays hidden, the art carries the name). 25/09/2026 review pass: 4 mismatched cover images unbound (attack-on-titan, naruto, my-hero-academia, evangelion -- files kept in Files, not deleted); studio-ghibli cover_has_title corrected to false; superman's logo cleared entirely (see 'cleared').",
   "imported_at": "2026-09-24",
   "logos": [
     {
@@ -13,7 +13,8 @@
       "status": "ok",
       "shape": "normal",
       "shape_ratio": 2.201,
-      "cover_has_title": true
+      "cover_has_title": false,
+      "note": "25/09/2026: cover image unbound from the collection (mismatched art, kept in Files, not deleted) -- collection now falls back to the dark band + this logo. cover_has_title set false to match."
     },
     {
       "handle": "avengers",
@@ -161,7 +162,8 @@
       "status": "ok",
       "shape": "normal",
       "shape_ratio": 3.0,
-      "cover_has_title": true
+      "cover_has_title": false,
+      "note": "25/09/2026: cover image unbound from the collection (mismatched art, kept in Files, not deleted) -- collection now falls back to the dark band + this logo. cover_has_title set false to match."
     },
     {
       "handle": "naruto",
@@ -173,7 +175,8 @@
       "status": "ok",
       "shape": "normal",
       "shape_ratio": 2.347,
-      "cover_has_title": true
+      "cover_has_title": false,
+      "note": "25/09/2026: cover image unbound from the collection (mismatched art, kept in Files, not deleted) -- collection now falls back to the dark band + this logo. cover_has_title set false to match."
     },
     {
       "handle": "pokemon-universe",
@@ -269,7 +272,8 @@
       "status": "ok",
       "shape": "normal",
       "shape_ratio": 3.242,
-      "cover_has_title": true
+      "cover_has_title": false,
+      "note": "25/09/2026: cover (Totoro + clouds) confirmed to have no baked-in title -- cover_has_title corrected to false. Logo SVG verified clean in a real browser (no <text>/font dependency, 0 <text> elements, pure paths); the garbled render in the v1 contact sheet was a PyMuPDF SVG rendering limitation in the audit tool itself, not a real defect -- see render_contact_sheet.py."
     },
     {
       "handle": "super-mario",
@@ -282,19 +286,6 @@
       "shape": "normal",
       "shape_ratio": 2.136,
       "cover_has_title": true
-    },
-    {
-      "handle": "superman",
-      "source": "commons",
-      "source_page": "https://commons.wikimedia.org/wiki/File:Superman_2025_film_logo_%28inverted%29.png",
-      "shopify_filename": "universe-logo-superman.png",
-      "file_id": "gid://shopify/MediaImage/72080871588170",
-      "colour": "colour (already white)",
-      "mono": false,
-      "status": "ok",
-      "shape": "normal",
-      "shape_ratio": 3.512,
-      "cover_has_title": false
     },
     {
       "handle": "zelda",
@@ -400,5 +391,12 @@
   ],
   "not_yet_run": [
     "masters-of-the-universe cover-image audit (task B) results are in CLAUDE.md / the chat report, not duplicated here"
+  ],
+  "cleared": [
+    {
+      "handle": "superman",
+      "cleared_at": "2026-09-25",
+      "reason": "Original file (Superman_2025_film_logo_(inverted).png) had an opaque black background, not transparent. Commons alternate (File:Superman_(2025)_text_logo.svg) checked and rejected -- it includes the DC Studios mark, not a wordmark-only file. custom.universe_logo / .universe_logo_mono / .universe_logo_shape / .universe_logo_source all deleted; falls back to visible H1, no cover image, no logo -- same as frozen/gi-joe/etc."
+    }
   ]
 }

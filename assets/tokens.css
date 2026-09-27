@@ -101,6 +101,18 @@
   --space-4xl: 64px;
   --space-5xl: 96px;
 
+  /* --- Header inline-nav breakpoint (#8) ----------------------------------
+     Single documented source. Below it the header uses hamburger + drawer;
+     at/above it the inline nav + boxed Cart + Account show. Measured
+     27/09/2026: logo 177 + nav 635 + actions 217 only fit from ~1101px
+     (990 = -111px overlap), 1200 leaves room for longer labels.
+     CSS custom properties do NOT resolve inside @media, so the value is
+     REPEATED literally in: assets/header.css (5 media queries, each
+     commented "= --ap-bp-header-inline, tokens.css"). JS reads it at
+     runtime (sections/header.liquid StickyHeader) — no literal there
+     except the fallback. Header only: grid breakpoints stay 750/990/1280. */
+  --ap-bp-header-inline: 1200px;
+
   /* --- Universe cover (tiles: homepage doorways, /collections, nav thumbs) --
      One treatment whatever the asset (audit 27/09). Ratio + radius come from
      wireframe 1a/1b ("universe 1:1", square corners) — NOT the briefing's

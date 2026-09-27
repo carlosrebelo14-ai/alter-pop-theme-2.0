@@ -29,12 +29,17 @@
 .ap-header__logo-heading {
   margin: 0;
   display: flex;
-  min-width: 0;
+  /* #8: the logo never shrinks — a future lack of space shows as the nav
+     breaking/clipping, never as the lockup drawn over the nav. */
+  flex-shrink: 0;
+  min-width: max-content;
   font-size: 16px; /* override Dawn's giant h1 on the index page */
   line-height: 1;
 }
 
 .ap-header__logo {
+  flex-shrink: 0;
+  min-width: max-content;
   display: inline-flex;
   align-items: center;
   white-space: nowrap;
@@ -60,7 +65,7 @@
   display: none;
 }
 
-@media (min-width: 990px) {
+@media (min-width: 1200px) { /* = --ap-bp-header-inline, tokens.css */
   .ap-nav {
     /* wireframe 6a: nav is left-aligned right after the logo, NOT centred.
        The 1fr middle column absorbs the slack between nav and the actions. */
@@ -69,6 +74,15 @@
     flex-wrap: nowrap;
     gap: var(--space-xl);
     justify-self: start;
+    /* #8 safety net: if labels ever outgrow the row, the nav clips instead
+       of pushing over the logo. The 4px padding (cancelled by the negative
+       margin) keeps the link underline (bottom: -2px) and focus rings
+       inside the clip box. The Universes strip is positioned against
+       .header-wrapper, an ancestor of the nav, so it is not clipped. */
+    min-width: 0;
+    overflow: hidden;
+    padding: 4px;
+    margin: -4px;
   }
 }
 
@@ -160,7 +174,7 @@
   text-decoration: none;
 }
 
-@media (min-width: 990px) {
+@media (min-width: 1200px) { /* = --ap-bp-header-inline, tokens.css */
   .ap-header__account {
     display: inline-flex;
   }
@@ -214,7 +228,7 @@
   line-height: 1;
 }
 
-@media (min-width: 990px) {
+@media (min-width: 1200px) { /* = --ap-bp-header-inline, tokens.css */
   .ap-header__cart {
     padding: 6px 10px;
     border: 1px solid var(--color-ink-900);
@@ -243,7 +257,7 @@
   display: none;
 }
 
-@media (min-width: 990px) {
+@media (min-width: 1200px) { /* = --ap-bp-header-inline, tokens.css */
   .ap-universes {
     display: block;
   }
@@ -367,7 +381,7 @@ header-drawer {
   display: inline-flex;
 }
 
-@media (min-width: 990px) {
+@media (min-width: 1200px) { /* = --ap-bp-header-inline, tokens.css */
   header-drawer {
     display: none;
   }

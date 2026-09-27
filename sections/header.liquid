@@ -156,7 +156,8 @@
       {%- comment -%}
         Cart — boxed "Cart" text + count on desktop (6a); a plain cart icon
         with a count badge on mobile (1a). Both live in one element; CSS
-        swaps the label/icon at the 990px breakpoint.
+        swaps the label/icon at the header inline breakpoint (--ap-bp-header-inline,
+        1200px — tokens.css).
       {%- endcomment -%}
       <a href="{{ routes.cart_url }}" class="ap-header__cart" id="cart-icon-bubble">
         <svg class="ap-header__cart-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
@@ -190,7 +191,11 @@
 
     connectedCallback() {
       this.header = document.querySelector('.section-header');
-      this.mobileMediaQuery = window.matchMedia('(max-width: 990px)');
+      // #8: header breakpoint read from the token (tokens.css), fallback 1200px.
+      const apHeaderBp =
+        getComputedStyle(document.documentElement).getPropertyValue('--ap-bp-header-inline').trim() || '1200px';
+      this.apHeaderBp = apHeaderBp;
+      this.mobileMediaQuery = window.matchMedia(`not all and (min-width: ${apHeaderBp})`);
       this.headerIsAlwaysSticky =
         this.getAttribute('data-sticky-type') === 'always' ||
         this.getAttribute('data-sticky-type') === 'reduce-logo-size';

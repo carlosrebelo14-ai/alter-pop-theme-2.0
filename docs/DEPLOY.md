@@ -17,6 +17,19 @@ Regras
   um desvio, e o deploy seguinte apanha-o — o drift check do comando compara o
   live com o commit em LIVE_DEPLOYED_AT e recusa avancar se divergirem.
 
+- Edicao no editor do live (ou `theme push --only` de JSON de editor)
+  obriga a `shopify theme pull --theme 207355216202 --only <ficheiros>` e
+  commit no main NO MESMO DIA. Motivo: a edicao de 24/09 (universe_collections)
+  ficou 3 dias so no live e so foi apanhada pelo drift check de 27/09.
+- O drift check tem de correr ANTES de duplicar o live: o rollback so se cria
+  quando o push vai mesmo acontecer. Hoje o script so verifica o drift depois
+  de o rollback existir (e o --rollback e obrigatorio) — alteracao ao script
+  registada em issue propria; ate la, correr `--dry-run` com o rollback atual
+  antes de duplicar e ignorar so o ✗ do rollback.
+- Cada entrada no registo de drift inclui: ficheiros, chaves exactas, origem
+  (quem/que decisao/quando) e decisao tomada (live ganha / git ganha). Tem de
+  ser legivel sem abrir diffs.
+
 Licoes — push ao vivo 24/09/2026 (universes auto-source)
 - `shopify theme push` ao live precisa de `--allow-live` quando corrido sem
   TTY (agente, CI). Sem a flag, o comando falha a pedir confirmacao

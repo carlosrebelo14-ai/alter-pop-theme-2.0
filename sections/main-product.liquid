@@ -348,21 +348,25 @@
             </div>
 
             {%- comment -%}
-              Official licensing seal (premium). alterpop.license_supplier
-              is out of contract — without it we can't name THIS product's
-              licensor, so the whole block hides rather than showing a
-              generic "Officially Licensed" claim or a placeholder.
+              Official licensing seal (premium). Wireframe 3b places it
+              AFTER the spec sheet, premium only — kept there (the 27/09
+              audit briefing asked for price→ATC; the wireframe wins).
+              Source: ociostock.licence (27/09 decision — the seal vouches
+              for the LICENCE, not the manufacturer; product.vendor stays
+              in Tech Specs). Blank licence -> the block doesn't render.
+              Emerald-600 is reserved to this block (+ the 4b order seal).
             {%- endcomment -%}
             {%- if is_premium -%}
-              {%- assign seal_supplier = product.metafields.alterpop.license_supplier.value -%}
-              {%- if seal_supplier != blank -%}
+              {%- assign seal_licence = product.metafields.ociostock.licence.value -%}
+              {%- if seal_licence != blank -%}
                 <div class="ap-pdp__seal" role="note">
                   <p class="ap-pdp__seal-line">
                     <span class="ap-pdp__seal-icon" aria-hidden="true">
                       {{- 'icon-checkmark.svg' | inline_asset_content -}}
                     </span>
-                    {{ 'sections.pdp.seal_by' | t: brand: seal_supplier }}
+                    {{ seal_licence | escape }}
                   </p>
+                  <p class="ap-pdp__seal-note type-caption">{{ 'sections.pdp.seal_note' | t }}</p>
                 </div>
               {%- endif -%}
             {%- endif -%}

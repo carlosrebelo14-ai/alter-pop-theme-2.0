@@ -679,8 +679,7 @@
   color: var(--color-ink-900);
 }
 
-.ap-reviews__summary,
-.ap-reviews__empty {
+.ap-reviews__summary {
   display: flex;
   align-items: center;
   gap: var(--space-md);
@@ -703,11 +702,6 @@
 }
 
 .ap-reviews__count {
-  color: var(--color-text-muted);
-}
-
-.ap-reviews__empty-note {
-  margin: 0;
   color: var(--color-text-muted);
 }
 

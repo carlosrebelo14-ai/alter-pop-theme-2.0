@@ -6,7 +6,10 @@
 
   Data: the Shopify Product Reviews app metafields
   (product.metafields.reviews.rating / .rating_count). No review app is
-  installed -> an explicit, marked empty state. NO fabricated reviews.
+  installed. With rating_count 0/blank the WHOLE block hides (audit 27/09 +
+  15/09 decision: a slot without data hides, no placeholder reaches the
+  customer — replaces the old marked "no reviews yet" empty state).
+  NO fabricated reviews.
 
   Regime mirrors the product section: snippets/ap-tier.liquid, with a
   `force_tier` setting for development.
@@ -36,36 +39,27 @@
   endif
 -%}
 
+{%- if has_reviews -%}
 <section class="ap-reviews page-width" aria-labelledby="Reviews-{{ section.id }}">
   <h2 class="ap-reviews__heading type-h3" id="Reviews-{{ section.id }}">
     {{ 'sections.pdp.reviews' | t }}
   </h2>
 
-  {%- if has_reviews -%}
-    <div class="ap-reviews__summary">
-      <span class="ap-reviews__stars" role="img" aria-label="{{ 'sections.pdp.reviews_stars_label' | t: rating: rating.rating, max: scale_max }}">
-        {%- assign filled = rating.rating | round -%}
-        {%- for i in (1..scale_max) -%}
-          <span class="ap-reviews__star{% if i <= filled %} is-filled{% endif %}" aria-hidden="true"></span>
-        {%- endfor -%}
+  <div class="ap-reviews__summary">
+    <span class="ap-reviews__stars" role="img" aria-label="{{ 'sections.pdp.reviews_stars_label' | t: rating: rating.rating, max: scale_max }}">
+      {%- assign filled = rating.rating | round -%}
+      {%- for i in (1..scale_max) -%}
+        <span class="ap-reviews__star{% if i <= filled %} is-filled{% endif %}" aria-hidden="true"></span>
+      {%- endfor -%}
+    </span>
+    {%- if is_premium -%}
+      <span class="ap-reviews__count type-caption">
+        {{ rating.rating }} · {{ 'sections.pdp.reviews_count' | t: count: rating_count }}
       </span>
-      {%- if is_premium -%}
-        <span class="ap-reviews__count type-caption">
-          {{ rating.rating }} · {{ 'sections.pdp.reviews_count' | t: count: rating_count }}
-        </span>
-      {%- endif -%}
-    </div>
-  {%- else -%}
-    <div class="ap-reviews__empty" role="note">
-      <span class="ap-reviews__stars" aria-hidden="true">
-        {%- for i in (1..5) -%}
-          <span class="ap-reviews__star"></span>
-        {%- endfor -%}
-      </span>
-      <p class="ap-reviews__empty-note type-caption">{{ 'sections.pdp.reviews_empty' | t }}</p>
-    </div>
-  {%- endif -%}
+    {%- endif -%}
+  </div>
 </section>
+{%- endif -%}
 
 {% schema %}
 {

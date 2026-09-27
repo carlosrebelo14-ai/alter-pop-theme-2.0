@@ -29,22 +29,27 @@
 .ap-header__logo-heading {
   margin: 0;
   display: flex;
-  /* #8: the logo never shrinks — a future lack of space shows as the nav
-     breaking/clipping, never as the lockup drawn over the nav. */
-  flex-shrink: 0;
-  min-width: max-content;
+  /* hotfix 27/09: below the inline-nav breakpoint the logo column may shrink
+     and the lockup scales WITH it (svg width: 100% below), so it never pushes
+     the actions off-screen (#8 regression) nor draws over the search button
+     (pre-#8). The no-shrink lock applies only >= 1200px, further down. */
+  min-width: 0;
   font-size: 16px; /* override Dawn's giant h1 on the index page */
   line-height: 1;
 }
 
 .ap-header__logo {
-  flex-shrink: 0;
-  min-width: max-content;
+  min-width: 0;
   display: inline-flex;
   align-items: center;
   white-space: nowrap;
   text-decoration: none;
   color: var(--color-ink-900);
+}
+
+/* index page: the <a> sits inside the <h1> flex box — let it fill it */
+.ap-header__logo-heading .ap-header__logo {
+  flex: 1 1 auto;
 }
 
 .ap-header__logo img {
@@ -53,11 +58,30 @@
   max-width: 100%;
 }
 
-/* inline brand lockup (fallback when settings.logo is unset) */
+/* inline brand lockup (fallback when settings.logo is unset). Below 1200px
+   it takes the column width, capped at its natural 22px-tall size
+   (viewBox 1119.02 x 139.244 -> ratio 8.036 -> 176.8px), height from the
+   viewBox ratio. */
 .ap-header__logo svg {
   display: block;
-  height: 22px;
-  width: auto;
+  width: 100%;
+  max-width: calc(22px * 1119.02 / 139.244);
+  height: auto;
+}
+
+@media (min-width: 1200px) { /* = --ap-bp-header-inline, tokens.css */
+  /* #8: with the inline nav the logo never shrinks — a future lack of space
+     shows as the nav clipping, never as the lockup drawn over the nav. */
+  .ap-header__logo-heading,
+  .ap-header__logo {
+    flex-shrink: 0;
+    min-width: max-content;
+  }
+  .ap-header__logo svg {
+    width: auto;
+    max-width: none;
+    height: 22px;
+  }
 }
 
 /* --- Desktop nav --------------------------------------------------------- */

@@ -107,7 +107,7 @@
      27/09/2026: logo 177 + nav 635 + actions 217 only fit from ~1101px
      (990 = -111px overlap), 1200 leaves room for longer labels.
      CSS custom properties do NOT resolve inside @media, so the value is
-     REPEATED literally in: assets/header.css (5 media queries, each
+     REPEATED literally in: assets/header.css (6 media queries, each
      commented "= --ap-bp-header-inline, tokens.css"). JS reads it at
      runtime (sections/header.liquid StickyHeader) — no literal there
      except the fallback. Header only: grid breakpoints stay 750/990/1280. */

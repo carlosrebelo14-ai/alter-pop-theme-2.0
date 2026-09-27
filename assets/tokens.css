@@ -101,6 +101,17 @@
   --space-4xl: 64px;
   --space-5xl: 96px;
 
+  /* --- Universe cover (tiles: homepage doorways, /collections, nav thumbs) --
+     One treatment whatever the asset (audit 27/09). Ratio + radius come from
+     wireframe 1a/1b ("universe 1:1", square corners) — NOT the briefing's
+     4/5 + radius-md. Scrim = the existing doorway gradient. The Universe
+     Room hero (universe-room-header) is deliberately NOT on these tokens. */
+  --ap-cover-ratio: 1 / 1;
+  --ap-cover-fit: cover;
+  --ap-cover-position: center 30%;
+  --ap-cover-radius: var(--radius-none);
+  --ap-cover-scrim: linear-gradient(180deg, transparent 45%, rgba(18, 16, 20, 0.72) 100%);
+
   /* --- Radius -------------------------------------------------------------
      radius-none: product images/thumbnails (pure-square rule).
      radius-xs:   inputs, quantity stepper, filter pills.

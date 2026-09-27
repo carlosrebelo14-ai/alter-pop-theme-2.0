@@ -1,0 +1,74 @@
+/* ============================================================================
+   Universe waitlist — "More pieces on the way" (audit 27/09).
+   < 750 stacked · 750-989 input + button inline, max 560px · >= 990 two
+   columns (copy left, form right). Submit is .ap-btn--secondary — never
+   Marigold (purchase-CTA only).
+   ============================================================================ */
+.ap-waitlist {
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.ap-waitlist__inner {
+  display: grid;
+  gap: var(--space-xl);
+  padding-block: var(--space-3xl);
+}
+
+.ap-waitlist__heading {
+  margin: 0 0 var(--space-sm);
+  color: var(--color-ink-900);
+}
+
+.ap-waitlist__body {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.ap-waitlist__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.ap-waitlist__field input[type="email"] {
+  width: 100%;
+  min-width: 0;
+  height: 44px;
+  padding: 0 var(--space-md);
+  border: 1px solid var(--color-ink-900);
+  border-radius: var(--radius-xs);
+  background: var(--color-canvas);
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--color-ink-900);
+}
+
+.ap-waitlist__field input[type="email"]::placeholder { color: var(--color-text-muted); }
+.ap-waitlist__field input[type="email"]:focus {
+  outline: 2px solid var(--color-ink-900);
+  outline-offset: 2px;
+}
+
+.ap-waitlist__submit { width: 100%; }
+
+.ap-waitlist__message {
+  margin: var(--space-sm) 0 0;
+  color: var(--color-text-muted);
+}
+
+@media (min-width: 750px) {
+  .ap-waitlist__inner { max-width: 560px; }
+  .ap-waitlist__field { flex-direction: row; }
+  .ap-waitlist__field input[type="email"] { flex: 1 1 auto; width: auto; }
+  .ap-waitlist__submit { width: auto; flex: 0 0 auto; }
+}
+
+@media (min-width: 990px) {
+  .ap-waitlist__inner {
+    max-width: var(--page-width, 1400px);
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: var(--space-3xl);
+  }
+}

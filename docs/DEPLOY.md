@@ -1,9 +1,9 @@
 LIVE_THEME_ID       = 207355216202   ALTERPOP 2.0
 STAGING_THEME_ID    = 207846408522   ALTERPOP 2.0 - Tema de Testes
-ROLLBACK_ACTIVE     = 208259023178   ROLLBACK pre-universes-auto — 24/09/2026 (snapshot do live pre-deploy)
+ROLLBACK_ACTIVE     = 208446718282   ROLLBACK pre-audit-2709 — 27/09/2026 (snapshot do live pre-deploy)
 ROLLBACK_REMOVED    = 208259023178   ROLLBACK pre-universes-auto — 24/09/2026 (apagado 27/09/2026, depois de 208446718282 verificado; antes: 207885467978, ja inexistente)
 STAGING_SYNCED_AT   = 708679e (27/09/2026)
-LIVE_DEPLOYED_AT    = bbc9239 (tag live-2409-reconciled = 0601ab9 + edicao de editor de 24/09; reconciliado 27/09/2026)
+LIVE_DEPLOYED_AT    = d9b11d6 (27/09/2026)
 
 Regras
 - Nenhum push direto ao live.

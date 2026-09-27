@@ -30,6 +30,27 @@ Regras
   (quem/que decisao/quando) e decisao tomada (live ganha / git ganha). Tem de
   ser legivel sem abrir diffs.
 
+Checklist do header (27/09/2026 — regressao da #8 no mobile, hotfix 6a14443)
+- Qualquer alteracao ao header e medida NO STAGING (cookie jar / preview), nao
+  so no dev server, e depois no live sem cookie.
+- Larguras: 320, 360, 375, 390, 414, 768, 1024, 1199, 1200, 1280.
+- Por largura: scrollWidth == clientWidth; right do carrinho <= clientWidth -
+  padding lateral do header; intersecao logo ∩ botao de pesquisa == 0; >= 1200:
+  intersecao logo ∩ nav == 0 e nav sem corte (scrollWidth <= clientWidth).
+- Barras de scroll: sobreposta (emulacao mobile / Browser pane) E classica
+  (simular com `html{overflow-y:scroll}::-webkit-scrollbar{width:15px}`).
+  Abaixo de 768px a emulacao mobile forca barra sobreposta — como os telemoveis.
+- REGRA DE EVIDENCIA (vale para QUALQUER medicao de layout, nao so o header):
+  antes de ler medidas, `document.getAnimations().forEach(a => a.finish())` e
+  aguardar dois `requestAnimationFrame`. Com o browser/pane em segundo plano
+  (`document.visibilityState === 'hidden'`) as animacoes de entrada ficam
+  paradas no 1.o frame: um `scale(1.02)` faz a pagina parecer 2% mais larga.
+  Uma medicao sem este passo NAO conta como evidencia. Excecao deliberada:
+  quando o defeito a verificar e a propria animacao (#10), mede-se a meio dela,
+  sem finish(), com o separador visivel.
+  Hit duas vezes a 27/09: #7 (383px a 375 = 375 x 1.02 do .ap-uroom-header) e
+  #10 (faixa de Universos 1306px = 1280 x 1.02) — ambos diagnosticos falsos.
+
 Licoes — push ao vivo 24/09/2026 (universes auto-source)
 - `shopify theme push` ao live precisa de `--allow-live` quando corrido sem
   TTY (agente, CI). Sem a flag, o comando falha a pedir confirmacao

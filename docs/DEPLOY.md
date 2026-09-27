@@ -1,7 +1,7 @@
 LIVE_THEME_ID       = 207355216202   ALTERPOP 2.0
 STAGING_THEME_ID    = 207846408522   ALTERPOP 2.0 - Tema de Testes
 ROLLBACK_ACTIVE     = 208259023178   ROLLBACK pre-universes-auto — 24/09/2026 (snapshot do live pre-deploy)
-ROLLBACK_REMOVED    = 207885467978   (ja nao existe na loja — registo corrigido 27/09/2026 contra `shopify theme list`)
+ROLLBACK_REMOVED    = 208259023178   ROLLBACK pre-universes-auto — 24/09/2026 (apagado 27/09/2026, depois de 208446718282 verificado; antes: 207885467978, ja inexistente)
 STAGING_SYNCED_AT   = b6e9bf1 (27/09/2026)
 LIVE_DEPLOYED_AT    = 0601ab9 (24/09/2026)
 

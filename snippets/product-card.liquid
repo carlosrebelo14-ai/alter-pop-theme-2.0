@@ -139,6 +139,7 @@
     <a class="ap-card__media-link" href="{{ card_product.url }}" aria-labelledby="{{ title_id }}">
       <div class="ap-card__media">
         {%- if card_product.featured_media -%}
+          {%- assign card_alt = card_product.featured_media.alt | default: card_product.title | escape -%}
           {{
             card_product.featured_media
             | image_url: width: 800
@@ -147,7 +148,7 @@
               class: 'ap-card__img',
               widths: '165, 220, 280, 360, 480, 600, 800',
               sizes: '(min-width: 990px) 280px, (min-width: 750px) 33vw, 50vw',
-              alt: ''
+              alt: card_alt
           }}
         {%- else -%}
           {{ placeholder_image | default: 'product-1' | placeholder_svg_tag: 'ap-card__img ap-card__img--placeholder' }}

@@ -1,0 +1,88 @@
+{{ 'universe-waitlist.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  Alterpop — "Universe in progress" (audit 27/09). A Universe Room below
+  settings.ap_universe_min_products (global, default 12) shows what it has
+  and, after the grid, adds a Collectors Club sign-up segmented by
+  universe: contact[tags] = collectors-club, universe-<handle>. At or above
+  the threshold the section renders nothing.
+
+  Submit is .ap-btn--secondary — Marigold is purchase-CTA only.
+  No wireframe page covers this state; layout follows the audit briefing
+  (< 750 stacked · 750-989 inline, max 560px · >= 990 two columns).
+{%- endcomment -%}
+
+{%- liquid
+  assign ap_min = settings.ap_universe_min_products | default: 12
+  assign ap_show = false
+  if collection and collection.products_count < ap_min
+    assign ap_show = true
+  endif
+-%}
+
+{%- if ap_show -%}
+  {%- assign ap_form_id = 'UniverseWaitlist-' | append: section.id -%}
+  <section class="ap-waitlist" aria-labelledby="{{ ap_form_id }}-heading">
+    <div class="ap-waitlist__inner page-width">
+      <div class="ap-waitlist__copy">
+        <h2 class="ap-waitlist__heading type-h3" id="{{ ap_form_id }}-heading">
+          {{- 'sections.universe_room.waitlist_heading' | t -}}
+        </h2>
+        <p class="ap-waitlist__body type-body">
+          {{- 'sections.universe_room.waitlist_body' | t: universe: collection.title -}}
+        </p>
+      </div>
+
+      {%- form 'customer', id: ap_form_id, class: 'ap-waitlist__form' -%}
+        <input type="hidden" name="contact[tags]" value="collectors-club, universe-{{ collection.handle }}">
+        <div class="ap-waitlist__field">
+          <label class="visually-hidden" for="{{ ap_form_id }}-email">{{ 'newsletter.label' | t }}</label>
+          <input
+            id="{{ ap_form_id }}-email"
+            type="email"
+            name="contact[email]"
+            value="{{ form.email }}"
+            aria-required="true"
+            autocorrect="off"
+            autocapitalize="off"
+            autocomplete="email"
+            {% if form.errors %}
+              aria-invalid="true" aria-describedby="{{ ap_form_id }}-error"
+            {% elsif form.posted_successfully? %}
+              aria-describedby="{{ ap_form_id }}-success"
+            {% endif %}
+            placeholder="{{ 'newsletter.label' | t }}"
+            required
+          >
+          <button type="submit" class="ap-btn ap-btn--secondary ap-waitlist__submit" name="commit">
+            {{- 'sections.universe_room.waitlist_submit' | t -}}
+          </button>
+        </div>
+        {%- if form.errors -%}
+          <p class="ap-waitlist__message type-caption" id="{{ ap_form_id }}-error" role="alert">
+            {{- form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email -}}
+          </p>
+        {%- elsif form.posted_successfully? -%}
+          <p class="ap-waitlist__message type-caption" id="{{ ap_form_id }}-success" role="status">
+            {{- 'sections.universe_room.waitlist_success' | t: universe: collection.title -}}
+          </p>
+        {%- endif -%}
+      {%- endform -%}
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Universe waitlist",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Shows only when this universe has fewer products than the theme setting \"Universe in progress — minimum products\" (Theme settings → Universe Room)."
+    }
+  ],
+  "enabled_on": { "templates": ["collection"] }
+}
+{% endschema %}

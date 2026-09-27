@@ -3,7 +3,7 @@
     "shipping_bar": {
       "type": "shipping-bar",
       "disabled": true,
-      "settings": { "threshold_amount": 50, "reached_text": "You've unlocked free shipping" }
+      "settings": { "reached_text": "You've unlocked free shipping" }
     },
     "hero": {
       "type": "hero",

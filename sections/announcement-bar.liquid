@@ -9,8 +9,34 @@
   if section.settings.enable_country_selector or section.settings.enable_language_selector
     assign language_country_selector = true
   endif
-  if section.blocks.size > 0
+  # Alterpop (audit 27/09): a block with blank text no longer counts as an
+  # announcement, and with nothing to show the whole bar is skipped — no
+  # empty strip. With settings.show_free_shipping on, the bar carries the
+  # free-shipping line, amount from settings.ap_free_shipping_threshold
+  # (the single source, #4).
+  assign ap_fs_on = settings.show_free_shipping
+  assign ap_text_blocks = 0
+  for block in section.blocks
+    if block.settings.text != blank
+      assign ap_text_blocks = ap_text_blocks | plus: 1
+    endif
+  endfor
+  assign announcement_bar = false
+  if ap_fs_on or ap_text_blocks > 0
     assign announcement_bar = true
+  endif
+  assign ap_show_bar = announcement_bar
+  if section.settings.show_social and social_icons
+    assign ap_show_bar = true
+  endif
+  if section.settings.enable_country_selector and localization.available_countries.size > 1
+    assign ap_show_bar = true
+  endif
+  if section.settings.enable_language_selector and localization.available_languages.size > 1
+    assign ap_show_bar = true
+  endif
+  if request.design_mode
+    assign ap_show_bar = true
   endif
 -%}
 
@@ -18,6 +44,7 @@
   {{ 'component-list-social.css' | asset_url | stylesheet_tag }}
 {% endif %}
 
+{%- if ap_show_bar -%}
 <div
   class="utility-bar color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_line_separator and section.blocks.size > 0 %} utility-bar--bottom-border{% elsif section.settings.show_line_separator and section.settings.show_social and social_icons%} utility-bar--bottom-border-social-only{% endif %}{% if section.settings.enable_country_selector or section.settings.enable_language_selector %} header-localization{% endif %}"
 >
@@ -25,7 +52,20 @@
     {%- if section.settings.show_social and social_icons -%}
       {%- render 'social-icons' -%}
     {%- endif -%}
-    {%- if section.blocks.size == 1 -%}
+    {%- if ap_fs_on -%}
+      {%- assign ap_fs_amount = settings.ap_free_shipping_threshold | default: 50 | times: 100 | money_without_trailing_zeros -%}
+      <div
+        class="announcement-bar{% if section.settings.show_social %} announcement-bar--one-announcement{% endif %}"
+        role="region"
+        aria-label="{{ 'sections.header.announcement' | t }}"
+      >
+        <p class="announcement-bar__message h5">
+          <span>{{ 'sections.announcements.free_shipping' | t: amount: ap_fs_amount }}</span>
+        </p>
+      </div>
+    {%- elsif ap_text_blocks == 0 -%}
+      {%- comment -%} no announcement text: nothing in this slot {%- endcomment -%}
+    {%- elsif section.blocks.size == 1 -%}
       <div
         class="announcement-bar{% if section.settings.show_social %} announcement-bar--one-announcement{% endif %}"
         role="region"
@@ -161,6 +201,7 @@
     </div>
   </div>
 </div>
+{%- endif -%}
 
 {% schema %}
 {

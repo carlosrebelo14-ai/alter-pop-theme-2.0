@@ -1,7 +1,8 @@
 LIVE_THEME_ID       = 207355216202   ALTERPOP 2.0
 STAGING_THEME_ID    = 207846408522   ALTERPOP 2.0 - Tema de Testes
-ROLLBACK_ACTIVE     = 207885467978   ROLLBACK pre-character-hardening — 18/09/2026 (snapshot do live pre-deploy)
-STAGING_SYNCED_AT   = cfb1993 (24/09/2026)
+ROLLBACK_ACTIVE     = 208259023178   ROLLBACK pre-universes-auto — 24/09/2026 (snapshot do live pre-deploy)
+ROLLBACK_REMOVED    = 207885467978   (ja nao existe na loja — registo corrigido 27/09/2026 contra `shopify theme list`)
+STAGING_SYNCED_AT   = b6e9bf1 (27/09/2026)
 LIVE_DEPLOYED_AT    = 0601ab9 (24/09/2026)
 
 Regras
@@ -41,6 +42,9 @@ Sequencia de deploy
 4. fast-forward do ramo para main, git push origin main
 5. duplicar live no admin como ROLLBACK - <data>; verificar o rollback (ver
    CLAUDE.md, "theme duplicate is not atomic"); so depois apagar o anterior
+   Ordem (decisao 27/09/2026): duplicar live → registar o ID novo → apagar
+   o rollback anterior (ROLLBACK_ACTIVE) → push. Antes de duplicar, confirmar
+   com `shopify theme list` que ROLLBACK_ACTIVE existe mesmo na loja.
 6. node scripts/deploy-theme.mjs live --rollback <id do rollback novo> --dry-run
       lista os pre-requisitos com ✓/✗ e nao empurra nada. Com tudo ✓, repetir
       sem --dry-run. Pre-requisitos: main == origin/main, tema em HEAD igual ao

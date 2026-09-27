@@ -5,6 +5,7 @@
   Accepts:
   - media: {Object} Product Media object
   - media_count: {Number} Number of media objects
+  - product_title: {String} Alterpop — alt fallback when media.alt is blank (optional)
   - position: {String} Position of the media. Used for accessible label.
   - desktop_layout: {String} Layout of the media for desktop.
   - mobile_layout: {String} Layout of the media for mobile.
@@ -78,6 +79,21 @@
     </span>
     {%- render 'loading-spinner' -%}
     <div class="product__media media media--transparent">
+      {%- comment -%}
+        Alterpop alt fallback (audit 27/09): media.alt, else
+        "<product title> – image N of M". product_title is passed by
+        product-media-gallery; empty elsewhere -> Dawn's behaviour.
+      {%- endcomment -%}
+      {%- liquid
+        assign ap_alt = media.alt
+        if ap_alt == blank and product_title != blank
+          assign ap_alt = product_title
+          if media_count > 1
+            assign ap_alt_n = 'products.product.media.image_n_of_m' | t: index: position, total: media_count
+            assign ap_alt = ap_alt | append: ' – ' | append: ap_alt_n
+          endif
+        endif
+      -%}
       {{
         media.preview_image
         | image_url: width: 1946
@@ -85,6 +101,7 @@
           class: image_class,
           loading: lazy,
           sizes: sizes,
+          alt: ap_alt,
           widths: '246, 493, 600, 713, 823, 990, 1100, 1206, 1346, 1426, 1646, 1946'
       }}
     </div>

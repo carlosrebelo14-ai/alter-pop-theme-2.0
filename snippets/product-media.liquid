@@ -5,6 +5,7 @@
   - media: {Object} Product Media object
   - loop: {Boolean} Enable video looping (optional)
   - variant_image: {Boolean} Whether or not media is associated with a variant
+  - product_title, media_count: Alterpop — alt fallback when media.alt is blank (optional)
 
   Usage:
   {% render 'product-media',
@@ -14,6 +15,20 @@
   %}
 {% endcomment %}
 
+{%- comment -%}
+  Alterpop alt fallback (audit 27/09): media.alt, else "<product title> –
+  image N of M" when product_title/media_count are passed (zoom modal).
+{%- endcomment -%}
+{%- liquid
+  assign ap_alt = media.alt
+  if ap_alt == blank and product_title != blank
+    assign ap_alt = product_title
+    if media_count > 1
+      assign ap_alt_n = 'products.product.media.image_n_of_m' | t: index: media.position, total: media_count
+      assign ap_alt = ap_alt | append: ' – ' | append: ap_alt_n
+    endif
+  endif
+-%}
 {%- if media.media_type == 'image' -%}
   <img
     class="global-media-settings global-media-settings--no-shadow{% if variant_image %} product__media-item--variant{% endif %}"
@@ -30,7 +45,7 @@
     "
     sizes="(min-width: 750px) calc(100vw - 22rem), 1100px"
     src="{{ media.preview_image | image_url: width: 1445 }}"
-    alt="{{ media.alt | escape }}"
+    alt="{{ ap_alt | escape }}"
     loading="lazy"
     width="1100"
     height="{{ 1100 | divided_by: media.preview_image.aspect_ratio | ceil }}"

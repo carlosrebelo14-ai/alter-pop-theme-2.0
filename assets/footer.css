@@ -112,8 +112,12 @@
 }
 
 .newsletter-form__message svg { width: 14px; height: 14px; }
+/* icon-success.svg hardcodes a green circle fill — follow the text colour. */
+.ap-footer .newsletter-form__message--success .icon-success path:first-child { fill: currentColor; }
+/* No success token in tokens.css; Emerald is seal-only (audit 27/09) ->
+   Dawn's foreground triplet (= ink-900). The icon inherits currentColor. */
 .newsletter-form__message--success {
-  color: var(--color-emerald-600);
+  color: rgb(var(--color-foreground));
   font-weight: var(--font-weight-body-medium);
 }
 

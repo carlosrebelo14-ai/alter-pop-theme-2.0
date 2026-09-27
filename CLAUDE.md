@@ -289,12 +289,19 @@ uploaded copy is stale until a restart + re-verify says otherwise.
 
 - Store handle: **`jyr17t-wr.myshopify.com`** (permanent domain). `alterpop-store`
   does not resolve. Set in `shopify.theme.toml`.
-- Development theme id: `206791704906`. Dev server: `http://127.0.0.1:9292`.
-- Live theme id: `207355216202` (name "ALTERPOP 2.0").
-- Current rollback snapshot: `ROLLBACK pre-character-page — 18/09/2026`, id
-  `207859253578` (`docs/DEPLOY.md` is the live record of this id). One snapshot at a time — name it `ROLLBACK <reason> —
-  DD/MM/YYYY` and delete the previous one it supersedes once the new one is
-  verified (see gotcha below).
+- **Theme ids — `docs/DEPLOY.md` is the record** (its header block is
+  rewritten by `scripts/deploy-theme.mjs` on every push; if this list and
+  DEPLOY.md disagree, DEPLOY.md wins):
+  - Live: `207355216202` ("ALTERPOP 2.0").
+  - Staging: `207846408522` ("ALTERPOP 2.0 - Tema de Testes"). Preview:
+    `https://jyr17t-wr.myshopify.com/?preview_theme_id=207846408522`.
+    Push only via `node scripts/deploy-theme.mjs staging`.
+  - Development (`shopify theme dev`): `207352529226` as of 27/09/2026 —
+    the CLI can recreate it, so read the id off the dev server's startup
+    banner. Dev server: `http://127.0.0.1:9292`.
+  - Rollback: `ROLLBACK_ACTIVE` in `docs/DEPLOY.md`. One snapshot at a
+    time — name it `ROLLBACK <reason> — DD/MM/YYYY` and delete the previous
+    one it supersedes once the new one is verified (see gotcha below).
 - **`shopify theme duplicate` is not atomic — hard rule, hit 17/09/2026.**
   A `theme duplicate --theme <live>` immediately followed by a
   `theme push --theme <live> --allow-live` can race: the duplicate's async

@@ -101,6 +101,7 @@
             preload: true
         }}
       {%- else -%}
+        <span class="visually-hidden">{{ shop.name | escape }}</span>
         {{- 'lockup-horizontal-ink.svg' | inline_asset_content -}}
       {%- endif -%}
     </a>

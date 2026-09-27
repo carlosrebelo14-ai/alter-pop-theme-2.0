@@ -80,7 +80,7 @@
               <a href="{{ collection.url }}">
                 <span class="ap-universes__thumb">
                   {%- if collection.featured_image -%}
-                    {{ collection.featured_image | image_url: width: 96 | image_tag: loading: 'lazy', alt: collection.title | escape }}
+                    {{ collection.featured_image | image_url: width: 96 | image_tag: loading: 'lazy', alt: '' }}
                   {%- else -%}
                     <span class="ap-universes__thumb--ph" aria-hidden="true">{{ collection.title | slice: 0, 1 }}</span>
                   {%- endif -%}
@@ -96,7 +96,7 @@
               <a href="{{ universe.url }}">
                 <span class="ap-universes__thumb">
                   {%- if universe.image -%}
-                    {{ universe.image | image_url: width: 96 | image_tag: loading: 'lazy', alt: universe.title | escape }}
+                    {{ universe.image | image_url: width: 96 | image_tag: loading: 'lazy', alt: '' }}
                   {%- else -%}
                     <span class="ap-universes__thumb--ph" aria-hidden="true">{{ universe.title | slice: 0, 1 }}</span>
                   {%- endif -%}

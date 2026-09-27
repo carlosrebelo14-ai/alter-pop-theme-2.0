@@ -23,7 +23,20 @@
 
 <footer class="ap-footer">
 
-  {%- if section.settings.newsletter_enable -%}
+  {%- comment -%}
+    Universe Room waitlist active (sections/universe-waitlist.liquid, same
+    condition recomputed here — sections share no variables) -> the club
+    band yields: one sign-up per page, and it never reaches the HTML.
+  {%- endcomment -%}
+  {%- liquid
+    assign ap_waitlist_active = false
+    assign ap_waitlist_min = settings.ap_universe_min_products | default: 12
+    if template.suffix == 'universe-room' and collection and collection.products_count < ap_waitlist_min
+      assign ap_waitlist_active = true
+    endif
+  -%}
+
+  {%- if section.settings.newsletter_enable and ap_waitlist_active == false -%}
     <div class="ap-footer__club">
       <div class="ap-footer__club-inner page-width">
         <div class="ap-footer__club-copy">

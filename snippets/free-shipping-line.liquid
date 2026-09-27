@@ -5,21 +5,22 @@
   that need it live re-render the text on Dawn's cartUpdate pub/sub.
 
   Gated on the single theme setting settings.show_free_shipping (default
-  false) — the €50 figure baked into every caller doesn't match the live
-  store rule (Spain free >= €55, PT/rest of EU pay a flat €8.99, no
-  threshold). Renders nothing while the flag is off; flip it on once the
-  merchant confirms the real shipping rule and the callers' hardcoded
-  threshold_amount values are updated to match. This is the ONLY switch —
-  don't reintroduce a second one (e.g. commented-out code) here or at a
-  call site.
+  false) — the €50 default doesn't match the live store rule (Spain free
+  >= €55, PT/rest of EU pay a flat €8.99, no threshold). Renders nothing
+  while the flag is off; flip it on once the merchant confirms the real
+  shipping rule. This is the ONLY switch — don't reintroduce a second one
+  (e.g. commented-out code) here or at a call site.
+
+  Threshold: settings.ap_free_shipping_threshold (global, default 50) is
+  the single source of the € figure (#4). Callers pass no amount — never
+  add a per-section threshold setting or a hardcoded number back.
 
   Accepts:
-  - threshold_amount: {Number} in store currency (e.g. 50 = €50). Default 50.
-  - reached_text:     {String} shown once the threshold is met. Optional.
+  - reached_text: {String} shown once the threshold is met. Optional.
 {%- endcomment -%}
 {%- if settings.show_free_shipping -%}
   {%- liquid
-    assign fsl_threshold = threshold_amount | default: 50 | times: 100
+    assign fsl_threshold = settings.ap_free_shipping_threshold | default: 50 | times: 100
     assign fsl_remaining = fsl_threshold | minus: cart.total_price
     if fsl_remaining < 0
       assign fsl_remaining = 0

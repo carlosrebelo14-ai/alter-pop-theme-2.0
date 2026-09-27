@@ -327,9 +327,9 @@
 .ap-doorways__tile {
   position: relative;
   display: block;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: var(--ap-cover-ratio);
   overflow: hidden;
-  border-radius: var(--radius-none);
+  border-radius: var(--ap-cover-radius);
   background: var(--color-ink-900);
   text-decoration: none;
   animation: ap-hp-editorial-in var(--motion-editorial) both;
@@ -344,7 +344,8 @@
 }
 
 .ap-doorways__img {
-  object-fit: cover;
+  object-fit: var(--ap-cover-fit);
+  object-position: var(--ap-cover-position);
   transition: transform var(--motion-transactional);
 }
 
@@ -367,7 +368,8 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 45%, rgba(18, 16, 20, 0.72) 100%);
+  background: var(--ap-cover-scrim);
+  pointer-events: none;
 }
 
 .ap-doorways__name {

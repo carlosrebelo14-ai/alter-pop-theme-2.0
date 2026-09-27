@@ -247,4 +247,17 @@ Ao diagnosticar chaves orfas, verificar o escopo certo antes de remover.
 Nota — drift check
 A comparacao valida e sobre JSON normalizado.
 shopify theme pull reindenta e acrescenta comentario, gerando falsos positivos.
-Caso conhecido e inofensivo — "settings": {} no live vs. chave ausente no repo.
+O Shopify tambem apaga algumas chaves vazias ao gravar JSON de editor. A
+normalizacao (scripts/lib/theme-json.mjs, testes em
+scripts/lib/theme-json.test.mjs — `node --test scripts/lib/theme-json.test.mjs`)
+trata como equivalentes a ausentes, por NOME de chave:
+  - "settings": {}      (caso original)
+  - "blocks": {}        (27/09/2026)
+  - "block_order": []   (27/09/2026 — header-group.json depois de retirado o
+                         bloco "Welcome"; o live gravou-o sem a chave)
+Nunca normalizado: qualquer chave DENTRO de um objeto settings, mesmo vazia
+(incluindo settings.blocks / settings.block_order). Ai um valor vazio e uma
+decisao — ex.: universe_collections: [] = fonte automatica de universos — e a
+chave ausente cai no default do schema, que pode ser outra coisa (a lista
+manual). Nunca se remove por tipo de valor ("qualquer [] vazio"), so pelos tres
+nomes acima.

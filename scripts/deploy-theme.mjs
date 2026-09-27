@@ -25,6 +25,7 @@ import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtempSync, readFileSync, writeFileSync, readdirSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { normalize, parseThemeJson } from "./lib/theme-json.mjs";
 
 const STORE = "jyr17t-wr.myshopify.com";
 const TARGETS = {
@@ -74,23 +75,9 @@ function check(name, fn) {
 
 // ---------------------------------------------- comparação normalizada (drift)
 
-/** JSON de tema: remove o bloco /* ... *\/ inicial que o `theme pull` acrescenta. */
-const parseThemeJson = (text) => JSON.parse(text.replace(/^\s*\/\*[\s\S]*?\*\//, ""));
-
-/** `"settings": {}` ausente ≡ vazio — falso positivo conhecido (ver DEPLOY.md, drift check). */
-function normalize(v) {
-  if (Array.isArray(v)) return v.map(normalize);
-  if (v && typeof v === "object") {
-    const out = {};
-    for (const k of Object.keys(v).sort()) {
-      const n = normalize(v[k]);
-      if (k === "settings" && n && typeof n === "object" && !Object.keys(n).length) continue;
-      out[k] = n;
-    }
-    return out;
-  }
-  return v;
-}
+// parseThemeJson / normalize vivem em scripts/lib/theme-json.mjs (testes em
+// scripts/lib/theme-json.test.mjs): chaves vazias que o Shopify apaga ao gravar
+// (settings / blocks / block_order) não contam como drift; settings.* nunca.
 
 function listFiles(base) {
   const out = new Map();

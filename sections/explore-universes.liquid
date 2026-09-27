@@ -117,7 +117,8 @@
           <li class="ap-doorways__item">
             <a class="ap-doorways__tile" href="{{ collection.url }}">
               {%- if collection.featured_image -%}
-                {{ collection.featured_image | image_url: width: 640 | image_tag: loading: 'lazy', class: 'ap-doorways__img', sizes: '(min-width: 750px) 25vw, 50vw', widths: '320, 480, 640', alt: collection.title | escape }}
+                {%- assign ap_tile_alt = collection.featured_image.alt | default: collection.title | escape -%}
+                {{ collection.featured_image | image_url: width: 640 | image_tag: loading: 'lazy', class: 'ap-doorways__img', sizes: '(min-width: 750px) 25vw, 50vw', widths: '320, 480, 640', alt: ap_tile_alt }}
               {%- else -%}
                 <span class="ap-doorways__ph" aria-hidden="true">{{ collection.title | slice: 0, 1 }}</span>
               {%- endif -%}
@@ -134,7 +135,8 @@
           <li class="ap-doorways__item">
             <a class="ap-doorways__tile" href="{{ universe.url }}">
               {%- if universe.image -%}
-                {{ universe.image | image_url: width: 640 | image_tag: loading: 'lazy', class: 'ap-doorways__img', sizes: '(min-width: 750px) 25vw, 50vw', widths: '320, 480, 640', alt: universe.title | escape }}
+                {%- assign ap_tile_alt = universe.image.alt | default: universe.title | escape -%}
+                {{ universe.image | image_url: width: 640 | image_tag: loading: 'lazy', class: 'ap-doorways__img', sizes: '(min-width: 750px) 25vw, 50vw', widths: '320, 480, 640', alt: ap_tile_alt }}
               {%- else -%}
                 <span class="ap-doorways__ph" aria-hidden="true">{{ universe.title | slice: 0, 1 }}</span>
               {%- endif -%}

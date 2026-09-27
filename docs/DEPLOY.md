@@ -3,7 +3,7 @@ STAGING_THEME_ID    = 207846408522   ALTERPOP 2.0 - Tema de Testes
 ROLLBACK_ACTIVE     = 208259023178   ROLLBACK pre-universes-auto — 24/09/2026 (snapshot do live pre-deploy)
 ROLLBACK_REMOVED    = 208259023178   ROLLBACK pre-universes-auto — 24/09/2026 (apagado 27/09/2026, depois de 208446718282 verificado; antes: 207885467978, ja inexistente)
 STAGING_SYNCED_AT   = 708679e (27/09/2026)
-LIVE_DEPLOYED_AT    = 0601ab9 (24/09/2026)
+LIVE_DEPLOYED_AT    = bbc9239 (tag live-2409-reconciled = 0601ab9 + edicao de editor de 24/09; reconciliado 27/09/2026)
 
 Regras
 - Nenhum push direto ao live.
@@ -74,6 +74,24 @@ Registo de drift — 24/09/2026
   reverter tudo desde 18/09 se necessario), mas o proximo rollback
   antes do proximo deploy deve duplicar o live atual (cfb1993), nao o
   207885467978.
+
+Registo de drift — reconciliacao 27/09/2026 (edicao de editor de 24/09)
+- Ficheiros: sections/header-group.json, templates/index.json,
+  templates/list-collections.json.
+- Chave: `universe_collections` (header / explore_universes / main) —
+  lista manual de 32 handles no git, `[]` no live.
+- Origem: decisao de 24/09 (fonte automatica de universos, template_suffix
+  universe-room) aplicada ao live por `theme pull --only` → editar →
+  `theme push --only`, nunca commitada. Apanhada pelo drift check do
+  deploy de fix/audit-2709 (simulacao de 27/09, antes de qualquer push).
+- Decisao: o live ganha. Git adopta `[]` nos tres (708679e, main).
+  LIVE_DEPLOYED_AT passa de 0601ab9 para bbc9239, tag
+  `live-2409-reconciled` = 0601ab9 + so essas tres edicoes (verificado
+  com `git diff 0601ab9 live-2409-reconciled --stat`: 3 ficheiros) — o
+  que o live servia de facto. O commit da tag nao esta em main.
+- Staging re-sincronizado (708679e) e comparado com o live: handles e
+  ordem dos tiles iguais na homepage, painel de Universos, drawer mobile
+  e /collections.
 
 Registo de drift — 24/09/2026 (universes auto-source)
 - Live (207355216202) recebeu codigo de origin/main (commit de merge do

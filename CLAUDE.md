@@ -328,8 +328,12 @@ uploaded copy is stale until a restart + re-verify says otherwise.
 
 - **Header curation collection handles** (Phase 1B) — verified against the
   store via the Admin API:
-  - `/collections/new-arrivals` **EXISTS** — 805 products, rule tag =
-    "new-arrival", sorted `CREATED_DESC`. Real curation, live.
+  - `/collections/new-arrivals` **EXISTS** — smart collection, rule
+    `product.metafields.alterpop.is_new_arrival = true`, sorted
+    `CREATED_DESC`. The `new-arrival` tag is no longer read by the theme or
+    by the collection. A future "New" badge on the product card must read
+    `product.metafields.alterpop.is_new_arrival.value == true`, never
+    `product.tags`.
   - `/collections/limited-editions-exclusives` and `/collections/gifts-under-25`
     **DO NOT EXIST** — dead links in `sections/header.liquid` +
     `snippets/mobile-drawer.liquid` today. **App dependency, not an admin
